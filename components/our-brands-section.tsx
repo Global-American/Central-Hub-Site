@@ -1,131 +1,126 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Building2 } from "lucide-react"
+import Link from "next/link"
 
 const brands = [
   {
     id: 1,
-    name: "helm",
-    tagline: "WAREHOUSE EFFICIENCY. REDEFINED.",
-    description: "The world's leading brands trust Helm to supercharge their warehouses with unparalleled speed and precision. Our WMS streamlines inventory tracking, order fulfillment, replenishment, and shipping—powering a smarter, more agile warehouse from end to end.",
-    color: "bg-gradient-to-br from-teal-600 to-teal-800",
-    textColor: "text-white",
+    name: "ShipItSmart",
+    tagline: "GLOBAL SHIPPING. SIMPLIFIED.",
+    description: "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
+    color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
+    textColor: "text-white"
   },
   {
     id: 2,
-    name: "voila",
-    tagline: "COURIER MANAGEMENT, REINVENTED.",
-    description: "Voila is shaking up the shipping industry, connecting businesses to 150+ couriers and 7,000+ services with a single integration. Smart shipping rules, AI-driven automation, and real-time tracking make fulfillment faster, leaner, and more cost-effective.",
-    color: "bg-gradient-to-br from-red-600 to-red-800",
-    textColor: "text-white",
+    name: "FreightItSmart",
+    tagline: "FREIGHT MANAGEMENT. REINVENTED.",
+    description: "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
+    color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
+    textColor: "text-white"
   },
   {
     id: 3,
-    name: "neuro",
-    tagline: "THE FUTURE OF E-COMMERCE CONNECTIVITY.",
-    description: "Neuro is the ultimate iPaaS solution, effortlessly linking merchants to their entire ecosystem. Seamlessly connect stores, warehouses, suppliers, and logistics partners through one powerful platform. Built for scale, designed for simplicity.",
-    color: "bg-gradient-to-br from-slate-600 to-slate-800",
-    textColor: "text-white",
+    name: "ReturnItSmart",
+    tagline: "REVERSE LOGISTICS. PERFECTED.",
+    description: "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
+    color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
+    textColor: "text-white"
+  },
+  {
+    id: 4,
+    name: "FulfillItSmart",
+    tagline: "END-TO-END FULFILLMENT. EXCELLENCE.",
+    description: "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
+    color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
+    textColor: "text-white"
   }
 ]
 
 export default function OurBrandsSection() {
-  const [scrollY, setScrollY] = useState(0)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect()
-        const sectionTop = rect.top
-        const sectionHeight = rect.height
-        const windowHeight = window.innerHeight
-        
-        // Better scroll progress calculation
-        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight * 0.5)))
-        setScrollY(progress)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
     <section ref={sectionRef} id="brands" className="py-20 md:py-28 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-16">
           <Badge variant="secondary" className="mb-6 text-primary">
             <Building2 size={16} className="mr-2" />
-            Trusted Partners
+            Our Services
           </Badge>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-8">
-            Our <span className="text-accent">Brands</span>
+            Smart <span className="text-accent">Solutions</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We partner with industry leaders across diverse sectors, delivering specialized logistics solutions 
-            that drive growth and innovation in every market we serve.
+            We offer comprehensive logistics solutions through our specialized service platforms, 
+            each designed to optimize specific aspects of your supply chain and drive operational excellence.
           </p>
         </div>
 
-        {/* Stacked Cards */}
-        <div className="relative max-w-6xl mx-auto space-y-6">
-          {brands.map((brand, index) => {
-            const cardStart = index / brands.length
-            const cardEnd = (index + 1) / brands.length
-            const cardProgress = Math.max(0, Math.min(1, (scrollY - cardStart) / (cardEnd - cardStart)))
-            
-            // Improved animations
-            const yOffset = cardProgress * 60
-            const scale = Math.max(0.92, 1 - cardProgress * 0.08)
-            const opacity = Math.max(0.6, 1 - cardProgress * 0.4)
-
-            return (
-              <div
-                key={brand.id}
-                className="relative"
-                style={{
-                  transform: `translateY(-${yOffset}px) scale(${scale})`,
-                  opacity: opacity,
-                  zIndex: brands.length - index,
-                }}
-              >
-                <div className={`rounded-3xl overflow-hidden shadow-2xl ${brand.color} h-[350px] md:h-[380px] flex items-center relative group hover:shadow-3xl transition-all duration-500`}>
-                  {/* Content */}
-                  <div className="flex-1 p-8 md:p-12 z-10 relative">
+        {/* Stacked Brand Cards */}
+        <div className="relative max-w-5xl mx-auto space-y-16">
+          {brands.map((brand, index) => (
+            <div
+              key={brand.id}
+              className="relative rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1"
+            >
+              <div className={`${brand.color}`}>
+                <div className="grid grid-cols-1 lg:grid-cols-2">
+                  {/* Content Side */}
+                  <div className="p-6 sm:p-8 md:p-12 z-10 relative">
                     <div className={brand.textColor}>
-                      <h1 className="text-4xl md:text-6xl lg:text-7xl font-light mb-6 tracking-wide">
-                        {brand.name}
-                      </h1>
-                      <p className="text-xs md:text-sm font-semibold tracking-[0.2em] mb-8 opacity-90 uppercase">
-                        {brand.tagline}
-                      </p>
-                      <p className="text-sm md:text-base leading-relaxed opacity-85 max-w-2xl">
+                      <div className="mb-6">
+                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+                          {brand.name}
+                        </h3>
+                        <p className="text-xs sm:text-sm font-semibold tracking-[0.15em] sm:tracking-[0.2em] opacity-90 uppercase mt-1">
+                          {brand.tagline}
+                        </p>
+                      </div>
+                      
+                      <p className="text-sm md:text-base leading-relaxed opacity-90 mb-8">
                         {brand.description}
                       </p>
+                      
+                      <Link href="#contact">
+                        <Button 
+                          variant="outline" 
+                          className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm"
+                        >
+                          Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
-
-                  {/* Refined Decorative Elements */}
-                  <div className="absolute right-8 top-1/2 transform -translate-y-1/2 opacity-10">
-                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border border-white"></div>
+                  
+                  {/* Visual Side */}
+                  <div className="relative hidden lg:block h-full min-h-[320px]">
+                    {/* Abstract Decoration */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative w-full h-full">
+                        <div className="absolute top-1/4 right-1/4 w-32 h-32 rounded-full border-4 border-white/10 backdrop-blur-sm"></div>
+                        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 rounded-full border-2 border-white/5"></div>
+                        <div className="absolute top-1/3 right-1/2 w-24 h-24 rounded-full bg-white/5 backdrop-blur-sm"></div>
+                      </div>
+                    </div>
+                    
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/30"></div>
                   </div>
-                  <div className="absolute right-16 top-1/2 transform -translate-y-1/2 opacity-5">
-                    <div className="w-20 h-20 md:w-28 md:h-28 rounded-full border border-white"></div>
-                  </div>
-
-                  {/* Subtle gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/5 pointer-events-none"></div>
                 </div>
               </div>
-            )
-          })}
+              
+              {/* Card number indicator */}
+              <div className="absolute top-0 right-0 w-12 h-12 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-bl-xl">
+                <span className={`text-xl font-bold ${brand.textColor}`}>{index + 1}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

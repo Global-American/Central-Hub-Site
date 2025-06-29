@@ -1,11 +1,10 @@
 import HeaderNav from "@/components/header-nav"
 import HeroSection from "@/components/hero-section"
 import VideoSection from "@/components/video-section"
-import ServicesSection from "@/components/services-section"
 import OurBrandsSection from "@/components/our-brands-section"
 import ContactSection from "@/components/contact-section"
 import Footer from "@/components/footer"
-import { Package, Ship, Plane, MapPin } from "lucide-react"
+import { Package, Ship, MapPin } from "lucide-react"
 
 // Horizontal Icon Divider Component
 function HorizontalDivider({ Icon, className = "" }: { Icon: React.ComponentType<any>, className?: string }) {
@@ -35,8 +34,6 @@ export default function GlobalAmericanLandingPage() {
         <HorizontalDivider Icon={Package} />
         <VideoSection />
         <HorizontalDivider Icon={Ship} />
-        <ServicesSection />
-        <HorizontalDivider Icon={Plane} />
         <OurBrandsSection />
         <HorizontalDivider Icon={MapPin} />
         <ContactSection />

@@ -74,7 +74,7 @@ export default function ContactSection() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
             {contactOptions.map((option, index) => (
               <Card
                 key={option.key}
@@ -103,7 +103,7 @@ export default function ContactSection() {
           </div>
 
           <div className="text-center">
-            <div className="bg-secondary rounded-2xl p-8 max-w-2xl mx-auto">
+            <div className="bg-secondary rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto">
               <h3 className="text-xl font-bold text-foreground mb-4">Need a <span className="text-accent">custom solution?</span></h3>
               <p className="text-muted-foreground mb-6">
                 Our logistics experts will design a solution that fits your specific needs and budget.
