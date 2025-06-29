@@ -1,10 +1,17 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
-  title: 'Global American LLC - Logistics Solutions',
-  description: 'Comprehensive logistics solutions for modern commerce. Air freight, ocean freight, express courier, and 3PL services worldwide.',
+  title: 'Global American LLC - Smart Logistics Solutions',
+  description: 'Smart logistics solutions powered by ShipItSmart, FreightItSmart, ReturnItSmart, and FulfillItSmart. Intelligent supply chain management that moves industries forward.',
   generator: 'Next.js',
+  viewport: 'width=device-width, initial-scale=1',
 }
 
 export default function RootLayout({
@@ -14,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

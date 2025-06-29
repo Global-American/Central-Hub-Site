@@ -46,13 +46,13 @@ export default function VideoSection() {
           className={`text-center mb-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
         >
           <Badge variant="outline" className="text-xs border-accent text-accent bg-accent/10 mb-4">
-            What We Offer
+            How It Works
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            See how we <span className="text-accent">move your world</span>
+            Logistics intelligence <span className="text-accent">in action</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover our comprehensive logistics solutions and learn why global businesses trust us with their most important shipments.
+            Experience how our smart logistics platforms work together to streamline your supply chain operations and accelerate your business growth.
           </p>
         </div>
 
@@ -83,12 +83,12 @@ export default function VideoSection() {
                 <Button
                   onClick={togglePlayback}
                   size="lg"
-                  className="bg-white/90 hover:bg-white text-primary shadow-xl rounded-full w-20 h-20 group-hover:scale-110 transition-all duration-300"
+                  className="bg-white/90 hover:bg-white text-primary shadow-xl rounded-full w-16 h-16 sm:w-20 sm:h-20 group-hover:scale-110 transition-all duration-300"
                 >
                   {isPlaying ? (
-                    <Volume2 className="h-8 w-8" />
+                    <Volume2 className="h-6 w-6 sm:h-8 sm:w-8" />
                   ) : (
-                    <Play className="h-8 w-8 ml-1" />
+                    <Play className="h-6 w-6 sm:h-8 sm:w-8 ml-0.5 sm:ml-1" />
                   )}
                 </Button>
               </div>
