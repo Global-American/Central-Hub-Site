@@ -1,8 +1,18 @@
+/* 
+ * Global Styles - Tailwind CSS
+ * This file contains Tailwind CSS directives and custom styles
+ */
+
+/* Disable CSS validation for Tailwind directives */
+/* postcss-disable-next-line at-rule-no-unknown */
 @tailwind base;
-@tailwind components;
+/* postcss-disable-next-line at-rule-no-unknown */
+@tailwind components; 
+/* postcss-disable-next-line at-rule-no-unknown */
 @tailwind utilities;
 
-
+/* CSS configuration to suppress IDE warnings */
+/* @config './tailwind.config.ts' */
 
 @layer utilities {
   .text-balance {
@@ -80,13 +90,16 @@
     --sidebar-border: 214 60% 25%;
     --sidebar-ring: 219 100% 92%;
   }
-}
-
-@layer base {
   * {
+    /* postcss-disable-next-line at-rule-no-unknown */
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px; /* Account for fixed header */
+  }
   body {
+    /* postcss-disable-next-line at-rule-no-unknown */
     @apply bg-background text-foreground;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     -webkit-font-smoothing: antialiased;
@@ -118,5 +131,21 @@
     ::selection {
       background-color: rgba(235, 153, 60, 0.2);
     }
+  }
+
+  /* Infinite horizontal scrolling animation */
+  .animate-scroll-infinite {
+    animation: scroll-infinite 40s linear infinite;
+    will-change: transform;
+  }
+}
+
+/* Seamless infinite scroll animation */
+@keyframes scroll-infinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }

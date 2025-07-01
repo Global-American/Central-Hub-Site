@@ -128,9 +128,10 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
               <DialogFooter className="pt-4">
                 <Button
                   type="submit"
-                  className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-md hover:shadow-lg transition-shadow px-6 py-2.5"
+                  size="lg"
+                  className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6 py-3 text-base"
                 >
-                  Send Message &rarr;
+                  Send Message →
                 </Button>
               </DialogFooter>
             </form>

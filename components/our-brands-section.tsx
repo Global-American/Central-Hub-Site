@@ -45,10 +45,10 @@ export default function OurBrandsSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section ref={sectionRef} id="brands" className="py-20 md:py-28 bg-background">
+    <section ref={sectionRef} id="brands" className="py-24 md:py-32 lg:py-40 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-20 lg:mb-28">
           <Badge variant="secondary" className="mb-6 text-primary">
             <Building2 size={16} className="mr-2" />
             Our Services
@@ -63,7 +63,7 @@ export default function OurBrandsSection() {
         </div>
 
         {/* Stacked Brand Cards */}
-        <div className="relative max-w-5xl mx-auto space-y-16">
+        <div className="relative max-w-6xl xl:max-w-7xl mx-auto space-y-20 lg:space-y-24">
           {brands.map((brand, index) => (
             <div
               key={brand.id}
@@ -72,9 +72,9 @@ export default function OurBrandsSection() {
               <div className={`${brand.color}`}>
                 <div className="grid grid-cols-1 lg:grid-cols-2">
                   {/* Content Side */}
-                  <div className="p-6 sm:p-8 md:p-12 z-10 relative">
+                  <div className="p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 z-10 relative">
                     <div className={brand.textColor}>
-                      <div className="mb-6">
+                      <div className="mb-8 lg:mb-12">
                         <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
                           {brand.name}
                         </h3>
@@ -90,27 +90,60 @@ export default function OurBrandsSection() {
                       <Link href="#contact">
                         <Button 
                           variant="outline" 
-                          className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm"
+                          size="lg"
+                          className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 font-semibold"
                         >
-                          Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                          Learn More <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
                         </Button>
                       </Link>
                     </div>
                   </div>
                   
                   {/* Visual Side */}
-                  <div className="relative hidden lg:block h-full min-h-[320px]">
+                  <div className="relative hidden lg:block h-full min-h-[400px] xl:min-h-[500px]">
                     {/* Abstract Decoration */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="relative w-full h-full">
-                        <div className="absolute top-1/4 right-1/4 w-32 h-32 rounded-full border-4 border-white/10 backdrop-blur-sm"></div>
-                        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 rounded-full border-2 border-white/5"></div>
-                        <div className="absolute top-1/3 right-1/2 w-24 h-24 rounded-full bg-white/5 backdrop-blur-sm"></div>
+                        <div className="absolute top-1/4 right-1/4 w-40 h-40 xl:w-48 xl:h-48 rounded-full border-4 border-white/10 backdrop-blur-sm"></div>
+                        <div className="absolute bottom-1/4 right-1/3 w-56 h-56 xl:w-64 xl:h-64 rounded-full border-2 border-white/5"></div>
+                        <div className="absolute top-1/3 right-1/2 w-32 h-32 xl:w-40 xl:h-40 rounded-full bg-white/5 backdrop-blur-sm"></div>
                       </div>
                     </div>
                     
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/30"></div>
+                    
+                    {/* Caption Section */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/20 backdrop-blur-sm border-t border-white/10">
+                      <div className="px-6 py-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h5 className="text-white font-semibold text-sm mb-1">
+                              {brand.name === 'ShipItSmart' && 'International Shipping Platform'}
+                              {brand.name === 'FreightItSmart' && 'Heavy Cargo Management'}
+                              {brand.name === 'ReturnItSmart' && 'Reverse Logistics Solution'}
+                              {brand.name === 'FulfillItSmart' && 'Complete Order Fulfillment'}
+                            </h5>
+                            <p className="text-white/80 text-xs">
+                              {brand.name === 'ShipItSmart' && 'Global carrier network • Real-time tracking'}
+                              {brand.name === 'FreightItSmart' && 'Optimization algorithms • Cost reduction'}
+                              {brand.name === 'ReturnItSmart' && 'Return authorization • Value recovery'}
+                              {brand.name === 'FulfillItSmart' && 'Inventory management • Distribution'}
+                            </p>
+                          </div>
+                          <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            brand.name === 'ShipItSmart' || brand.name === 'ReturnItSmart'
+                              ? 'bg-orange-500/20 text-orange-200 border border-orange-400/30'
+                              : 'bg-blue-500/20 text-blue-200 border border-blue-400/30'
+                          }`}>
+                            {brand.name === 'ShipItSmart' && 'Global'}
+                            {brand.name === 'FreightItSmart' && 'Enterprise'}
+                            {brand.name === 'ReturnItSmart' && 'Smart'}
+                            {brand.name === 'FulfillItSmart' && 'Complete'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
