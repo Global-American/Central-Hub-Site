@@ -47,7 +47,7 @@ const slides = [
   }
 ]
 
-const SLIDE_DURATION = 15000 // 15 seconds
+const SLIDE_DURATION = 10000 // 10 seconds
 
 export default function HeroSection() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
@@ -55,28 +55,28 @@ export default function HeroSection() {
   const [progress, setProgress] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const slideTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const progressTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const progressAnimationRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(Date.now())
 
   // Function to start the slide timer
   const startSlideTimer = () => {
     if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-    if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
+    if (progressAnimationRef.current) cancelAnimationFrame(progressAnimationRef.current)
     
     startTimeRef.current = Date.now()
     setProgress(0)
     
-    // Start progress animation
-    const updateProgress = () => {
+    // Start progress animation with requestAnimationFrame for smooth updates
+    const animate = () => {
       const elapsed = Date.now() - startTimeRef.current
       const progressPercent = Math.min((elapsed / SLIDE_DURATION) * 100, 100)
       setProgress(progressPercent)
       
       if (progressPercent < 100 && !isPaused) {
-        progressTimerRef.current = setTimeout(updateProgress, 16) // ~60fps
+        progressAnimationRef.current = requestAnimationFrame(animate)
       }
     }
-    updateProgress()
+    animate()
     
     // Set slide change timer
     slideTimerRef.current = setTimeout(() => {
@@ -112,7 +112,7 @@ export default function HeroSection() {
   const handlePause = () => {
     setIsPaused(true)
     if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-    if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
+    if (progressAnimationRef.current) cancelAnimationFrame(progressAnimationRef.current)
   }
 
   const handleResume = () => {
@@ -121,14 +121,14 @@ export default function HeroSection() {
     const remaining = SLIDE_DURATION - elapsed
     
     if (remaining > 0) {
-      // Resume from where we left off
+      // Resume from where we left off using requestAnimationFrame
       const updateProgress = () => {
         const totalElapsed = Date.now() - startTimeRef.current
         const progressPercent = Math.min((totalElapsed / SLIDE_DURATION) * 100, 100)
         setProgress(progressPercent)
         
         if (progressPercent < 100 && !isPaused) {
-          progressTimerRef.current = setTimeout(updateProgress, 16)
+          progressAnimationRef.current = requestAnimationFrame(updateProgress)
         }
       }
       updateProgress()
@@ -145,7 +145,7 @@ export default function HeroSection() {
     
     return () => {
       if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-      if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
+      if (progressAnimationRef.current) cancelAnimationFrame(progressAnimationRef.current)
     }
   }, [])
 
@@ -221,7 +221,7 @@ export default function HeroSection() {
         {/* Slide indicators with labels */}
         <div className="flex items-center justify-center space-x-6">
           {slides.map((slide, index) => (
-            <div key={index} className="flex flex-col items-center space-y-2">
+            <div key={index} className="flex flex-col items-center space-y-2" data-slide={index}>
               {/* Circular progress indicator */}
               <button
                 onClick={() => goToSlide(index)}
@@ -249,9 +249,11 @@ export default function HeroSection() {
                       stroke="hsl(var(--accent))"
                       strokeWidth="2"
                       strokeLinecap="round"
-                      strokeDasharray="100"
-                      strokeDashoffset={100 - progress}
-                      className="transition-all duration-75 ease-linear"
+                      strokeDasharray={2 * Math.PI * 16}
+                      strokeDashoffset={2 * Math.PI * 16 * (1 - progress / 100)}
+                      style={{
+                        transition: 'stroke-dashoffset 0.1s ease-out'
+                      }}
                     />
                   )}
                 </svg>
@@ -285,3 +287,5 @@ export default function HeroSection() {
     </section>
   )
 }
+
+
