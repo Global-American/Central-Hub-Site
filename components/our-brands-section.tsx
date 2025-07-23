@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Building2 } from "lucide-react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import Image from "next/image"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -19,7 +20,8 @@ const brands = [
     tagline: "GLOBAL SHIPPING. SIMPLIFIED.",
     description: "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
-    textColor: "text-white"
+    textColor: "text-white",
+    image: ""
   },
   {
     id: 2,
@@ -27,7 +29,8 @@ const brands = [
     tagline: "FREIGHT MANAGEMENT. REINVENTED.",
     description: "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
-    textColor: "text-white"
+    textColor: "text-white",
+    image: "/images/frieghtitsmart-thumb.png"
   },
   {
     id: 3,
@@ -35,7 +38,8 @@ const brands = [
     tagline: "REVERSE LOGISTICS. PERFECTED.",
     description: "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
-    textColor: "text-white"
+    textColor: "text-white",
+    image: ""
   },
   {
     id: 4,
@@ -43,7 +47,8 @@ const brands = [
     tagline: "END-TO-END FULFILLMENT. EXCELLENCE.",
     description: "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
-    textColor: "text-white"
+    textColor: "text-white",
+    image: ""
   }
 ]
 
@@ -167,14 +172,40 @@ export default function OurBrandsSection() {
                   </div>
                 </div>
                 <div className="relative hidden lg:block h-full min-h-[400px]">
+                  {/* Brand Image Container */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative w-full h-full">
-                      <div className="absolute top-1/4 right-1/4 w-48 h-48 rounded-full border-4 border-white/10 backdrop-blur-sm animate-spin-slow"></div>
-                      <div className="absolute bottom-1/4 right-1/3 w-64 h-64 rounded-full border-2 border-white/5 animate-pulse"></div>
-                      <div className="absolute top-1/3 right-1/2 w-40 h-40 rounded-full bg-white/5 backdrop-blur-sm"></div>
+                    {brand.image ? (
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={brand.image}
+                          alt={`${brand.name} illustration`}
+                          fill
+                          className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                        />
+                        {/* Subtle overlay for better text readability */}
+                        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/5 to-black/20"></div>
+                      </div>
+                    ) : (
+                      // Fallback decorative elements if no image
+                      <div className="relative w-full h-full">
+                        <div className="absolute top-1/4 right-1/4 w-48 h-48 rounded-full border-4 border-white/10 backdrop-blur-sm animate-spin-slow"></div>
+                        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 rounded-full border-2 border-white/5 animate-pulse"></div>
+                        <div className="absolute top-1/3 right-1/2 w-40 h-40 rounded-full bg-white/5 backdrop-blur-sm"></div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Subtitle Section with Tagline */}
+                  <div className="absolute bottom-6 left-6 right-6 z-20">
+                    <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/20">
+                      <div className="text-center">
+                        <h4 className="text-white text-sm md:text-base font-bold tracking-tight leading-tight">
+                          {brand.tagline}
+                        </h4>
+                      </div>
                     </div>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/10 to-black/40"></div>
                 </div>
               </div>
             </div>

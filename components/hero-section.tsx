@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react"
 // Slideshow data with synchronized content
 const slides = [
   {
-    background: "bg-[url('/images/hero-variation-1/hero-2.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-holo/holo-shipit.png')] bg-cover bg-center bg-no-repeat",
     title: "Ship smart with",
     titleAccent: "ShipItSmart.",
     subtitle: "Global shipping",
@@ -16,7 +16,7 @@ const slides = [
     label: "Shipping"
   },
   {
-    background: "bg-[url('/images/hero-variation-1/hero-3.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-holo/holo-frieght.png')] bg-cover bg-center bg-no-repeat",
     title: "Smarter",
     titleAccent: "Freight.",
     subtitle: "Smoother",
@@ -26,7 +26,7 @@ const slides = [
     label: "Freight"
   },
   {
-    background: "bg-[url('/images/hero-variation-1/hero-4.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-holo/holo-returnit.png')] bg-cover bg-center bg-no-repeat",
     title: "Smart",
     titleAccent: "Returns.",
     subtitle: "Seamless",
@@ -36,7 +36,7 @@ const slides = [
     label: "Returns"
   },
   {
-    background: "bg-[url('/images/hero-variation-1/hero-5.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-holo/holo-fufillit.png')] bg-cover bg-center bg-no-repeat",
     title: "Smart Fulfilment",
     titleAccent: "for Growing",
     subtitle: "Brands",
@@ -47,7 +47,7 @@ const slides = [
   }
 ]
 
-const SLIDE_DURATION = 10000 // 10 seconds
+const SLIDE_DURATION = 15000 // 15 seconds
 
 export default function HeroSection() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
@@ -55,28 +55,28 @@ export default function HeroSection() {
   const [progress, setProgress] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const slideTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const progressAnimationRef = useRef<number | null>(null)
+  const progressTimerRef = useRef<NodeJS.Timeout | null>(null)
   const startTimeRef = useRef<number>(Date.now())
 
   // Function to start the slide timer
   const startSlideTimer = () => {
     if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-    if (progressAnimationRef.current) cancelAnimationFrame(progressAnimationRef.current)
+    if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
     
     startTimeRef.current = Date.now()
     setProgress(0)
     
-    // Start progress animation with requestAnimationFrame for smooth updates
-    const animate = () => {
+    // Start progress animation
+    const updateProgress = () => {
       const elapsed = Date.now() - startTimeRef.current
       const progressPercent = Math.min((elapsed / SLIDE_DURATION) * 100, 100)
       setProgress(progressPercent)
       
       if (progressPercent < 100 && !isPaused) {
-        progressAnimationRef.current = requestAnimationFrame(animate)
+        progressTimerRef.current = setTimeout(updateProgress, 16) // ~60fps
       }
     }
-    animate()
+    updateProgress()
     
     // Set slide change timer
     slideTimerRef.current = setTimeout(() => {
@@ -112,7 +112,7 @@ export default function HeroSection() {
   const handlePause = () => {
     setIsPaused(true)
     if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-    if (progressAnimationRef.current) cancelAnimationFrame(progressAnimationRef.current)
+    if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
   }
 
   const handleResume = () => {
@@ -121,14 +121,14 @@ export default function HeroSection() {
     const remaining = SLIDE_DURATION - elapsed
     
     if (remaining > 0) {
-      // Resume from where we left off using requestAnimationFrame
+      // Resume from where we left off
       const updateProgress = () => {
         const totalElapsed = Date.now() - startTimeRef.current
         const progressPercent = Math.min((totalElapsed / SLIDE_DURATION) * 100, 100)
         setProgress(progressPercent)
         
         if (progressPercent < 100 && !isPaused) {
-          progressAnimationRef.current = requestAnimationFrame(updateProgress)
+          progressTimerRef.current = setTimeout(updateProgress, 16)
         }
       }
       updateProgress()
@@ -145,7 +145,7 @@ export default function HeroSection() {
     
     return () => {
       if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-      if (progressAnimationRef.current) cancelAnimationFrame(progressAnimationRef.current)
+      if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
     }
   }, [])
 
@@ -221,7 +221,7 @@ export default function HeroSection() {
         {/* Slide indicators with labels */}
         <div className="flex items-center justify-center space-x-6">
           {slides.map((slide, index) => (
-            <div key={index} className="flex flex-col items-center space-y-2" data-slide={index}>
+            <div key={index} className="flex flex-col items-center space-y-2">
               {/* Circular progress indicator */}
               <button
                 onClick={() => goToSlide(index)}
@@ -249,11 +249,9 @@ export default function HeroSection() {
                       stroke="hsl(var(--accent))"
                       strokeWidth="2"
                       strokeLinecap="round"
-                      strokeDasharray={2 * Math.PI * 16}
-                      strokeDashoffset={2 * Math.PI * 16 * (1 - progress / 100)}
-                      style={{
-                        transition: 'stroke-dashoffset 0.1s ease-out'
-                      }}
+                      strokeDasharray="100"
+                      strokeDashoffset={100 - progress}
+                      className="transition-all duration-75 ease-linear"
                     />
                   )}
                 </svg>
@@ -287,5 +285,3 @@ export default function HeroSection() {
     </section>
   )
 }
-
-

@@ -3,9 +3,10 @@ import HeroSection from "@/components/hero-section"
 import VideoSection from "@/components/video-section"
 import OurBrandsSection from "@/components/our-brands-section"
 import TestimonialsSection from "@/components/testimonials-section"
+import WarehouseLocationsSection from "@/components/warehouse-locations-section"
 import ContactSection from "@/components/contact-section"
 import Footer from "@/components/footer"
-import { Package, Ship, MapPin, Plane } from "lucide-react"
+import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react"
 
 // Horizontal Icon Divider Component with Infinite Animation
 function HorizontalDivider({ Icon, className = "" }: { Icon: React.ComponentType<any>, className?: string }) {
@@ -45,6 +46,8 @@ export default function GlobalAmericanLandingPage() {
         <HorizontalDivider Icon={Plane} />
         <TestimonialsSection />
         <HorizontalDivider Icon={MapPin} />
+        <WarehouseLocationsSection />
+        <HorizontalDivider Icon={Warehouse} />
         <ContactSection />
       </main>
       <Footer />
