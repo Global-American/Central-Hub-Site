@@ -52,37 +52,13 @@ const solutions = [
 
 export default function HeaderNav() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isGetStartedDropdownOpen, setIsGetStartedDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isMobileSolutionsOpen, setIsMobileSolutionsOpen] = useState(false)
   const [isMobileGetStartedOpen, setIsMobileGetStartedOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
   const getStartedDropdownRef = useRef<HTMLDivElement>(null)
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Dropdown management with delay
-  const handleDropdownOpen = () => {
-    if (dropdownTimeoutRef.current) {
-      clearTimeout(dropdownTimeoutRef.current)
-      dropdownTimeoutRef.current = null
-    }
-    setIsDropdownOpen(true)
-    setIsGetStartedDropdownOpen(false)
-  }
 
-  const handleDropdownClose = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setIsDropdownOpen(false)
-    }, 150) // 150ms delay
-  }
-
-  const handleDropdownEnter = () => {
-    if (dropdownTimeoutRef.current) {
-      clearTimeout(dropdownTimeoutRef.current)
-      dropdownTimeoutRef.current = null
-    }
-  }
 
   // Smooth scroll function with better easing
   const smoothScrollTo = (elementId: string) => {
@@ -116,9 +92,6 @@ export default function HeaderNav() {
     
     // Close dropdown when clicking outside
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false)
-      }
       if (getStartedDropdownRef.current && !getStartedDropdownRef.current.contains(event.target as Node)) {
         setIsGetStartedDropdownOpen(false)
       }
@@ -154,71 +127,6 @@ export default function HeaderNav() {
             />
           </Link>
           <nav className="hidden md:flex items-center space-x-8">
-            {/* Solutions Dropdown */}
-            <div 
-              ref={dropdownRef}
-              className="relative"
-              onMouseEnter={handleDropdownOpen}
-              onMouseLeave={handleDropdownClose}
-            >
-              <button
-                className="text-base font-medium text-muted-foreground hover:text-foreground transition-all duration-200 flex items-center py-2 group"
-              >
-                Solutions
-                <ChevronDown className={`h-4 w-4 ml-1 transition-all duration-300 group-hover:text-accent ${isDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {/* Full-width Solutions Dropdown */}
-              <div 
-                className={`fixed left-0 right-0 top-[80px] z-50 transition-all duration-300 ${
-                  isDropdownOpen 
-                    ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
-                    : 'opacity-0 invisible translate-y-2 pointer-events-none'
-                }`}
-                onMouseEnter={handleDropdownEnter}
-                onMouseLeave={handleDropdownClose}
-              >
-                <div className="w-full bg-white shadow-xl border-t border-gray-100 backdrop-blur-sm">
-                  <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Choose Your Solution</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                      {solutions.map((solution, index) => (
-                        <button
-                          key={solution.name}
-                          onClick={() => {
-                            handleNavClick(solution.href, () => setIsDropdownOpen(false))
-                          }}
-                          className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 border border-transparent hover:border-accent/20 hover:shadow-lg"
-                          style={{ transitionDelay: `${index * 50}ms` }}
-                        >
-                          <div>
-                            <h4 className="text-lg font-bold text-foreground group-hover:text-accent transition-colors duration-200 mb-2">
-                              {solution.name}
-                            </h4>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              {solution.title}
-                            </p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-                      <button
-                        onClick={() => {
-                          handleNavClick("#contact", () => setIsDropdownOpen(false))
-                        }}
-                        className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-medium transition-all duration-200 text-base group bg-accent/10 hover:bg-accent/20 px-6 py-3 rounded-lg"
-                      >
-                        Contact us to learn more about our solutions
-                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
             <button
               onClick={() => handleNavClick("#about")}
               className="text-base font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2"
@@ -227,11 +135,24 @@ export default function HeaderNav() {
                   clearTimeout(dropdownTimeoutRef.current)
                   dropdownTimeoutRef.current = null
                 }
-                setIsDropdownOpen(false)
                 setIsGetStartedDropdownOpen(false)
               }}
             >
               About
+            </button>
+            
+            <button
+              onClick={() => handleNavClick("#brands")}
+              className="text-base font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2"
+              onMouseEnter={() => {
+                if (dropdownTimeoutRef.current) {
+                  clearTimeout(dropdownTimeoutRef.current)
+                  dropdownTimeoutRef.current = null
+                }
+                setIsGetStartedDropdownOpen(false)
+              }}
+            >
+              Our Solutions
             </button>
             
             <button
@@ -242,11 +163,24 @@ export default function HeaderNav() {
                   clearTimeout(dropdownTimeoutRef.current)
                   dropdownTimeoutRef.current = null
                 }
-                setIsDropdownOpen(false)
                 setIsGetStartedDropdownOpen(false)
               }}
             >
               Testimonials
+            </button>
+            
+            <button
+              onClick={() => handleNavClick("#warehouse-locations")}
+              className="text-base font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2"
+              onMouseEnter={() => {
+                if (dropdownTimeoutRef.current) {
+                  clearTimeout(dropdownTimeoutRef.current)
+                  dropdownTimeoutRef.current = null
+                }
+                setIsGetStartedDropdownOpen(false)
+              }}
+            >
+              Locations
             </button>
             
             <button
@@ -257,7 +191,6 @@ export default function HeaderNav() {
                   clearTimeout(dropdownTimeoutRef.current)
                   dropdownTimeoutRef.current = null
                 }
-                setIsDropdownOpen(false)
                 setIsGetStartedDropdownOpen(false)
               }}
             >
@@ -274,7 +207,6 @@ export default function HeaderNav() {
                   dropdownTimeoutRef.current = null
                 }
                 setIsGetStartedDropdownOpen(true)
-                setIsDropdownOpen(false)
               }}
               onMouseLeave={() => setIsGetStartedDropdownOpen(false)}
             >
@@ -362,52 +294,6 @@ export default function HeaderNav() {
         <div className="container mx-auto px-4 py-6 space-y-6">
           {/* Navigation Links */}
           <div className="space-y-4">
-            {/* Mobile Solutions */}
-            <div className="space-y-3">
-              <button
-                onClick={() => setIsMobileSolutionsOpen(!isMobileSolutionsOpen)}
-                className="flex items-center w-full text-left"
-              >
-                <h4 className="text-lg font-semibold text-foreground">Solutions</h4>
-                <ChevronDown className={`h-5 w-5 text-muted-foreground ml-1 transition-transform duration-200 ${
-                  isMobileSolutionsOpen ? 'rotate-180' : ''
-                }`} />
-              </button>
-              
-              <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                isMobileSolutionsOpen 
-                  ? 'max-h-96 opacity-100' 
-                  : 'max-h-0 opacity-0'
-              }`}>
-                <div className="space-y-3 pl-4 pt-2">
-                  {solutions.map((solution) => (
-                    <button
-                      key={solution.name}
-                      onClick={() => {
-                        handleNavClick(solution.href, () => {
-                        setIsMobileMenuOpen(false)
-                        setIsMobileSolutionsOpen(false)
-                        })
-                      }}
-                      className="flex items-center gap-3 py-2 w-full text-left hover:bg-gray-50 rounded-lg transition-all duration-200"
-                    >
-                      <div className={`flex-shrink-0 p-2 rounded-md text-white bg-gradient-to-br ${solution.color}`}>
-                        {solution.icon}
-                      </div>
-                      <div>
-                        <h5 className="text-base font-bold text-foreground">
-                          {solution.name}
-                        </h5>
-                        <p className="text-sm text-muted-foreground">
-                          {solution.title}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
             <button
               onClick={() => handleNavClick("#about", () => setIsMobileMenuOpen(false))}
               className="block text-lg font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2 w-full text-left"
@@ -416,10 +302,24 @@ export default function HeaderNav() {
             </button>
             
             <button
+              onClick={() => handleNavClick("#brands", () => setIsMobileMenuOpen(false))}
+              className="block text-lg font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2 w-full text-left"
+            >
+              Our Solutions
+            </button>
+            
+            <button
               onClick={() => handleNavClick("#testimonials", () => setIsMobileMenuOpen(false))}
               className="block text-lg font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2 w-full text-left"
             >
               Testimonials
+            </button>
+            
+            <button
+              onClick={() => handleNavClick("#warehouse-locations", () => setIsMobileMenuOpen(false))}
+              className="block text-lg font-medium text-muted-foreground hover:text-[#EB993C] transition-all duration-200 py-2 w-full text-left"
+            >
+              Locations
             </button>
             
             <button

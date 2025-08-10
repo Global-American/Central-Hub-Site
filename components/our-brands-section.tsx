@@ -21,7 +21,7 @@ const brands = [
     description: "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
-    image: ""
+    image: "/images/card-thumbnails/holo-shipit.png"
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const brands = [
     description: "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
-    image: "/images/frieghtitsmart-thumb.png"
+    image: "/images/card-thumbnails/holo-frieghtit.png"
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ const brands = [
     description: "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
-    image: ""
+    image: "/images/card-thumbnails/returnit.png"
   },
   {
     id: 4,
@@ -48,31 +48,16 @@ const brands = [
     description: "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
-    image: ""
+    image: "/images/card-thumbnails/holo-fufillit.png"
   }
 ]
 
-// Static noise SVG for a subtle texture
-const noiseSVG = `
-  <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' opacity='0.05'>
-    <filter id='noise'>
-      <feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/>
-    </filter>
-    <rect width='100%' height='100%' filter='url(#noise)'/>
-  </svg>
-`
+
 
 export default function OurBrandsSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const cardsContainerRef = useRef<HTMLDivElement>(null)
-  const [noiseUrl, setNoiseUrl] = useState("")
 
-  useEffect(() => {
-    // Generate noise URL on client side only to avoid hydration mismatch
-    if (typeof window !== "undefined") {
-      setNoiseUrl(`data:image/svg+xml;base64,${window.btoa(noiseSVG)}`)
-    }
-  }, [])
 
   const handleLearnMoreClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -136,16 +121,7 @@ export default function OurBrandsSection() {
           >
             {/* Inner wrapper for border and styling */}
             <div className={`relative w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl ${brand.color} border border-white/10`}>
-              {/* Noise texture overlay - only render if noiseUrl is available */}
-              {noiseUrl && (
-                <div 
-                  className="absolute inset-0" 
-                  style={{ 
-                    backgroundImage: `url(${noiseUrl})`,
-                    zIndex: 0 
-                  }}
-                />
-              )}
+
 
               <div className="grid grid-cols-1 lg:grid-cols-2 relative z-10">
                 <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
@@ -175,7 +151,7 @@ export default function OurBrandsSection() {
                   {/* Brand Image Container */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     {brand.image ? (
-                      <div className="relative w-full h-full">
+                      <div className={`relative ${brand.name === 'ReturnItSmart' ? 'w-3/4 h-3/4' : 'w-full h-full'}`}>
                         <Image
                           src={brand.image}
                           alt={`${brand.name} illustration`}
@@ -183,8 +159,7 @@ export default function OurBrandsSection() {
                           className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                           sizes="(max-width: 1024px) 100vw, 50vw"
                         />
-                        {/* Subtle overlay for better text readability */}
-                        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/5 to-black/20"></div>
+
                       </div>
                     ) : (
                       // Fallback decorative elements if no image

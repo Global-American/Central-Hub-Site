@@ -67,7 +67,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
             
             {/* Logo and Partnership Section */}
             <div className={`lg:col-span-1 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
@@ -140,52 +140,43 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Contact Info - Compact */}
-            <div className={`lg:col-span-1 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`} style={{ transitionDelay: "300ms" }}>
-              <h4 className="text-base font-semibold mb-3">
-                <span className="text-accent">Contact</span> Info
-              </h4>
-              <div className="space-y-2">
-                <div className="flex items-start space-x-2">
-                  <MapPin className="h-4 w-4 text-accent mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-foreground">Global American LLC</p>
-                    <p className="text-sm text-muted-foreground">
-                      1234 Logistics Avenue<br />
-                      Miami, FL 33101
-                    </p>
+            {/* Global Locations & Contact - Two Column Layout */}
+            <div className={`lg:col-span-2 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`} style={{ transitionDelay: "300ms" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+                {/* Global Locations Column */}
+                <div>
+                  <h4 className="text-base font-semibold mb-3">
+                    <span className="text-accent">Global</span> Locations
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex items-start space-x-2">
+                      <MapPin className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-muted-foreground leading-relaxed">
+                        <p className="font-medium text-foreground">🇺🇸 New York, USA</p>
+                        <p className="font-medium text-foreground">🇬🇧 Belfast, Northern Ireland</p>
+                        <p className="font-medium text-foreground">🇮🇪 Dublin, Republic of Ireland</p>
+                        <p className="font-medium text-foreground">🇬🇧 Manchester, United Kingdom</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4 text-accent flex-shrink-0" />
-                  <span className="text-sm text-muted-foreground">+1 (555) 123-4567</span>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4 text-accent flex-shrink-0" />
-                  <span className="text-sm text-muted-foreground">info@globalamerican.com</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Google Map - Compact */}
-            <div className={`lg:col-span-1 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`} style={{ transitionDelay: "400ms" }}>
-              <h4 className="text-base font-semibold mb-3">
-                <span className="text-accent">Find</span> Us
-              </h4>
-              <div className="relative rounded-lg overflow-hidden shadow-md border border-accent/10 hover:shadow-lg transition-shadow duration-300">
-                <div className="aspect-video bg-gradient-to-br from-accent/5 to-accent/10">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.2758089830347!2d-80.19659892470353!3d25.776450007672104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b48425b6eb65%3A0x6d9b8d4e5b6f4b8e!2sMiami%2C%20FL%2C%20USA!5e0!3m2!1sen!2sus!4v1645123456789!5m2!1sen!2sus"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="grayscale hover:grayscale-0 transition-all duration-500"
-                  />
+                {/* Contact Us Column */}
+                <div>
+                  <h4 className="text-base font-semibold mb-3">
+                    <span className="text-accent">Contact</span> Us
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Phone className="h-4 w-4 text-accent flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">+1 (555) 123-4567</span>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Mail className="h-4 w-4 text-accent flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">info@globalamerican.com</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
