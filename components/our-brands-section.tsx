@@ -21,7 +21,7 @@ const brands = [
     description: "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
-    image: "/images/card-thumbnails/holo-shipit.png"
+    image: "/images/card-thumbnails/smart-shipit.png"
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const brands = [
     description: "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
-    image: "/images/card-thumbnails/holo-frieghtit.png"
+    image: "/images/card-thumbnails/smart-freight.png"
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ const brands = [
     description: "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
-    image: "/images/card-thumbnails/holo-fufillit.png"
+    image: "/images/card-thumbnails/smart-fufillit.png"
   }
 ]
 
