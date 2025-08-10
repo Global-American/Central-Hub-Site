@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react"
 // Slideshow data with synchronized content
 const slides = [
   {
-    background: "bg-[url('/images/hero-variation-holo/holo-shipit.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-shipit.png')] bg-cover bg-center bg-no-repeat",
     title: "Ship smart with",
     titleAccent: "ShipItSmart.",
     subtitle: "Global shipping",
@@ -16,7 +16,7 @@ const slides = [
     label: "Shipping"
   },
   {
-    background: "bg-[url('/images/hero-variation-holo/holo-frieght.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-frieght.png')] bg-cover bg-center bg-no-repeat",
     title: "Smarter",
     titleAccent: "Freight.",
     subtitle: "Smoother",
@@ -26,7 +26,7 @@ const slides = [
     label: "Freight"
   },
   {
-    background: "bg-[url('/images/hero-variation-holo/holo-returnit.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-returnit.png')] bg-cover bg-center bg-no-repeat",
     title: "Smart",
     titleAccent: "Returns.",
     subtitle: "Seamless",
@@ -36,7 +36,7 @@ const slides = [
     label: "Returns"
   },
   {
-    background: "bg-[url('/images/hero-variation-holo/holo-fufillit.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-fufillit.png')] bg-cover bg-center bg-no-repeat",
     title: "Smart Fulfilment",
     titleAccent: "for Growing",
     subtitle: "Brands",
