@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react"
 // Slideshow data with synchronized content
 const slides = [
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-shipit.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-shipit.png')] bg-cover bg-top bg-no-repeat",
     title: "Ship smart with",
     titleAccent: "ShipItSmart.",
     subtitle: "Global shipping",
@@ -16,32 +16,32 @@ const slides = [
     label: "Shipping"
   },
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-frieght.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-frieght.png')] bg-cover bg-top bg-no-repeat",
     title: "Smarter",
     titleAccent: "Freight.",
-    subtitle: "Smoother",
-    subtitleAccent: "Journeys.",
-    description: "Experience a new level of transparency, speed, and service in global logistics.",
+    subtitle: "Faster",
+    subtitleAccent: "Deliveries.",
+    description: "Transparent, fast global logistics.",
     textColor: "text-white",
     label: "Freight"
   },
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-returnit.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-returnit.png')] bg-cover bg-top bg-no-repeat",
     title: "Smart",
     titleAccent: "Returns.",
-    subtitle: "Seamless",
-    subtitleAccent: "Experience.",
-    description: "Make returns hassle-free for customers — and efficient, trackable, and cost-effective for you.",
+    subtitle: "Hassle-free",
+    subtitleAccent: "Process.",
+    description: "Efficient, trackable returns.",
     textColor: "text-white",
     label: "Returns"
   },
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-fufillit.png')] bg-cover bg-center bg-no-repeat",
+    background: "bg-[url('/images/hero-variation-smart/smart-fufillit.png')] bg-cover bg-top bg-no-repeat",
     title: "Smart Fulfilment",
     titleAccent: "for Growing",
-    subtitle: "Brands",
-    subtitleAccent: "that scale.",
-    description: "Seamless storage, picking, packing, and shipping — built to scale with your business.",
+    subtitle: "E-Commerce",
+    subtitleAccent: "Brands.",
+    description: "Storage, picking, packing, shipping.",
     textColor: "text-white",
     label: "Fulfillment"
   }
@@ -170,13 +170,13 @@ export default function HeroSection() {
         />
       ))}
       
-      {/* Subtle overlay */}
-      <div className="absolute inset-0 bg-[#14529f]/10 z-10" />
+      {/* Dark overlay for improved text contrast */}
+      <div className="absolute inset-0 bg-black/40 z-10" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 flex items-center h-full">
         <div className="flex flex-col items-start text-left space-y-6 max-w-2xl">
           {/* Main title with animations */}
-          <h1 className={`text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight ${slides[currentSlideIndex].textColor} transition-all duration-500 ease-in-out ${
+          <h1 className={`text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight ${slides[currentSlideIndex].textColor} transition-all duration-500 ease-in-out ${
             titleAnimation === "animate-in" 
               ? "opacity-100 translate-y-0 transform" 
               : "opacity-0 translate-y-4 transform"
