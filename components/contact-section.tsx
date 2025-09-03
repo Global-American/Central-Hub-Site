@@ -1,131 +1,146 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useState, useEffect, useRef } from "react"
-import { Send, Building2, Truck, Ship, Package, RotateCcw } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useState, useEffect, useRef } from "react";
+import { Send, Building2, Truck, Ship, Package, RotateCcw } from "lucide-react";
 
 const brands = [
   {
     id: "shipitsmart",
     name: "ShipItSmart",
     description: "Global Shipping Simplified",
-    icon: <Ship className="h-4 w-4" />
+    icon: <Ship className="h-4 w-4" />,
   },
   {
-    id: "freightitsmart", 
+    id: "freightitsmart",
     name: "FreightItSmart",
     description: "Freight Management Reinvented",
-    icon: <Truck className="h-4 w-4" />
+    icon: <Truck className="h-4 w-4" />,
   },
   {
     id: "returnitsmart",
-    name: "ReturnItSmart", 
+    name: "ReturnItSmart",
     description: "Reverse Logistics Perfected",
-    icon: <RotateCcw className="h-4 w-4" />
+    icon: <RotateCcw className="h-4 w-4" />,
   },
   {
     id: "fulfillitsmart",
     name: "FulfillItSmart",
-    description: "End-to-End Fulfillment Excellence", 
-    icon: <Package className="h-4 w-4" />
-  }
-]
+    description: "End-to-End Fulfillment Excellence",
+    icon: <Package className="h-4 w-4" />,
+  },
+];
 
 export default function ContactSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isVisible, setIsVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  //just making a comment so i can deploy lmao
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     company: "",
     message: "",
-    selectedBrands: [] as string[]
-  })
-  const sectionRef = useRef<HTMLElement>(null)
+    selectedBrands: [] as string[],
+  });
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
+          setIsVisible(true);
         }
       },
-      { threshold: 0.3 },
-    )
+      { threshold: 0.3 }
+    );
 
     if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+      observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleBrandSelection = (brandId: string, checked: boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      selectedBrands: checked 
+      selectedBrands: checked
         ? [...prev.selectedBrands, brandId]
-        : prev.selectedBrands.filter(id => id !== brandId)
-    }))
-  }
+        : prev.selectedBrands.filter((id) => id !== brandId),
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
+    e.preventDefault();
+    setIsSubmitting(true);
+
     // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     // Reset form
-    setFormData({ 
-      name: "", 
-      email: "", 
+    setFormData({
+      name: "",
+      email: "",
       phone: "",
-      company: "", 
+      company: "",
       message: "",
-      selectedBrands: []
-    })
-    setIsSubmitting(false)
-    
+      selectedBrands: [],
+    });
+    setIsSubmitting(false);
+
     // Here you would typically send the data to your backend
-    console.log("Form submitted:", formData)
-  }
+    console.log("Form submitted:", formData);
+  };
 
   return (
-    <section ref={sectionRef} id="contact" className="py-20 md:py-28 lg:py-36 bg-background">
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="py-20 md:py-28 lg:py-36 bg-background"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div
-          className={`text-center mb-12 lg:mb-20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          className={`text-center mb-12 lg:mb-20 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
         >
-          <Badge variant="outline" className="text-xs border-accent text-accent bg-accent/10 mb-4">
+          <Badge
+            variant="outline"
+            className="text-xs border-accent text-accent bg-accent/10 mb-4"
+          >
             Get Started
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Let's <span className="text-accent">connect</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Tell us about your logistics needs and we'll get back to you within 2 hours.
+            Tell us about your logistics needs and we'll get back to you within
+            2 hours.
           </p>
         </div>
 
         {/* Contact Form Section */}
         <div
-          className={`max-w-5xl lg:max-w-6xl mx-auto transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          className={`max-w-5xl lg:max-w-6xl mx-auto transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
           style={{ transitionDelay: "100ms" }}
         >
           <div className="bg-[#f6fdfe] rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16">
@@ -133,7 +148,10 @@ export default function ContactSection() {
               {/* Name and Company Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
                 <div className="space-y-3">
-                  <Label htmlFor="name" className="text-base lg:text-lg font-medium text-foreground">
+                  <Label
+                    htmlFor="name"
+                    className="text-base lg:text-lg font-medium text-foreground"
+                  >
                     Full Name *
                   </Label>
                   <Input
@@ -147,9 +165,12 @@ export default function ContactSection() {
                     placeholder="Enter your full name"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
-                  <Label htmlFor="company" className="text-base lg:text-lg font-medium text-foreground">
+                  <Label
+                    htmlFor="company"
+                    className="text-base lg:text-lg font-medium text-foreground"
+                  >
                     Company Name
                   </Label>
                   <Input
@@ -167,7 +188,10 @@ export default function ContactSection() {
               {/* Phone and Email Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
                 <div className="space-y-3">
-                  <Label htmlFor="phone" className="text-base lg:text-lg font-medium text-foreground">
+                  <Label
+                    htmlFor="phone"
+                    className="text-base lg:text-lg font-medium text-foreground"
+                  >
                     Phone Number
                   </Label>
                   <Input
@@ -182,7 +206,10 @@ export default function ContactSection() {
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="email" className="text-base lg:text-lg font-medium text-foreground">
+                  <Label
+                    htmlFor="email"
+                    className="text-base lg:text-lg font-medium text-foreground"
+                  >
                     Email Address *
                   </Label>
                   <Input
@@ -209,7 +236,7 @@ export default function ContactSection() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Select the services you'd like to learn more about (optional)
                 </p>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {brands.map((brand) => (
                     <div
@@ -220,7 +247,9 @@ export default function ContactSection() {
                         <Checkbox
                           id={brand.id}
                           checked={formData.selectedBrands.includes(brand.id)}
-                          onCheckedChange={(checked) => handleBrandSelection(brand.id, checked as boolean)}
+                          onCheckedChange={(checked) =>
+                            handleBrandSelection(brand.id, checked as boolean)
+                          }
                           className="mt-0.5 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
                         />
                         <div className="flex-1 min-w-0">
@@ -229,9 +258,7 @@ export default function ContactSection() {
                             className="cursor-pointer block"
                           >
                             <div className="flex items-center gap-2 mb-1">
-                              <div className="text-accent">
-                                {brand.icon}
-                              </div>
+                              <div className="text-accent">{brand.icon}</div>
                               <span className="font-medium text-foreground text-sm lg:text-base group-hover:text-accent transition-colors">
                                 {brand.name}
                               </span>
@@ -249,7 +276,10 @@ export default function ContactSection() {
 
               {/* Message Field */}
               <div className="space-y-3">
-                <Label htmlFor="message" className="text-base lg:text-lg font-medium text-foreground">
+                <Label
+                  htmlFor="message"
+                  className="text-base lg:text-lg font-medium text-foreground"
+                >
                   Message *
                 </Label>
                 <Textarea
@@ -290,5 +320,5 @@ export default function ContactSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
