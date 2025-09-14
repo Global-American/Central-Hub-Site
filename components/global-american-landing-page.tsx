@@ -1,17 +1,24 @@
-import HeaderNav from "@/components/header-nav"
-import HeroSection from "@/components/hero-section"
-import VideoSection from "@/components/video-section"
-import OurBrandsSection from "@/components/our-brands-section"
-import TestimonialsSection from "@/components/testimonials-section"
-import WarehouseLocationsSection from "@/components/warehouse-locations-section"
-import ContactSection from "@/components/contact-section"
-import Footer from "@/components/footer"
-import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react"
+import HeaderNav from "@/components/header-nav";
+import HeroSection from "@/components/hero-section";
+import VideoSection from "@/components/video-section";
+import OurBrandsSection from "@/components/our-brands-section";
+import TestimonialsSection from "@/components/testimonials-section";
+import WarehouseLocationsSection from "@/components/warehouse-locations-section";
+import Footer from "@/components/footer";
+import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react";
 
 // Horizontal Icon Divider Component with Infinite Animation
-function HorizontalDivider({ Icon, className = "" }: { Icon: React.ComponentType<any>, className?: string }) {
+function HorizontalDivider({
+  Icon,
+  className = "",
+}: {
+  Icon: React.ComponentType<any>;
+  className?: string;
+}) {
   return (
-    <div className={`py-12 bg-[#f6fdfe] border-t border-b border-muted/30 overflow-hidden ${className}`}>
+    <div
+      className={`py-12 bg-[#f6fdfe] border-t border-b border-muted/30 overflow-hidden ${className}`}
+    >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
         <div className="flex items-center animate-scroll-infinite opacity-60">
@@ -30,7 +37,7 @@ function HorizontalDivider({ Icon, className = "" }: { Icon: React.ComponentType
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function GlobalAmericanLandingPage() {
@@ -48,9 +55,8 @@ export default function GlobalAmericanLandingPage() {
         <HorizontalDivider Icon={MapPin} />
         <WarehouseLocationsSection />
         <HorizontalDivider Icon={Warehouse} />
-        <ContactSection />
       </main>
       <Footer />
     </div>
-  )
+  );
 }
