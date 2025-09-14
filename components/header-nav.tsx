@@ -159,71 +159,115 @@ export default function HeaderNav() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className={`text-base font-medium transition-all duration-200 py-2 relative ${
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
                 isActiveLink("/")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Home
+              {/* Active underline */}
               {isActiveLink("/") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/#services"
-              className={`text-base font-medium transition-all duration-200 py-2 relative ${
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
                 isActiveLink("/#services")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Services
+              {/* Active underline */}
               {isActiveLink("/#services") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/#services") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/#integrations"
-              className={`text-base font-medium transition-all duration-200 py-2 relative ${
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
                 isActiveLink("/#integrations")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Integrations
+              {/* Active underline */}
               {isActiveLink("/#integrations") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/#integrations") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/about"
-              className={`text-base font-medium transition-all duration-200 py-2 relative ${
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
                 isActiveLink("/about")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               About Us
+              {/* Active underline */}
               {isActiveLink("/about") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/about") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/contact"
-              className={`text-base font-medium transition-all duration-200 py-2 relative ${
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
                 isActiveLink("/contact")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Contact Us
+              {/* Active underline */}
               {isActiveLink("/contact") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/contact") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/contact-v2"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
+                isActiveLink("/contact-v2")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              Contact Us v2
+              {/* Active underline */}
+              {isActiveLink("/contact-v2") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/contact-v2") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
@@ -333,45 +377,60 @@ export default function HeaderNav() {
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
                 isActiveLink("/")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Home
+              {/* Active underline */}
               {isActiveLink("/") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/#services"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
                 isActiveLink("/#services")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Services
+              {/* Active underline */}
               {isActiveLink("/#services") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/#services") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/#integrations"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
                 isActiveLink("/#integrations")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Integrations
+              {/* Active underline */}
               {isActiveLink("/#integrations") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/#integrations") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
@@ -408,30 +467,60 @@ export default function HeaderNav() {
             <Link
               href="/about"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
                 isActiveLink("/about")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               About Us
+              {/* Active underline */}
               {isActiveLink("/about") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/about") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
                 isActiveLink("/contact")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
               }`}
             >
               Contact Us
+              {/* Active underline */}
               {isActiveLink("/contact") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/contact") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/contact-v2"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
+                isActiveLink("/contact-v2")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              Contact Us v2
+              {/* Active underline */}
+              {isActiveLink("/contact-v2") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/contact-v2") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
