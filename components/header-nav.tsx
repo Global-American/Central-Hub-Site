@@ -70,6 +70,7 @@ export default function HeaderNav() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginDropdownOpen, setIsLoginDropdownOpen] = useState(false);
   const [isMobileLoginOpen, setIsMobileLoginOpen] = useState(false);
+  const [currentHash, setCurrentHash] = useState("");
   const loginDropdownRef = useRef<HTMLDivElement>(null);
 
   // Function to check if a navigation item is active
@@ -78,11 +79,7 @@ export default function HeaderNav() {
       return pathname === "/";
     }
     if (href.startsWith("/#")) {
-      return (
-        pathname === "/" &&
-        typeof window !== "undefined" &&
-        window.location.hash === href.substring(1)
-      );
+      return pathname === "/" && currentHash === href.substring(1);
     }
     return pathname === href;
   };
@@ -107,6 +104,7 @@ export default function HeaderNav() {
   const handleNavClick = (href: string, callback?: () => void) => {
     if (href.startsWith("#")) {
       smoothScrollTo(href);
+      setCurrentHash(href);
     }
     if (callback) {
       callback();
@@ -117,6 +115,14 @@ export default function HeaderNav() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+
+    // Handle hash changes for client-side navigation
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    // Initialize hash on mount
+    setCurrentHash(window.location.hash);
 
     // Close dropdown when clicking outside
     const handleClickOutside = (event: MouseEvent) => {
@@ -129,10 +135,12 @@ export default function HeaderNav() {
     };
 
     window.addEventListener("scroll", handleScroll);
+    window.addEventListener("hashchange", handleHashChange);
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("hashchange", handleHashChange);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -267,6 +275,25 @@ export default function HeaderNav() {
               )}
               {/* Hover underline - only show when not active */}
               {!isActiveLink("/contact-v2") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/contact-v3"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
+                isActiveLink("/contact-v3")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              Contact Us v3
+              {/* Active underline */}
+              {isActiveLink("/contact-v3") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/contact-v3") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
@@ -520,6 +547,26 @@ export default function HeaderNav() {
               )}
               {/* Hover underline - only show when not active */}
               {!isActiveLink("/contact-v2") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/contact-v3"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
+                isActiveLink("/contact-v3")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              Contact Us v3
+              {/* Active underline */}
+              {isActiveLink("/contact-v3") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/contact-v3") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>

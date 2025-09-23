@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import WarehouseLocationsSection from "@/components/warehouse-locations-section";
 
 export default function AboutPageContent() {
   const [isAboutVisible, setIsAboutVisible] = useState(false);
@@ -32,6 +33,7 @@ export default function AboutPageContent() {
   }, []);
 
   return (
+    <>
     <section
       id="about"
       className="py-20 md:py-28 lg:py-36"
@@ -212,5 +214,9 @@ export default function AboutPageContent() {
         </div>
       </div>
     </section>
+
+    {/* Warehouse Locations Section */}
+    <WarehouseLocationsSection />
+  </>
   );
 }

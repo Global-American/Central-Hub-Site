@@ -21,6 +21,28 @@
 }
 
 @layer base {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  main {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 214 77% 35%; /* Body Text #14529f */
