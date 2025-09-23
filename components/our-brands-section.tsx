@@ -17,7 +17,7 @@ const brands = [
   {
     id: 1,
     name: "ShipItSmart",
-    tagline: "GLOBAL SHIPPING. SIMPLIFIED.",
+    tagline: "Be smart, ShipItSmart.",
     description: "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
@@ -26,7 +26,7 @@ const brands = [
   {
     id: 2,
     name: "FreightItSmart",
-    tagline: "FREIGHT MANAGEMENT. REINVENTED.",
+    tagline: "Be smart, FreightItSmart.",
     description: "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
@@ -35,7 +35,7 @@ const brands = [
   {
     id: 3,
     name: "ReturnItSmart",
-    tagline: "REVERSE LOGISTICS. PERFECTED.",
+    tagline: "Be smart, ReturnItSmart.",
     description: "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
@@ -44,7 +44,7 @@ const brands = [
   {
     id: 4,
     name: "FulfillItSmart",
-    tagline: "END-TO-END FULFILLMENT. EXCELLENCE.",
+    tagline: "Be smart, FulfillItSmart.",
     description: "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
@@ -112,7 +112,22 @@ export default function OurBrandsSection() {
 
   return (
     <section ref={sectionRef} id="brands" className="relative h-screen overflow-hidden">
-      <div ref={cardsContainerRef} className="absolute inset-0 flex items-center justify-center">
+      {/* Section Header */}
+      <div className="absolute top-16 left-0 right-0 z-50 px-4 md:px-8 pt-8">
+        <div className="text-center">
+          <Badge variant="outline" className="text-xs border-accent text-accent bg-accent/10 mb-4">
+            Our Brands
+          </Badge>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            Smart Logistics <span className="text-accent">Platforms</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Discover our suite of intelligent logistics solutions designed to transform your supply chain operations.
+          </p>
+        </div>
+      </div>
+      
+      <div ref={cardsContainerRef} className="absolute inset-0 flex items-center justify-center pt-40">
         {brands.map((brand, i) => (
           <div
             key={brand.id}
@@ -120,7 +135,7 @@ export default function OurBrandsSection() {
             style={{ zIndex: i }}
           >
             {/* Inner wrapper for border and styling */}
-            <div className={`relative w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl ${brand.color} border border-white/10`}>
+            <div className={`relative w-full max-w-6xl rounded-3xl overflow-hidden shadow-2xl ${brand.color} border border-white/10`}>
 
 
               <div className="grid grid-cols-1 lg:grid-cols-2 relative z-10">
@@ -148,22 +163,21 @@ export default function OurBrandsSection() {
                   </div>
                 </div>
                 <div className="relative hidden lg:block h-full min-h-[400px]">
-                  {/* Brand Image Container */}
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Brand Image Container - Centered with more space */}
+                  <div className="absolute inset-0 flex items-center justify-center pb-20">
                     {brand.image ? (
-                      <div className={`relative ${brand.name === 'ReturnItSmart' ? 'w-3/4 h-3/4' : 'w-full h-full'}`}>
+                      <div className="relative w-2/3 h-2/3">
                         <Image
                           src={brand.image}
                           alt={`${brand.name} illustration`}
                           fill
                           className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          sizes="(max-width: 1024px) 100vw, 33vw"
                         />
-
                       </div>
                     ) : (
                       // Fallback decorative elements if no image
-                      <div className="relative w-full h-full">
+                      <div className="relative w-2/3 h-2/3">
                         <div className="absolute top-1/4 right-1/4 w-48 h-48 rounded-full border-4 border-white/10 backdrop-blur-sm animate-spin-slow"></div>
                         <div className="absolute bottom-1/4 right-1/3 w-64 h-64 rounded-full border-2 border-white/5 animate-pulse"></div>
                         <div className="absolute top-1/3 right-1/2 w-40 h-40 rounded-full bg-white/5 backdrop-blur-sm"></div>

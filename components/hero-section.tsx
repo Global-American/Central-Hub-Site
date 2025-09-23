@@ -1,90 +1,55 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { useEffect, useState, useRef } from "react"
+import { useState, useEffect } from "react"
 
 // Slideshow data with synchronized content
 const slides = [
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-shipit.png')] bg-cover bg-top bg-no-repeat",
-    title: "Ship smart with",
-    titleAccent: "ShipItSmart.",
-    subtitle: "Global shipping",
-    subtitleAccent: "simplified.",
-    description: "Smart shipping solutions.",
+    title: "Smart",
+    titleAccent: "Shipping.",
+    subtitle: "Global",
+    subtitleAccent: "Solutions.",
+    description: "Fast, reliable shipping worldwide.",
     textColor: "text-white",
-    label: "Shipping"
+    label: "Shipping",
+    graphic: null
   },
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-frieght.png')] bg-cover bg-top bg-no-repeat",
-    title: "Smarter",
+    title: "Smart",
     titleAccent: "Freight.",
-    subtitle: "Faster",
-    subtitleAccent: "Deliveries.",
-    description: "Transparent, fast global logistics.",
+    subtitle: "Fast",
+    subtitleAccent: "Logistics.",
+    description: "Transparent global freight.",
     textColor: "text-white",
-    label: "Freight"
+    label: "Freight",
+    graphic: null
   },
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-returnit.png')] bg-cover bg-top bg-no-repeat",
     title: "Smart",
     titleAccent: "Returns.",
-    subtitle: "Hassle-free",
+    subtitle: "Easy",
     subtitleAccent: "Process.",
-    description: "Efficient, trackable returns.",
+    description: "Hassle-free returns.",
     textColor: "text-white",
-    label: "Returns"
+    label: "Returns",
+    graphic: null
   },
   {
-    background: "bg-[url('/images/hero-variation-smart/smart-fufillit.png')] bg-cover bg-top bg-no-repeat",
-    title: "Smart Fulfilment",
-    titleAccent: "for Growing",
+    title: "Smart",
+    titleAccent: "Fulfillment.",
     subtitle: "E-Commerce",
-    subtitleAccent: "Brands.",
-    description: "Storage, picking, packing, shipping.",
+    description: "Complete fulfillment solutions.",
     textColor: "text-white",
-    label: "Fulfillment"
+    label: "Fulfillment",
+    graphic: null
   }
 ]
 
-const SLIDE_DURATION = 15000 // 15 seconds
 
 export default function HeroSection() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [titleAnimation, setTitleAnimation] = useState("animate-in")
-  const [progress, setProgress] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
-  const slideTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const progressTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const startTimeRef = useRef<number>(Date.now())
-
-  // Function to start the slide timer
-  const startSlideTimer = () => {
-    if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-    if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
-    
-    startTimeRef.current = Date.now()
-    setProgress(0)
-    
-    // Start progress animation
-    const updateProgress = () => {
-      const elapsed = Date.now() - startTimeRef.current
-      const progressPercent = Math.min((elapsed / SLIDE_DURATION) * 100, 100)
-      setProgress(progressPercent)
-      
-      if (progressPercent < 100 && !isPaused) {
-        progressTimerRef.current = setTimeout(updateProgress, 16) // ~60fps
-      }
-    }
-    updateProgress()
-    
-    // Set slide change timer
-    slideTimerRef.current = setTimeout(() => {
-      if (!isPaused) {
-        nextSlide()
-      }
-    }, SLIDE_DURATION)
-  }
 
   // Function to go to next slide
   const nextSlide = () => {
@@ -92,7 +57,6 @@ export default function HeroSection() {
     setTimeout(() => {
       setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length)
       setTitleAnimation("animate-in")
-      startSlideTimer()
     }, 300)
   }
 
@@ -104,79 +68,36 @@ export default function HeroSection() {
     setTimeout(() => {
       setCurrentSlideIndex(index)
       setTitleAnimation("animate-in")
-      startSlideTimer()
     }, 300)
   }
 
-  // Pause/resume functionality
-  const handlePause = () => {
-    setIsPaused(true)
-    if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-    if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
-  }
-
-  const handleResume = () => {
-    setIsPaused(false)
-    const elapsed = Date.now() - startTimeRef.current
-    const remaining = SLIDE_DURATION - elapsed
-    
-    if (remaining > 0) {
-      // Resume from where we left off
-      const updateProgress = () => {
-        const totalElapsed = Date.now() - startTimeRef.current
-        const progressPercent = Math.min((totalElapsed / SLIDE_DURATION) * 100, 100)
-        setProgress(progressPercent)
-        
-        if (progressPercent < 100 && !isPaused) {
-          progressTimerRef.current = setTimeout(updateProgress, 16)
-        }
-      }
-      updateProgress()
-      
-      slideTimerRef.current = setTimeout(nextSlide, remaining)
-    } else {
+  // Auto-advance slides every 15 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
       nextSlide()
-    }
-  }
+    }, 15000) // 15 seconds
 
-  // Initialize timer on mount
-  useEffect(() => {
-    startSlideTimer()
-    
-    return () => {
-      if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
-      if (progressTimerRef.current) clearTimeout(progressTimerRef.current)
-    }
-  }, [])
+    return () => clearInterval(interval)
+  }, [currentSlideIndex]) // Dependency on currentSlideIndex to reset timer on manual navigation
 
-  // Handle pause state changes
-  useEffect(() => {
-    if (isPaused) {
-      handlePause()
-    } else {
-      handleResume()
-    }
-  }, [isPaused])
 
   return (
-    <section id="hero" className="relative w-full h-screen flex items-center justify-center overflow-hidden">
-      {/* Slideshow backgrounds */}
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlideIndex ? 'opacity-100' : 'opacity-0'
-          } ${slide.background}`}
-        />
-      ))}
+    <section id="hero" className="relative w-full h-[95vh] flex items-center justify-center overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#ea8339] via-transparent to-transparent opacity-60" />
+      </div>
       
       {/* Dark overlay for improved text contrast */}
-      <div className="absolute inset-0 bg-black/40 z-10" />
+      <div className="absolute inset-0 bg-black/20 z-10" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 flex items-center h-full">
-        <div className="flex flex-col items-start text-left space-y-6 max-w-2xl">
+        <div className="grid grid-cols-1 gap-8 items-center w-full">
+          {/* Content Column */}
+          <div className="flex flex-col items-start text-left space-y-6 max-w-2xl lg:order-1">
           {/* Main title with animations */}
-          <h1 className={`text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight ${slides[currentSlideIndex].textColor} transition-all duration-500 ease-in-out ${
+          <h1 className={`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight ${slides[currentSlideIndex].textColor} transition-all duration-500 ease-in-out ${
             titleAnimation === "animate-in" 
               ? "opacity-100 translate-y-0 transform" 
               : "opacity-0 translate-y-4 transform"
@@ -210,77 +131,37 @@ export default function HeroSection() {
             </Button>
           </div>
         </div>
+          
+        {/* Graphic Column removed */}
+        </div>
       </div>
 
-      {/* Enhanced slide indicators with progress and labels */}
-      <div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        {/* Slide indicators with labels */}
-        <div className="flex items-center justify-center space-x-6">
-          {slides.map((slide, index) => (
-            <div key={index} className="flex flex-col items-center space-y-2">
-              {/* Circular progress indicator */}
-              <button
-                onClick={() => goToSlide(index)}
-                className="relative group"
-                aria-label={`Go to ${slide.label} slide`}
-              >
-                {/* Outer progress ring */}
-                <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-                  {/* Background circle */}
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="16"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.2)"
-                    strokeWidth="2"
-                  />
-                  {/* Progress circle - only show for current slide */}
-                  {index === currentSlideIndex && (
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      stroke="hsl(var(--accent))"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeDasharray="100"
-                      strokeDashoffset={100 - progress}
-                      className="transition-all duration-75 ease-linear"
-                    />
-                  )}
-                </svg>
-                
-                {/* Inner dot */}
-                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
-                  index === currentSlideIndex
-                    ? 'scale-110'
-                    : 'group-hover:scale-105'
-                }`}>
-                  <div className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                    index === currentSlideIndex
-                      ? 'bg-accent shadow-lg shadow-accent/30'
-                      : 'bg-white/60 group-hover:bg-white/80'
-                  }`} />
-                </div>
-              </button>
-              
-              {/* Slide label */}
-              <span className={`text-xs font-medium transition-all duration-300 ${
+      {/* Slide indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center space-x-6">
+        {slides.map((slide, index) => (
+          <div key={index} className="flex flex-col items-center space-y-2">
+            <button
+              onClick={() => goToSlide(index)}
+              className="relative group"
+              aria-label={`Go to ${slide.label} slide`}
+            >
+              <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentSlideIndex
-                  ? 'text-accent font-semibold'
-                  : 'text-white/70'
-              }`}>
-                {slide.label}
-              </span>
-            </div>
-          ))}
-        </div>
+                  ? 'bg-accent shadow-lg shadow-accent/30 scale-110'
+                  : 'bg-white/60 group-hover:bg-white/80 group-hover:scale-105'
+              }`} />
+            </button>
+            
+            {/* Slide label */}
+            <span className={`text-xs font-medium transition-all duration-300 ${
+              index === currentSlideIndex
+                ? 'text-accent font-semibold'
+                : 'text-white/70'
+            }`}>
+              {slide.label}
+            </span>
+          </div>
+        ))}
       </div>
     </section>
   )

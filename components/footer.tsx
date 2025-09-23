@@ -2,8 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Info } from "lucide-react";
 import { useState, useEffect } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Main 4 solutions with taglines
 const partnerSolutions = [
@@ -23,6 +29,30 @@ const partnerSolutions = [
     name: "FulfillItSmart",
     tagline: "Be Smart, Fulfill itSmart",
   },
+];
+
+// Global locations with full addresses
+const globalLocations = [
+  {
+    flag: "🇺🇸",
+    city: "New York, USA",
+    fullAddress: "123 Business Plaza, Suite 500\nNew York, NY 10001\nUnited States"
+  },
+  {
+    flag: "🇬🇧",
+    city: "Belfast, Northern Ireland",
+    fullAddress: "45 Innovation Drive\nBelfast BT1 2AB\nNorthern Ireland, UK"
+  },
+  {
+    flag: "🇮🇪",
+    city: "Dublin, Republic of Ireland",
+    fullAddress: "78 Enterprise Center\nDublin D02 XY12\nRepublic of Ireland"
+  },
+  {
+    flag: "🇬🇧",
+    city: "Manchester, United Kingdom",
+    fullAddress: "92 Commerce Street\nManchester M1 4BT\nUnited Kingdom"
+  }
 ];
 
 export default function Footer() {
@@ -167,22 +197,26 @@ export default function Footer() {
                     <span className="text-accent">Global</span> Locations
                   </h4>
                   <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <MapPin className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                      <div className="text-sm text-muted-foreground leading-relaxed">
-                        <p className="font-medium text-foreground">
-                          🇺🇸 New York, USA
-                        </p>
-                        <p className="font-medium text-foreground">
-                          🇬🇧 Belfast, Northern Ireland
-                        </p>
-                        <p className="font-medium text-foreground">
-                          🇮🇪 Dublin, Republic of Ireland
-                        </p>
-                        <p className="font-medium text-foreground">
-                          🇬🇧 Manchester, United Kingdom
-                        </p>
-                      </div>
+                    <div className="text-sm text-muted-foreground leading-relaxed">
+                      <TooltipProvider>
+                        {globalLocations.map((location, index) => (
+                          <div key={index} className="flex items-center gap-2 mb-1">
+                            <p className="font-medium text-foreground">
+                              {location.flag} {location.city}
+                            </p>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className="h-4 w-4 text-accent hover:text-accent/80 cursor-pointer transition-colors duration-200" />
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-xs">
+                                <div className="text-sm whitespace-pre-line">
+                                  {location.fullAddress}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ))}
+                      </TooltipProvider>
                     </div>
                   </div>
                 </div>

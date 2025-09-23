@@ -1,9 +1,8 @@
 import HeaderNav from "@/components/header-nav";
 import HeroSection from "@/components/hero-section";
-import VideoSection from "@/components/video-section";
 import OurBrandsSection from "@/components/our-brands-section";
 import TestimonialsSection from "@/components/testimonials-section";
-import WarehouseLocationsSection from "@/components/warehouse-locations-section";
+import CTASection from "@/components/cta-section";
 import Footer from "@/components/footer";
 import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react";
 
@@ -17,7 +16,7 @@ function HorizontalDivider({
 }) {
   return (
     <div
-      className={`py-12 bg-[#f6fdfe] border-t border-b border-muted/30 overflow-hidden ${className}`}
+      className={`py-12 bg-gradient-to-r from-[#f6fdfe] via-[#ffffff] to-[#f6fdfe] border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
     >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
@@ -46,15 +45,11 @@ export default function GlobalAmericanLandingPage() {
       <HeaderNav />
       <main className="flex-1">
         <HeroSection />
-        <HorizontalDivider Icon={Package} />
-        <VideoSection />
-        <HorizontalDivider Icon={Ship} />
+        <HorizontalDivider Icon={Ship} className="-mt-1 py-3" />
         <OurBrandsSection />
-        <HorizontalDivider Icon={Plane} />
+        <HorizontalDivider Icon={Plane} className="py-3" />
         <TestimonialsSection />
-        <HorizontalDivider Icon={MapPin} />
-        <WarehouseLocationsSection />
-        <HorizontalDivider Icon={Warehouse} />
+        <CTASection />
       </main>
       <Footer />
     </div>
