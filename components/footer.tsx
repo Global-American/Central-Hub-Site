@@ -64,30 +64,6 @@ const partnerSolutions = [
   },
 ];
 
-// Global locations with full addresses
-const globalLocations = [
-  {
-    flag: "🇺🇸",
-    city: "New York, USA",
-    fullAddress: "123 Business Plaza, Suite 500\nNew York, NY 10001\nUnited States"
-  },
-  {
-    flag: "🇬🇧",
-    city: "Belfast, Northern Ireland",
-    fullAddress: "45 Innovation Drive\nBelfast BT1 2AB\nNorthern Ireland, UK"
-  },
-  {
-    flag: "🇮🇪",
-    city: "Dublin, Republic of Ireland",
-    fullAddress: "78 Enterprise Center\nDublin D02 XY12\nRepublic of Ireland"
-  },
-  {
-    flag: "🇬🇧",
-    city: "Manchester, United Kingdom",
-    fullAddress: "92 Commerce Street\nManchester M1 4BT\nUnited Kingdom"
-  }
-];
-
 export default function Footer() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
