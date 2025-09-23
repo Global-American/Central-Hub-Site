@@ -7,7 +7,7 @@
 /* postcss-disable-next-line at-rule-no-unknown */
 @tailwind base;
 /* postcss-disable-next-line at-rule-no-unknown */
-@tailwind components; 
+@tailwind components;
 /* postcss-disable-next-line at-rule-no-unknown */
 @tailwind utilities;
 
@@ -101,7 +101,7 @@
   body {
     /* postcss-disable-next-line at-rule-no-unknown */
     @apply bg-background text-foreground;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -111,21 +111,24 @@
 /* Mobile optimizations */
 @layer utilities {
   /* Prevent horizontal scrolling */
-  html, body {
+  html,
+  body {
     overflow-x: hidden;
   }
-  
+
   /* Improve touch interactions */
   @media (hover: none) and (pointer: coarse) {
     .hover\:scale-105:hover {
       transform: scale(1.02);
     }
-    
-    button, [role="button"], .cursor-pointer {
+
+    button,
+    [role="button"],
+    .cursor-pointer {
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     }
   }
-  
+
   /* Better mobile text selection */
   @media (max-width: 768px) {
     ::selection {
