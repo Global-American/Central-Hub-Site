@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
+import Image from "next/image"
 
 // Slideshow data with synchronized content
 const slides = [
@@ -13,7 +14,7 @@ const slides = [
     description: "Fast, reliable shipping worldwide.",
     textColor: "text-white",
     label: "Shipping",
-    graphic: null
+    graphic: "/images/hero-variation-smart/Picture 1.png"
   },
   {
     title: "Smart",
@@ -93,7 +94,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-black/20 z-10" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 flex items-center h-full">
-        <div className="grid grid-cols-1 gap-8 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full">
           {/* Content Column */}
           <div className="flex flex-col items-start text-left space-y-6 max-w-2xl lg:order-1">
           {/* Main title with animations */}
@@ -132,7 +133,25 @@ export default function HeroSection() {
           </div>
         </div>
           
-        {/* Graphic Column removed */}
+          {/* Graphic Column */}
+          <div className="flex justify-center items-center lg:order-2">
+            {slides[currentSlideIndex].graphic && (
+              <div className={`transition-all duration-500 ease-in-out ${
+                titleAnimation === "animate-in" 
+                  ? "opacity-100 translate-y-0 transform" 
+                  : "opacity-0 translate-y-4 transform"
+              }`}>
+                <Image
+                  src={slides[currentSlideIndex].graphic}
+                  alt={`${slides[currentSlideIndex].label} illustration`}
+                  width={500}
+                  height={400}
+                  className="max-w-full h-auto object-contain"
+                  priority={currentSlideIndex === 0}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

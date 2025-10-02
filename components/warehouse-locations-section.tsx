@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { 
   MapPin, 
-  ExternalLink
+  ExternalLink,
+  RotateCcw
 } from "lucide-react"
 import Image from "next/image"
 
@@ -15,48 +16,48 @@ import Image from "next/image"
 const warehouseLocations = [
     {
     id: "new-york",
-    city: "New York",
+    city: "Englewood, NJ",
     country: "United States",
     countryCode: "US",
-    lat: 40.7128,
-    lng: -74.0060,
-    address: "Brooklyn Navy Yard, Brooklyn, NY 11205",
+    lat: 40.8929,
+    lng: -73.9726,
+    address: "40 North Van Brunt Street Ste 23, Englewood, NJ 07631, USA",
     image: "/images/warehouses/new-york.jpg",
     description: "Our flagship North American distribution hub strategically positioned to serve the entire East Coast with advanced logistics capabilities and multimodal transport connections.",
     features: ["Primary Hub", "East Coast Gateway", "Multimodal Transport"]
   },
   {
     id: "belfast",
-    city: "Belfast",
+    city: "Strabane",
     country: "Northern Ireland",
     countryCode: "GB",
-    lat: 54.5973,
-    lng: -5.9301,
-    address: "Belfast Harbour Industrial Estate, Belfast BT3 9JH",
+    lat: 54.8275,
+    lng: -7.4642,
+    address: "ShipItSmart Consulting Unit 1 Mahon Building, 39/49 Dock St, Strabane BT82 8EE, United Kingdom",
     image: "/images/warehouses/belfast.jpg",
     description: "Northern Ireland operations center providing comprehensive logistics solutions with direct access to UK and EU markets through strategic port connections.",
     features: ["UK-EU Gateway", "Port Access", "Cross-Border Logistics"]
   },
   {
     id: "dublin",
-    city: "Dublin",
+    city: "Convoy, Donegal",
     country: "Republic of Ireland",
     countryCode: "IE",
-    lat: 53.3498,
-    lng: -6.2603,
-    address: "Dublin Port Industrial Estate, Dublin 3, Ireland",
+    lat: 54.8656,
+    lng: -7.6644,
+    address: "Unit 4 Lower, Convoy Enterprise Centre, Convoy, Donegal, F93 H5F9, Ireland",
     image: "/images/warehouses/dublin.jpg",
     description: "European Union distribution hub with advanced automation systems, strategic location for EU market access, and comprehensive logistics capabilities.",
     features: ["EU Distribution Hub", "Automated Systems", "Cold Chain"]
   },
   {
     id: "manchester",
-    city: "Manchester",
+    city: "Heywood, Manchester",
     country: "United Kingdom",
     countryCode: "GB",
-    lat: 53.4808,
-    lng: -2.2426,
-    address: "Manchester Airport Cargo Centre, Manchester M90 1QX",
+    lat: 53.5950,
+    lng: -2.2150,
+    address: "Unit A, Birch Business Park, Heywood Manchester OL10 2SX, United Kingdom",
     image: "/images/warehouses/manchester.jpg",
     description: "UK headquarters facility with comprehensive e-commerce fulfillment capabilities and direct connections to major UK transport networks.",
     features: ["UK Headquarters", "E-commerce Hub", "Transport Networks"]
@@ -79,6 +80,32 @@ export default function WarehouseLocationsSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [mapLoaded, setMapLoaded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+
+  // Check for URL parameters to preselect location and scroll into view
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const locationParam = urlParams.get('location')
+      if (locationParam && warehouseLocations.find(loc => loc.id === locationParam)) {
+        setSelectedLocation(locationParam)
+        
+        // Scroll to the section after a brief delay to ensure content is loaded
+        setTimeout(() => {
+          const section = document.getElementById('warehouse-locations')
+          if (section) {
+            const headerOffset = 100 // Height of fixed header + some padding
+            const elementPosition = section.getBoundingClientRect().top
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            })
+          }
+        }, 300)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -120,7 +147,7 @@ export default function WarehouseLocationsSection() {
   }, [selectedLocationData, mapLoaded])
 
   return (
-    <section ref={sectionRef} id="warehouse-locations" className="py-16 md:py-20 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <section ref={sectionRef} id="warehouse-locations" className="py-16 md:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className={`text-center mb-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
@@ -133,18 +160,31 @@ export default function WarehouseLocationsSection() {
         </div>
 
         {/* Main Interface Container */}
-        <div className={`relative w-full h-[700px] lg:h-[800px] rounded-2xl overflow-hidden shadow-2xl bg-white transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+        <div className={`relative w-full h-[700px] lg:h-[800px] rounded-2xl overflow-hidden shadow-sm bg-background border-2 border-[#1F447B] transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="flex h-full">
             
             {/* Left Panel - Interactive Location List */}
-            <div className="w-full lg:w-2/5 bg-white border-r border-slate-200">
+            <div className="w-full lg:w-2/5 bg-background border-r-2 border-[#1F447B]">
                             {/* Panel Header */}
-              <div className="p-6 border-b border-slate-200 bg-slate-50">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground">Global Locations</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {warehouseLocations.length} facilities worldwide
-                  </p>
+              <div className="p-6 border-b-2 border-[#1F447B] bg-background">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">Global Locations</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {warehouseLocations.length} facilities worldwide
+                    </p>
+                  </div>
+                  {selectedLocation && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedLocation(null)}
+                      className="border-2 border-[#1F447B] text-[#1F447B] hover:bg-[#EB993C] hover:text-white hover:border-[#EB993C] transition-all duration-200"
+                    >
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      Reset
+                    </Button>
+                  )}
                 </div>
               </div>
                 
@@ -154,10 +194,10 @@ export default function WarehouseLocationsSection() {
                   {warehouseLocations.map((location, index) => (
                     <Card 
                       key={location.id}
-                      className={`mb-3 cursor-pointer transition-all duration-200 border hover:shadow-md ${
+                      className={`mb-3 cursor-pointer transition-all duration-200 border-2 hover:shadow-md ${
                         selectedLocation === location.id 
-                          ? 'ring-2 ring-blue-500 bg-blue-50' 
-                          : 'hover:bg-slate-50'
+                          ? 'border-[#1F447B] ring-2 ring-[#EB993C]/30 bg-gradient-to-br from-[#EBF4FF] to-[#D6E9FF]' 
+                          : 'border-[#1F447B]/20 hover:bg-slate-50 hover:border-[#EB993C]/50'
                       }`}
                       onClick={() => handleLocationSelect(location.id)}
                     >
@@ -188,10 +228,10 @@ export default function WarehouseLocationsSection() {
             </div>
 
             {/* Right Panel - Dynamic Map Interface */}
-            <div className="hidden lg:flex lg:w-3/5 flex-col bg-slate-100">
+            <div className="hidden lg:flex lg:w-3/5 flex-col bg-background">
               {/* Map Header */}
               {selectedLocationData && (
-                <div className="p-4 bg-white border-b border-slate-200 shadow-sm">
+                <div className="p-4 bg-background border-b-2 border-[#1F447B] shadow-sm">
                   <div className="flex items-center gap-3">
                     <div className="text-xl">
                       {countryFlags[selectedLocationData.countryCode]}
@@ -238,7 +278,7 @@ export default function WarehouseLocationsSection() {
         {/* Mobile View Enhancement */}
         <div className="lg:hidden mt-6">
           {selectedLocationData && (
-            <Card className="bg-white shadow-lg">
+            <Card className="bg-background shadow-sm border-2 border-[#1F447B]">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
                   <div className="text-xl">

@@ -235,7 +235,7 @@ export default function TestimonialsSection() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card
-                    className={`h-full border-0 shadow-sm hover:shadow-xl transition-all duration-500 ease-out bg-[#f6fdfe] hover:scale-105 ${
+                    className={`h-full border-2 border-[#1F447B] shadow-sm transition-all duration-500 ease-out bg-background ${
                       isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                     }`}
                     style={{ transitionDelay: `${index * 100}ms` }}

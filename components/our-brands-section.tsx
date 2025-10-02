@@ -16,8 +16,8 @@ if (typeof window !== "undefined") {
 const brands = [
   {
     id: 1,
-    name: "ShipItSmart",
-    tagline: "Be smart, ShipItSmart.",
+    name: "Ship itSmart",
+    tagline: "Be Smart, Ship itSmart !",
     description: "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
@@ -25,8 +25,8 @@ const brands = [
   },
   {
     id: 2,
-    name: "FreightItSmart",
-    tagline: "Be smart, FreightItSmart.",
+    name: "Freight itSmart",
+    tagline: "Be Smart, Freight itSmart !",
     description: "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
@@ -34,8 +34,8 @@ const brands = [
   },
   {
     id: 3,
-    name: "ReturnItSmart",
-    tagline: "Be smart, ReturnItSmart.",
+    name: "Return itSmart",
+    tagline: "Be Smart, Return itSmart !",
     description: "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
@@ -43,8 +43,8 @@ const brands = [
   },
   {
     id: 4,
-    name: "FulfillItSmart",
-    tagline: "Be smart, FulfillItSmart.",
+    name: "Fulfill itSmart",
+    tagline: "Be smart, Fulfill itSmart !",
     description: "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
@@ -127,7 +127,7 @@ export default function OurBrandsSection() {
         </div>
       </div>
       
-      <div ref={cardsContainerRef} className="absolute inset-0 flex items-center justify-center pt-40">
+      <div ref={cardsContainerRef} className="absolute inset-0 flex items-center justify-center pt-44 md:pt-48">
         {brands.map((brand, i) => (
           <div
             key={brand.id}
@@ -135,16 +135,13 @@ export default function OurBrandsSection() {
             style={{ zIndex: i }}
           >
             {/* Inner wrapper for border and styling */}
-            <div className={`relative w-full max-w-6xl rounded-3xl overflow-hidden shadow-2xl ${brand.color} border border-white/10`}>
+            <div className={`relative w-full max-w-6xl rounded-3xl overflow-hidden shadow-2xl ${brand.color} border-2 border-white/20`}>
 
 
               <div className="grid grid-cols-1 lg:grid-cols-2 relative z-10">
                 <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
                   <div className={brand.textColor}>
                     <div className="mb-6">
-                      <Badge variant="outline" className="border-white/20 bg-white/10 text-white mb-4 backdrop-blur-sm">
-                        {brand.tagline}
-                      </Badge>
                       <div className="flex items-center gap-4">
                         <Building2 className="h-10 w-10 opacity-80" />
                         <h3 className="text-4xl md:text-5xl font-bold tracking-tight">{brand.name}</h3>
@@ -163,27 +160,7 @@ export default function OurBrandsSection() {
                   </div>
                 </div>
                 <div className="relative hidden lg:block h-full min-h-[400px]">
-                  {/* Brand Image Container - Centered with more space */}
-                  <div className="absolute inset-0 flex items-center justify-center pb-20">
-                    {brand.image ? (
-                      <div className="relative w-2/3 h-2/3">
-                        <Image
-                          src={brand.image}
-                          alt={`${brand.name} illustration`}
-                          fill
-                          className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                          sizes="(max-width: 1024px) 100vw, 33vw"
-                        />
-                      </div>
-                    ) : (
-                      // Fallback decorative elements if no image
-                      <div className="relative w-2/3 h-2/3">
-                        <div className="absolute top-1/4 right-1/4 w-48 h-48 rounded-full border-4 border-white/10 backdrop-blur-sm animate-spin-slow"></div>
-                        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 rounded-full border-2 border-white/5 animate-pulse"></div>
-                        <div className="absolute top-1/3 right-1/2 w-40 h-40 rounded-full bg-white/5 backdrop-blur-sm"></div>
-                      </div>
-                    )}
-                  </div>
+                  {/* Empty space to maintain layout spacing */}
                   
                   {/* Subtitle Section with Tagline */}
                   <div className="absolute bottom-6 left-6 right-6 z-20">

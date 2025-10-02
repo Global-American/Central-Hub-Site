@@ -2,37 +2,35 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Info } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 // Global locations with full addresses
 const globalLocations = [
   {
     flag: "🇺🇸",
-    city: "New York, USA",
+    city: "Englewood, NJ",
     fullAddress:
-      "123 Business Plaza, Suite 500\nNew York, NY 10001\nUnited States",
+      "40 North Van Brunt Street Ste 23\nEnglewood, NJ 07631\nUSA",
+    locationId: "new-york",
   },
   {
     flag: "🇬🇧",
-    city: "Belfast, Northern Ireland",
-    fullAddress: "45 Innovation Drive\nBelfast BT1 2AB\nNorthern Ireland, UK",
+    city: "Strabane, Northern Ireland",
+    fullAddress: "ShipItSmart Consulting Unit 1 Mahon Building\n39/49 Dock St, Strabane BT82 8EE\nUnited Kingdom",
+    locationId: "belfast",
   },
   {
     flag: "🇮🇪",
-    city: "Dublin, Republic of Ireland",
-    fullAddress: "78 Enterprise Center\nDublin D02 XY12\nRepublic of Ireland",
+    city: "Convoy, Donegal",
+    fullAddress: "Unit 4 Lower, Convoy Enterprise Centre\nConvoy, Donegal, F93 H5F9\nIreland",
+    locationId: "dublin",
   },
   {
     flag: "🇬🇧",
-    city: "Manchester, United Kingdom",
-    fullAddress: "92 Commerce Street\nManchester M1 4BT\nUnited Kingdom",
+    city: "Heywood, Manchester",
+    fullAddress: "Unit A, Birch Business Park\nHeywood Manchester OL10 2SX\nUnited Kingdom",
+    locationId: "manchester",
   },
 ];
 
@@ -100,8 +98,7 @@ export default function Footer() {
   };
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <footer id="footer" className="bg-white border-t border-gray-200 pt-8">
+    <footer id="footer" className="bg-background pt-8">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             {/* Logo and Partnership Section */}
@@ -254,21 +251,13 @@ export default function Footer() {
                           key={index}
                           className="flex items-center gap-2 mb-1"
                         >
-                          <p className="font-medium text-foreground">
+                          <Link
+                            href={`/about?location=${location.locationId}#warehouse-locations`}
+                            className="font-medium text-foreground hover:text-[#EB993C] transition-colors duration-200 flex items-center gap-1 group"
+                          >
                             {location.flag} {location.city}
-                          </p>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button className="focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded">
-                                <Info className="h-4 w-4 text-accent hover:text-accent/80 cursor-pointer transition-colors duration-200" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="max-w-xs">
-                              <div className="text-sm whitespace-pre-line">
-                                {location.fullAddress}
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
+                            <MapPin className="h-3 w-3 text-accent group-hover:text-[#EB993C] transition-colors" />
+                          </Link>
                         </div>
                       ))}
                       {/* <div className="flex items-start">
@@ -472,6 +461,5 @@ export default function Footer() {
           </div>
         </div>
       </footer>
-    </TooltipProvider>
   );
 }

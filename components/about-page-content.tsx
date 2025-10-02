@@ -6,8 +6,6 @@ import WarehouseLocationsSection from "@/components/warehouse-locations-section"
 export default function AboutPageContent() {
   const [isAboutVisible, setIsAboutVisible] = useState(false);
   const [isTeamVisible, setIsTeamVisible] = useState(false);
-  const [bgColor, setBgColor] = useState("#F4FAFC");
-  const [containerColor, setContainerColor] = useState("#ffffff");
   const aboutRef = useRef<HTMLDivElement>(null);
   const teamRef = useRef<HTMLDivElement>(null);
 
@@ -36,8 +34,7 @@ export default function AboutPageContent() {
     <>
     <section
       id="about"
-      className="py-20 md:py-28 lg:py-36"
-      style={{ backgroundColor: bgColor }}
+      className="py-20 md:py-28 lg:py-36 bg-background"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -76,8 +73,7 @@ export default function AboutPageContent() {
           </div>
           <div className="flex justify-center">
             <div
-              className="w-full max-w-md h-96 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: containerColor }}
+              className="w-full max-w-md h-96 rounded-lg flex items-center justify-center bg-white border-2 border-[#1F447B]"
             >
               <span className="text-[#1F447B] text-lg">About Us Image</span>
             </div>
@@ -113,8 +109,7 @@ export default function AboutPageContent() {
               style={{ transitionDelay: "200ms" }}
             >
               <div
-                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer"
-                style={{ backgroundColor: containerColor }}
+                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer bg-white border-2 border-[#1F447B]"
               >
                 <svg
                   className="w-20 h-20 text-gray-400"
@@ -140,8 +135,7 @@ export default function AboutPageContent() {
               style={{ transitionDelay: "300ms" }}
             >
               <div
-                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer"
-                style={{ backgroundColor: containerColor }}
+                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer bg-white border-2 border-[#1F447B]"
               >
                 <svg
                   className="w-20 h-20 text-gray-400"
@@ -167,8 +161,7 @@ export default function AboutPageContent() {
               style={{ transitionDelay: "400ms" }}
             >
               <div
-                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer"
-                style={{ backgroundColor: containerColor }}
+                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer bg-white border-2 border-[#1F447B]"
               >
                 <svg
                   className="w-20 h-20 text-gray-400"
@@ -194,8 +187,7 @@ export default function AboutPageContent() {
               style={{ transitionDelay: "500ms" }}
             >
               <div
-                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer"
-                style={{ backgroundColor: containerColor }}
+                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer bg-white border-2 border-[#1F447B]"
               >
                 <svg
                   className="w-20 h-20 text-gray-400"

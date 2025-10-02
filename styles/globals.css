@@ -14,9 +14,9 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 214 100% 96%; /* Light blue background #EBF4FF */
     --foreground: 214 77% 35%; /* Body Text #14529f */
-    --card: 0 0% 100%;
+    --card: 0 0% 100%; /* Keep cards white for contrast */
     --card-foreground: 214 77% 35%;
     --popover: 0 0% 100%;
     --popover-foreground: 214 77% 35%;
