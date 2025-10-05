@@ -276,7 +276,7 @@ export default function TestimonialsSection() {
                           </blockquote>
 
                           {/* Author Info */}
-                          <div className="border-t border-gray-200 pt-6">
+                          <div className="border-t border-[#1F447B] pt-6">
                             <h4 className="font-bold text-[#1F447B] text-lg mb-1">
                               {testimonial.name}
                             </h4>
@@ -304,7 +304,7 @@ export default function TestimonialsSection() {
                   className={`rounded-full transition-all duration-300 ${
                     index === currentIndex
                       ? "bg-[#EB993C] w-10 h-4"
-                      : "bg-gray-300 hover:bg-gray-400 w-4 h-4"
+                      : "bg-[#1F447B] hover:bg-[#6f85a6] w-4 h-4"
                   }`}
                 />
               ))}
@@ -314,7 +314,7 @@ export default function TestimonialsSection() {
 
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-          <div className="text-center bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+          <div className="text-center bg-white rounded-2xl p-8 shadow-lg border border-[#1F447B] hover:shadow-xl transition-shadow duration-300">
             <div className="text-5xl font-bold text-[#EB993C] mb-3">4.9/5</div>
             <p className="text-[#324A6D] font-semibold text-lg mb-3">
               Average Rating
@@ -322,7 +322,7 @@ export default function TestimonialsSection() {
             <div className="flex justify-center">{renderStars(5)}</div>
           </div>
 
-          <div className="text-center bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+          <div className="text-center bg-white rounded-2xl p-8 shadow-lg border border-[#1F447B] hover:shadow-xl transition-shadow duration-300">
             <div className="text-5xl font-bold text-[#EB993C] mb-3">
               10,000+
             </div>
@@ -331,7 +331,7 @@ export default function TestimonialsSection() {
             </p>
           </div>
 
-          <div className="text-center bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+          <div className="text-center bg-white rounded-2xl p-8 shadow-lg border border-[#1F447B] hover:shadow-xl transition-shadow duration-300">
             <div className="text-5xl font-bold text-[#EB993C] mb-3">99.8%</div>
             <p className="text-[#324A6D] font-semibold text-lg">
               Customer Satisfaction
