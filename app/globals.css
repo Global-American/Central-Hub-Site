@@ -3,6 +3,8 @@
  * This file contains Tailwind CSS directives and custom styles
  */
 
+@config "./tailwind.config.ts";
+
 /* Disable CSS validation for Tailwind directives */
 /* postcss-disable-next-line at-rule-no-unknown */
 @tailwind base;
@@ -12,7 +14,6 @@
 @tailwind utilities;
 
 /* CSS configuration to suppress IDE warnings */
-/* @config './tailwind.config.ts' */
 
 @layer utilities {
   .text-balance {
