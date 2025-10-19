@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
+import { Package } from "lucide-react";
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -25,10 +26,32 @@ export default function CTASection() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-20 md:py-28 lg:py-36 overflow-hidden"
-    >
+    <>
+      {/* Decorative Divider with Parcel Icons - Matching site divider style */}
+      <div className="py-3 bg-gradient-to-r from-[#f6fdfe] via-[#ffffff] to-[#f6fdfe] border-t border-b border-muted/20 overflow-hidden transition-all duration-300">
+        <div className="relative w-full">
+          {/* Single line of infinitely repeating icons */}
+          <div className="flex items-center animate-scroll-infinite opacity-60">
+            {/* First set of icons */}
+            {Array.from({ length: 50 }).map((_, i) => (
+              <div key={`package-${i}`} className="flex-shrink-0 mx-12">
+                <Package size={24} className="text-accent" />
+              </div>
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {Array.from({ length: 50 }).map((_, i) => (
+              <div key={`package-duplicate-${i}`} className="flex-shrink-0 mx-12">
+                <Package size={24} className="text-accent" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <section
+        ref={sectionRef}
+        className="relative py-20 md:py-28 lg:py-36 overflow-hidden"
+      >
       {/* Hero-matching Gradient Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa]" />
@@ -138,5 +161,6 @@ export default function CTASection() {
         </div>
       </div>
     </section>
+    </>
   );
 }

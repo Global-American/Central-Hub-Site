@@ -233,7 +233,7 @@ export default function ContactSectionV3() {
           }`}
           style={{ transitionDelay: "100ms" }}
         >
-          <div className="rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 bg-gradient-to-br from-[#1F447B] via-[#3A6B9F] to-[#1F447B] relative overflow-hidden shadow-2xl shadow-[#EB993C]/30">
+          <div className="rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 border-4 border-[#EB993C] bg-gradient-to-br from-[#1F447B] via-[#3A6B9F] to-[#1F447B] relative overflow-hidden shadow-[0_0_30px_rgba(235,153,60,0.5)]">
             {/* Lighter center overlay using multiple overlapping gradients */}
             <div className="absolute inset-0 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#5C8BC4]/20 to-transparent"></div>

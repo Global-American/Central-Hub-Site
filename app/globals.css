@@ -3,21 +3,122 @@
  * This file contains Tailwind CSS directives and custom styles
  */
 
-/* Disable CSS validation for Tailwind directives */
-/* postcss-disable-next-line at-rule-no-unknown */
-@tailwind base;
-/* postcss-disable-next-line at-rule-no-unknown */
-@tailwind components;
-/* postcss-disable-next-line at-rule-no-unknown */
-@tailwind utilities;
+@import "tailwindcss";
 
-/* CSS configuration to suppress IDE warnings */
-/* @config './tailwind.config.ts' */
+/* Tell Tailwind where to look for classes */
+@source '../app/**/*.{js,ts,jsx,tsx,mdx}';
+@source '../components/**/*.{js,ts,jsx,tsx,mdx}';
+@source '../pages/**/*.{js,ts,jsx,tsx,mdx}';
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --breakpoint-xs: 475px;
+
+  --font-sans: Inter, system-ui, sans-serif;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+@utility cursor-pointer {
+  @media (hover: none) and (pointer: coarse) {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+}
+@utility animate-scroll-infinite {
+  /* Improve touch interactions */
+
+  /* Better mobile text selection */
+
+  /* Infinite horizontal scrolling animation */
+  animation: scroll-infinite 40s linear infinite;
+  will-change: transform;
 }
 
 @layer base {
@@ -25,17 +126,17 @@
     margin: 0;
     padding: 0;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
   }
-  
+
   main {
     margin: 0;
     padding: 0;
@@ -44,9 +145,9 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 214 100% 96%; /* Light blue background #EBF4FF */
     --foreground: 214 77% 35%; /* Body Text #14529f */
-    --card: 0 0% 100%;
+    --card: 0 0% 100%; /* Keep cards white for contrast */
     --card-foreground: 214 77% 35%;
     --popover: 0 0% 100%;
     --popover-foreground: 214 77% 35%;
@@ -122,11 +223,11 @@
   }
   body {
     /* postcss-disable-next-line at-rule-no-unknown */
-    @apply bg-background text-foreground;
+    /* @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizeLegibility; */
   }
 }
 
@@ -137,31 +238,10 @@
   body {
     overflow-x: hidden;
   }
-
-  /* Improve touch interactions */
-  @media (hover: none) and (pointer: coarse) {
-    .hover\:scale-105:hover {
-      transform: scale(1.02);
-    }
-
-    button,
-    [role="button"],
-    .cursor-pointer {
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  /* Better mobile text selection */
   @media (max-width: 768px) {
     ::selection {
       background-color: rgba(235, 153, 60, 0.2);
     }
-  }
-
-  /* Infinite horizontal scrolling animation */
-  .animate-scroll-infinite {
-    animation: scroll-infinite 40s linear infinite;
-    will-change: transform;
   }
 }
 

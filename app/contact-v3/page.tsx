@@ -1,6 +1,6 @@
 import HeaderNav from "@/components/header-nav";
 import ContactSectionV3 from "@/components/contact-section-v3";
-import Footer from "@/components/footer";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Contact Us v3 - Global American LLC",
@@ -15,7 +15,6 @@ export default function ContactV3Page() {
       <main className="flex-1">
         <ContactSectionV3 />
       </main>
-      <Footer />
     </div>
   );
 }

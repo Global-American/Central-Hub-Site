@@ -8,13 +8,13 @@ import { useEffect, useRef, useState } from "react"
 
 const services = [
   {
-    icon: <Plane className="h-8 w-8" />,
+    icon: <Plane className="h-8 w-8 scale-x-[-1]" />,
     title: "Air Freight",
     description: "Fast, reliable air cargo solutions for urgent shipments with global reach and real-time tracking.",
     highlight: "Express",
   },
   {
-    icon: <Ship className="h-8 w-8" />,
+    icon: <Ship className="h-8 w-8 scale-x-[-1]" />,
     title: "Ocean Freight",
     description: "Cost-effective sea freight solutions for large volumes with LCL and FCL options worldwide.",
     highlight: "Economical",
@@ -87,7 +87,7 @@ export default function ServicesSection() {
           {services.map((service, index) => (
             <Card
               key={service.title}
-              className={`group border-0 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden ${
+              className={`group border-2 border-[#1F447B]/20 hover:border-[#EB993C]/50 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden bg-gradient-to-br from-white to-slate-50 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
               style={{ transitionDelay: `${index * 50}ms` }}

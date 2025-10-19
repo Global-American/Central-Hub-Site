@@ -3,7 +3,7 @@ import HeroSection from "@/components/hero-section";
 import OurBrandsSection from "@/components/our-brands-section";
 import TestimonialsSection from "@/components/testimonials-section";
 import CTASection from "@/components/cta-section";
-import Footer from "@/components/footer";
+import Footer from "@/components/Footer";
 import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react";
 
 // Horizontal Icon Divider Component with Infinite Animation
@@ -51,7 +51,6 @@ export default function GlobalAmericanLandingPage() {
         <TestimonialsSection />
         <CTASection />
       </main>
-      <Footer />
     </div>
   );
 }
