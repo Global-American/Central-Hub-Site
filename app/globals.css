@@ -3,7 +3,7 @@
  * This file contains Tailwind CSS directives and custom styles
  */
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* Tell Tailwind where to look for classes */
 @source '../app/**/*.{js,ts,jsx,tsx,mdx}';
@@ -126,17 +126,17 @@
     margin: 0;
     padding: 0;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
   }
-  
+
   main {
     margin: 0;
     padding: 0;
@@ -223,11 +223,11 @@
   }
   body {
     /* postcss-disable-next-line at-rule-no-unknown */
-    @apply bg-background text-foreground;
+    /* @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizeLegibility; */
   }
 }
 

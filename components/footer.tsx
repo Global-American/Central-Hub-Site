@@ -6,29 +6,31 @@ import { Phone, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 
 // Global locations with full addresses
+// Using CSS flag icons (flag-icons) for consistent cross-platform rendering
+// countryCode uses ISO 3166-1 alpha-2 codes
 const globalLocations = [
   {
-    flag: "🇺🇸",
+    countryCode: "us",
     city: "Englewood, NJ",
     fullAddress: "40 North Van Brunt Street Ste 23\nEnglewood, NJ 07631\nUSA",
     locationId: "new-york",
   },
   {
-    flag: "🇬🇧",
+    countryCode: "gb",
     city: "Strabane, Northern Ireland",
     fullAddress:
       "ShipItSmart Consulting Unit 1 Mahon Building\n39/49 Dock St, Strabane BT82 8EE\nUnited Kingdom",
     locationId: "belfast",
   },
   {
-    flag: "🇮🇪",
+    countryCode: "ie",
     city: "Convoy, Donegal",
     fullAddress:
       "Unit 4 Lower, Convoy Enterprise Centre\nConvoy, Donegal, F93 H5F9\nIreland",
     locationId: "dublin",
   },
   {
-    flag: "🇬🇧",
+    countryCode: "gb",
     city: "Heywood, Manchester",
     fullAddress:
       "Unit A, Birch Business Park\nHeywood Manchester OL10 2SX\nUnited Kingdom",
@@ -114,11 +116,11 @@ export default function Footer() {
             {/* Logo */}
             <div className="mb-4 text-left">
               <Image
-                src="/images/logo.png"
+                src="/gaLogo.png"
                 alt="Global American LLC"
                 width={200}
                 height={60}
-                className="h-12 w-auto hover:scale-105 transition-transform duration-300"
+                className="hover:scale-105 transition-transform duration-300"
               />
             </div>
 
@@ -254,7 +256,12 @@ export default function Footer() {
                           href={`/about?location=${location.locationId}#warehouse-locations`}
                           className="font-medium text-foreground hover:text-[#EB993C] transition-colors duration-200 flex items-center gap-1 group"
                         >
-                          {location.flag} {location.city}
+                          <span
+                            className={`fi fi-${location.countryCode} rounded-sm shadow-sm`}
+                            aria-hidden="true"
+                            style={{ width: 16, height: 12 }}
+                          />
+                          <span>{location.city}</span>
                           <MapPin className="h-3 w-3 text-accent group-hover:text-[#EB993C] transition-colors" />
                         </Link>
                       </div>
@@ -410,50 +417,13 @@ export default function Footer() {
           </div>
           <div className="col-span-1 flex items-start justify-center">
             <Image
-              src="/images/shipItSmartIcon.png"
+              src="/shipItSmartIcon.png"
               alt="ShipItSmart Icon"
               width={195}
               height={195}
               className="w-auto object-contain"
               priority={false}
             />
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div
-          className={`border-t border-gray-200 bg-[#f6fdfe] py-6 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-          style={{ transitionDelay: "500ms" }}
-        >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-600">
-              &copy; {new Date().getFullYear()} Global American LLC. All rights
-              reserved.
-            </p>
-
-            {/* Additional Links */}
-            <div className="flex space-x-6">
-              <Link
-                href="/privacy"
-                className="text-sm text-gray-600 hover:text-[#EB993C] transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="text-sm text-gray-600 hover:text-[#EB993C] transition-colors"
-              >
-                Terms of Service
-              </Link>
-              <Link
-                href="/cookies"
-                className="text-sm text-gray-600 hover:text-[#EB993C] transition-colors"
-              >
-                Cookie Policy
-              </Link>
-            </div>
           </div>
         </div>
       </div>

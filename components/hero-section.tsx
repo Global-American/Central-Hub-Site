@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
-import Image from "next/image"
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 // Slideshow data with synchronized content
 const slides = [
@@ -14,7 +14,7 @@ const slides = [
     description: "Fast, reliable shipping worldwide.",
     textColor: "text-white",
     label: "Shipping",
-    graphic: "/images/hero-variation-smart/Picture 1.png"
+    graphic: "/hero-variation-smart/Picture 1.png",
   },
   {
     title: "Smart",
@@ -24,7 +24,7 @@ const slides = [
     description: "Transparent global freight.",
     textColor: "text-white",
     label: "Freight",
-    graphic: null
+    graphic: null,
   },
   {
     title: "Smart",
@@ -34,7 +34,7 @@ const slides = [
     description: "Hassle-free returns.",
     textColor: "text-white",
     label: "Returns",
-    graphic: null
+    graphic: null,
   },
   {
     title: "Smart",
@@ -43,53 +43,54 @@ const slides = [
     description: "Complete fulfillment solutions.",
     textColor: "text-white",
     label: "Fulfillment",
-    graphic: null
-  }
-]
-
+    graphic: null,
+  },
+];
 
 export default function HeroSection() {
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
-  const [titleAnimation, setTitleAnimation] = useState("animate-in")
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [titleAnimation, setTitleAnimation] = useState("animate-in");
 
   // Function to go to next slide
   const nextSlide = () => {
-    setTitleAnimation("animate-out")
+    setTitleAnimation("animate-out");
     setTimeout(() => {
-      setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length)
-      setTitleAnimation("animate-in")
-    }, 300)
-  }
+      setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
+      setTitleAnimation("animate-in");
+    }, 300);
+  };
 
   // Manual slide navigation
   const goToSlide = (index: number) => {
-    if (index === currentSlideIndex) return
-    
-    setTitleAnimation("animate-out")
+    if (index === currentSlideIndex) return;
+
+    setTitleAnimation("animate-out");
     setTimeout(() => {
-      setCurrentSlideIndex(index)
-      setTitleAnimation("animate-in")
-    }, 300)
-  }
+      setCurrentSlideIndex(index);
+      setTitleAnimation("animate-in");
+    }, 300);
+  };
 
   // Auto-advance slides every 15 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      nextSlide()
-    }, 15000) // 15 seconds
+      nextSlide();
+    }, 15000); // 15 seconds
 
-    return () => clearInterval(interval)
-  }, [currentSlideIndex]) // Dependency on currentSlideIndex to reset timer on manual navigation
-
+    return () => clearInterval(interval);
+  }, [currentSlideIndex]); // Dependency on currentSlideIndex to reset timer on manual navigation
 
   return (
-    <section id="hero" className="relative w-full h-[95vh] flex items-center justify-center overflow-hidden">
+    <section
+      id="hero"
+      className="relative w-full h-[95vh] flex items-center justify-center overflow-hidden"
+    >
       {/* Gradient Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#ea8339] via-transparent to-transparent opacity-60" />
       </div>
-      
+
       {/* Dark overlay for improved text contrast */}
       <div className="absolute inset-0 bg-black/20 z-10" />
 
@@ -97,50 +98,67 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full">
           {/* Content Column */}
           <div className="flex flex-col items-start text-left space-y-6 max-w-2xl lg:order-1">
-          {/* Main title with animations */}
-          <h1 className={`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight ${slides[currentSlideIndex].textColor} transition-all duration-500 ease-in-out ${
-            titleAnimation === "animate-in" 
-              ? "opacity-100 translate-y-0 transform" 
-              : "opacity-0 translate-y-4 transform"
-          }`}>
-            {slides[currentSlideIndex].title} <span className="text-white">{slides[currentSlideIndex].titleAccent}</span><br />
-            {slides[currentSlideIndex].subtitle} <span className="text-white">{slides[currentSlideIndex].subtitleAccent}</span>
-          </h1>
-
-          {/* Description text */}
-          <div className={`transition-all duration-500 ease-in-out ${
-            titleAnimation === "animate-in" 
-              ? "opacity-100 translate-y-0 transform" 
-              : "opacity-0 translate-y-4 transform"
-          }`}>
-            <p className="text-base sm:text-lg md:text-xl font-medium text-white">
-              {slides[currentSlideIndex].description}
-            </p>
-          </div>
-
-          {/* CTA Button */}
-          <div className={`pt-4 transition-all duration-500 ease-in-out ${
-            titleAnimation === "animate-in" 
-              ? "opacity-100 translate-y-0 transform" 
-              : "opacity-0 translate-y-4 transform"
-          }`}>
-            <Button
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6 sm:px-8 py-3 text-base sm:text-lg w-full sm:w-auto"
+            {/* Main title with animations */}
+            <h1
+              className={`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight ${
+                slides[currentSlideIndex].textColor
+              } transition-all duration-500 ease-in-out ${
+                titleAnimation === "animate-in"
+                  ? "opacity-100 translate-y-0 transform"
+                  : "opacity-0 translate-y-4 transform"
+              }`}
             >
-              Get Started →
-            </Button>
+              {slides[currentSlideIndex].title}{" "}
+              <span className="text-white">
+                {slides[currentSlideIndex].titleAccent}
+              </span>
+              <br />
+              {slides[currentSlideIndex].subtitle}{" "}
+              <span className="text-white">
+                {slides[currentSlideIndex].subtitleAccent}
+              </span>
+            </h1>
+
+            {/* Description text */}
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                titleAnimation === "animate-in"
+                  ? "opacity-100 translate-y-0 transform"
+                  : "opacity-0 translate-y-4 transform"
+              }`}
+            >
+              <p className="text-base sm:text-lg md:text-xl font-medium text-white">
+                {slides[currentSlideIndex].description}
+              </p>
+            </div>
+
+            {/* CTA Button */}
+            <div
+              className={`pt-4 transition-all duration-500 ease-in-out ${
+                titleAnimation === "animate-in"
+                  ? "opacity-100 translate-y-0 transform"
+                  : "opacity-0 translate-y-4 transform"
+              }`}
+            >
+              <Button
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6 sm:px-8 py-3 text-base sm:text-lg w-full sm:w-auto"
+              >
+                Get Started →
+              </Button>
+            </div>
           </div>
-        </div>
-          
+
           {/* Graphic Column */}
           <div className="flex justify-center items-center lg:order-2">
             {slides[currentSlideIndex].graphic && (
-              <div className={`transition-all duration-500 ease-in-out ${
-                titleAnimation === "animate-in" 
-                  ? "opacity-100 translate-y-0 transform" 
-                  : "opacity-0 translate-y-4 transform"
-              }`}>
+              <div
+                className={`transition-all duration-500 ease-in-out ${
+                  titleAnimation === "animate-in"
+                    ? "opacity-100 translate-y-0 transform"
+                    : "opacity-0 translate-y-4 transform"
+                }`}
+              >
                 <Image
                   src={slides[currentSlideIndex].graphic}
                   alt={`${slides[currentSlideIndex].label} illustration`}
@@ -164,24 +182,28 @@ export default function HeroSection() {
               className="relative group"
               aria-label={`Go to ${slide.label} slide`}
             >
-              <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlideIndex
-                  ? 'bg-accent shadow-lg shadow-accent/30 scale-110'
-                  : 'bg-white/60 group-hover:bg-white/80 group-hover:scale-105'
-              }`} />
+              <div
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlideIndex
+                    ? "bg-accent shadow-lg shadow-accent/30 scale-110"
+                    : "bg-white/60 group-hover:bg-white/80 group-hover:scale-105"
+                }`}
+              />
             </button>
-            
+
             {/* Slide label */}
-            <span className={`text-xs font-medium transition-all duration-300 ${
-              index === currentSlideIndex
-                ? 'text-accent font-semibold'
-                : 'text-white/70'
-            }`}>
+            <span
+              className={`text-xs font-medium transition-all duration-300 ${
+                index === currentSlideIndex
+                  ? "text-accent font-semibold"
+                  : "text-white/70"
+              }`}
+            >
               {slide.label}
             </span>
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }
