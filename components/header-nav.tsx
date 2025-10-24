@@ -157,7 +157,7 @@ export default function HeaderNav() {
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center group">
             <Image
-              src="/galogo.png"
+              src="/gaLogo.png"
               alt="Global American LLC"
               width={160}
               height={48}
