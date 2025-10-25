@@ -157,11 +157,11 @@ export default function HeaderNav() {
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center group">
             <Image
-              src="/images/logo.png"
+              src="/gaLogo.png"
               alt="Global American LLC"
-              width={180}
-              height={54}
-              className="h-10 w-auto hover:scale-105 transition-transform duration-300"
+              width={160}
+              height={48}
+              className="hover:scale-105 transition-transform duration-300"
             />
           </Link>
           <nav className="hidden md:flex items-center space-x-8">

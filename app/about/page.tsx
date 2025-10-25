@@ -1,5 +1,5 @@
 import HeaderNav from "@/components/header-nav";
-import Footer from "@/components/footer";
+import Footer from "@/components/Footer";
 import AboutPageContent from "@/components/about-page-content";
 
 export const metadata = {
@@ -15,7 +15,6 @@ export default function AboutPage() {
       <main className="flex-1">
         <AboutPageContent />
       </main>
-      <Footer />
     </div>
   );
 }

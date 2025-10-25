@@ -169,7 +169,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20 relative overflow-hidden">
+    <section className="bg-[#f6fdfe] from-gray-50 to-gray-100 py-20 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-10 left-10 w-20 h-20 border-2 border-[#1F447B] rounded-full"></div>
