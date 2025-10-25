@@ -48,22 +48,21 @@ export default function CTASection() {
           <div className="absolute bottom-10 right-10 w-18 h-18 border-2 border-white rounded-lg transform -rotate-12"></div>
         </div>
 
-          {/* Illustration Column */}
-          <div
-            className={`relative transition-all duration-700 ${
-              isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
-            }`}
-            style={{ transitionDelay: "200ms" }}
-          >
-            <div className="relative flex justify-end items-center">
-              {/* Globe Puzzle Image */}
-              <div className="relative w-96 h-96 lg:w-[500px] lg:h-[500px] xl:w-[550px] xl:h-[550px]">
-                <img
-                  src="/images/globe-jig.png"
-                  alt="Global Logistics Solutions"
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                />
-              </div>
+        {/* Illustration Column */}
+        <div
+          className={`relative transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+          }`}
+          style={{ transitionDelay: "200ms" }}
+        >
+          <div className="relative flex justify-end items-center">
+            {/* Globe Puzzle Image */}
+            <div className="relative w-96 h-96 lg:w-[500px] lg:h-[500px] xl:w-[550px] xl:h-[550px]">
+              <img
+                src="/images/globe-jig.png"
+                alt="Global Logistics Solutions"
+                className="w-full h-full object-contain drop-shadow-2xl"
+              />
             </div>
           </div>
         </div>
