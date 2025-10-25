@@ -109,52 +109,14 @@ export default function CTASection() {
             }`}
             style={{ transitionDelay: "200ms" }}
           >
-            <div className="relative">
-              {/* Delivery Person Illustration */}
-              <div className="relative mx-auto w-80 h-80 lg:w-96 lg:h-96">
-                {/* Person */}
-                <div className="absolute top-12 left-1/2 transform -translate-x-1/2">
-                  <div className="w-16 h-16 bg-gray-800 rounded-full mb-2"></div>
-                  <div className="w-20 h-24 bg-[#EB993C] rounded-lg mx-auto mb-2"></div>
-                  <div className="w-18 h-20 bg-white rounded-lg mx-auto"></div>
-                  <div className="w-4 h-8 bg-gray-800 rounded mx-auto mt-1"></div>
-                  <div className="w-4 h-8 bg-gray-800 rounded mx-auto mt-1"></div>
-                </div>
-
-                {/* Packages Stack */}
-                <div className="absolute bottom-0 right-0">
-                  {/* Global Delivery Label */}
-                  <div className="absolute -top-8 -right-2 bg-[#1F447B] text-white px-3 py-1 rounded text-sm font-semibold">
-                    GLOBAL DELIVERY
-                  </div>
-                  
-                  {/* Local Market Label */}
-                  <div className="absolute top-12 -left-8 bg-[#1F447B] text-white px-3 py-1 rounded text-sm font-semibold">
-                    LOCAL MARKET
-                  </div>
-
-                  {/* Package Stack */}
-                  <div className="grid grid-cols-4 gap-1">
-                    {Array.from({ length: 16 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-8 h-8 rounded border-2 border-gray-700 ${
-                          i % 4 === 0
-                            ? "bg-[#1F447B]"
-                            : i % 4 === 1
-                            ? "bg-[#EB993C]"
-                            : i % 4 === 2
-                            ? "bg-[#3b82f6]"
-                            : "bg-white"
-                        }`}
-                      >
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-gray-700 rounded"></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="relative flex justify-end items-center">
+              {/* Globe Puzzle Image */}
+              <div className="relative w-96 h-96 lg:w-[500px] lg:h-[500px] xl:w-[550px] xl:h-[550px]">
+                <img
+                  src="/images/globe-jig.png"
+                  alt="Global Logistics Solutions"
+                  className="w-full h-full object-contain drop-shadow-2xl"
+                />
               </div>
             </div>
           </div>

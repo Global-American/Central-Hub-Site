@@ -233,7 +233,69 @@ export default function ContactSectionV3() {
           }`}
           style={{ transitionDelay: "100ms" }}
         >
-          <div className="rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 border-4 border-[#EB993C] bg-gradient-to-br from-[#1F447B] via-[#3A6B9F] to-[#1F447B] relative overflow-hidden shadow-[0_0_30px_rgba(235,153,60,0.5)]">
+          {/* Package Border Container */}
+          <div className="relative">
+            {/* Corner packages (fill gaps) */}
+            <div className="absolute -top-14 -left-14 pointer-events-none">
+              <Package className="pkg-icon" />
+            </div>
+            <div className="absolute -top-14 -right-14 pointer-events-none">
+              <Package className="pkg-icon" />
+            </div>
+            <div className="absolute -bottom-14 -left-14 pointer-events-none">
+              <Package className="pkg-icon" />
+            </div>
+            <div className="absolute -bottom-14 -right-14 pointer-events-none">
+              <Package className="pkg-icon" />
+            </div>
+
+            {/* Top border packages - denser and unified spacing */}
+            <div className="absolute -top-14 left-6 right-6 flex justify-between items-center pointer-events-none">
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+            </div>
+
+            {/* Bottom border packages - denser and unified spacing */}
+            <div className="absolute -bottom-14 left-6 right-6 flex justify-between items-center pointer-events-none">
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+            </div>
+
+            {/* Left border packages - denser */}
+            <div className="absolute -left-14 top-10 bottom-10 flex flex-col justify-between items-center pointer-events-none">
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+            </div>
+
+            {/* Right border packages - denser */}
+            <div className="absolute -right-14 top-10 bottom-10 flex flex-col justify-between items-center pointer-events-none">
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+              <Package className="pkg-icon" />
+            </div>
+
+          <div className="rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 bg-gradient-to-br from-[#1F447B] via-[#3A6B9F] to-[#1F447B] relative overflow-hidden">
             {/* Lighter center overlay using multiple overlapping gradients */}
             <div className="absolute inset-0 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#5C8BC4]/20 to-transparent"></div>
@@ -404,6 +466,7 @@ export default function ContactSectionV3() {
                 </div>
               </form>
             </div>
+          </div>
           </div>
         </div>
       </div>
