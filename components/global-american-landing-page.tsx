@@ -4,7 +4,21 @@ import OurBrandsSection from "@/components/our-brands-section";
 import TestimonialsSection from "@/components/testimonials-section";
 import CTASection from "@/components/cta-section";
 import Footer from "@/components/Footer";
+import CargoShipIcon from "@/components/icons/cargo-ship";
 import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react";
+
+// Flipped Plane icon (horizontal mirror)
+const FlippedPlane = (props: any) => (
+  <Plane {...props} className={`${props?.className ?? ""} scale-x-[-1]`} />
+);
+
+// Already sized/stylable via props
+const FlippedCargoShip = (props: any) => (
+  <CargoShipIcon
+    {...props}
+    className={`${props?.className ?? ""} scale-x-[-1]`}
+  />
+);
 
 // Horizontal Icon Divider Component with Infinite Animation
 function HorizontalDivider({
@@ -16,7 +30,7 @@ function HorizontalDivider({
 }) {
   return (
     <div
-      className={`py-12 bg-gradient-to-r from-[#f6fdfe] via-[#ffffff] to-[#f6fdfe] border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
+      className={`bg-white from-[#f6fdfe] via-[#ffffff] to-[#f6fdfe] border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
     >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
@@ -45,10 +59,11 @@ export default function GlobalAmericanLandingPage() {
       <HeaderNav />
       <main className="flex-1">
         <HeroSection />
-        <HorizontalDivider Icon={Ship} className="-mt-1 py-3" />
+        <HorizontalDivider Icon={Package} className="-mt-1 py-3" />
         <OurBrandsSection />
-        <HorizontalDivider Icon={Plane} className="py-3" />
+        <HorizontalDivider Icon={FlippedPlane} className="py-3" />
         <TestimonialsSection />
+        <HorizontalDivider Icon={FlippedCargoShip} className="py-3" />
         <CTASection />
       </main>
     </div>
