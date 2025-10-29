@@ -34,7 +34,8 @@ export default function AboutPageContent() {
     <>
     <section
       id="about"
-      className="py-20 md:py-28 lg:py-36 bg-background"
+      className="py-20 md:py-28 lg:py-36"
+      style={{ backgroundColor: "#f6fdfe" }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -72,10 +73,12 @@ export default function AboutPageContent() {
             </div>
           </div>
           <div className="flex justify-center">
-            <div
-              className="w-full max-w-md h-96 rounded-lg flex items-center justify-center bg-white border-2 border-[#1F447B]"
-            >
-              <span className="text-[#1F447B] text-lg">About Us Image</span>
+            <div className="relative w-full max-w-md h-96">
+              <img
+                src="/images/globe-jig.png"
+                alt="Global Logistics Solutions"
+                className="w-full h-full object-contain drop-shadow-2xl"
+              />
             </div>
           </div>
         </div>

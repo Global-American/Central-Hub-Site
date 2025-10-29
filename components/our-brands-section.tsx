@@ -180,9 +180,9 @@ export default function OurBrandsSection() {
 
                   {/* Subtitle Section with Tagline */}
                   <div className="absolute bottom-6 left-6 right-6 z-20">
-                    <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/20">
+                    <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 md:p-8 lg:p-10 border border-white/20">
                       <div className="text-center">
-                        <h4 className="text-white text-sm md:text-base font-bold tracking-tight leading-tight">
+                        <h4 className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold tracking-tight leading-tight">
                           {brand.tagline}
                         </h4>
                       </div>

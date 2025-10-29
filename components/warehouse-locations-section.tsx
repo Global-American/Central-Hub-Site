@@ -159,7 +159,8 @@ export default function WarehouseLocationsSection() {
     <section
       ref={sectionRef}
       id="warehouse-locations"
-      className="py-16 md:py-20 bg-background"
+      className="pb-16 md:pb-20"
+      style={{ backgroundColor: "#f6fdfe", marginTop: "0" }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -168,10 +169,10 @@ export default function WarehouseLocationsSection() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-4">
-            <span className="font-bold">Unlimited capacity</span>, global reach
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "#1F447B" }}>
+            Unlimited capacity, <span className="text-[#EB993C]">Global reach</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg max-w-3xl mx-auto" style={{ color: "#324A6D" }}>
             Our strategically positioned warehouses across three continents
             ensure your goods are always close to your customers.
           </p>
@@ -179,21 +180,22 @@ export default function WarehouseLocationsSection() {
 
         {/* Main Interface Container */}
         <div
-          className={`relative w-full h-[700px] lg:h-[800px] rounded-2xl overflow-hidden shadow-sm bg-background border-2 border-[#1F447B] transition-all duration-700 ${
+          className={`relative w-full h-[700px] lg:h-[800px] rounded-2xl overflow-hidden shadow-sm border-2 border-[#1F447B] transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
+          style={{ backgroundColor: "#f6fdfe" }}
         >
           <div className="flex h-full">
             {/* Left Panel - Interactive Location List */}
-            <div className="w-full lg:w-2/5 bg-background border-r-2 border-[#1F447B]">
+            <div className="w-full lg:w-2/5 border-r-2 border-[#1F447B]" style={{ backgroundColor: "#f6fdfe" }}>
               {/* Panel Header */}
-              <div className="p-6 border-b-2 border-[#1F447B] bg-background">
+              <div className="p-6 border-b-2 border-[#1F447B]" style={{ backgroundColor: "#f6fdfe" }}>
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-foreground">
+                    <h3 className="text-xl font-bold" style={{ color: "#1F447B" }}>
                       Global Locations
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm mt-1" style={{ color: "#324A6D" }}>
                       {warehouseLocations.length} facilities worldwide
                     </p>
                   </div>
@@ -230,17 +232,17 @@ export default function WarehouseLocationsSection() {
                             {countryFlags[location.countryCode]}
                           </div>
                           <div>
-                            <h4 className="font-semibold text-foreground text-lg">
+                            <h4 className="font-semibold text-lg" style={{ color: "#1F447B" }}>
                               {location.city}
                             </h4>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm" style={{ color: "#324A6D" }}>
                               {location.country}
                             </p>
                           </div>
                         </div>
 
                         {/* Simple description */}
-                        <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                        <p className="text-sm leading-relaxed mt-2" style={{ color: "#324A6D" }}>
                           {location.description}
                         </p>
                       </CardContent>
@@ -251,19 +253,19 @@ export default function WarehouseLocationsSection() {
             </div>
 
             {/* Right Panel - Dynamic Map Interface */}
-            <div className="hidden lg:flex lg:w-3/5 flex-col bg-background">
+            <div className="hidden lg:flex lg:w-3/5 flex-col" style={{ backgroundColor: "#f6fdfe" }}>
               {/* Map Header */}
               {selectedLocationData && (
-                <div className="p-4 bg-background border-b-2 border-[#1F447B] shadow-sm">
+                <div className="p-4 border-b-2 border-[#1F447B] shadow-sm" style={{ backgroundColor: "#f6fdfe" }}>
                   <div className="flex items-center gap-3">
                     <div className="text-xl">
                       {countryFlags[selectedLocationData.countryCode]}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-lg text-foreground">
+                      <h4 className="font-semibold text-lg" style={{ color: "#1F447B" }}>
                         {selectedLocationData.city}
                       </h4>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2 text-sm" style={{ color: "#324A6D" }}>
                         <MapPin className="h-4 w-4" />
                         <span>{selectedLocationData.address}</span>
                       </div>
@@ -303,17 +305,17 @@ export default function WarehouseLocationsSection() {
         {/* Mobile View Enhancement */}
         <div className="lg:hidden mt-6">
           {selectedLocationData && (
-            <Card className="bg-background shadow-sm border-2 border-[#1F447B]">
+            <Card className="shadow-sm border-2 border-[#1F447B]" style={{ backgroundColor: "#f6fdfe" }}>
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
                   <div className="text-xl">
                     {countryFlags[selectedLocationData.countryCode]}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg">
+                    <h4 className="font-semibold text-lg" style={{ color: "#1F447B" }}>
                       {selectedLocationData.city}
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm" style={{ color: "#324A6D" }}>
                       {selectedLocationData.country}
                     </p>
                   </div>
@@ -322,13 +324,13 @@ export default function WarehouseLocationsSection() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-slate-600" />
-                    <span className="text-slate-600">
+                    <MapPin className="h-4 w-4" style={{ color: "#324A6D" }} />
+                    <span style={{ color: "#324A6D" }}>
                       {selectedLocationData.address}
                     </span>
                   </div>
 
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm leading-relaxed" style={{ color: "#324A6D" }}>
                     {selectedLocationData.description}
                   </p>
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Send, Building2, Truck, Ship, Package, RotateCcw } from "lucide-react";
+import { gsap } from "gsap";
 
 function Building2Icon(props: { className?: string }) {
   return (
@@ -87,7 +88,13 @@ function SimpleCheckbox({
       id={id}
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      className={`accent-[#EB993C] w-5 h-5 mr-2 ${className ?? ""}`}
+      className={`w-5 h-5 mr-2 rounded cursor-pointer ${className ?? ""}`}
+      style={{
+        accentColor: "#EB993C",
+        border: "2px solid #EB993C",
+        outline: "2px solid #EB993C",
+        outlineOffset: "-2px"
+      }}
     />
   );
 }
@@ -132,6 +139,7 @@ export default function ContactSectionV3() {
   });
   const [bgColor, setBgColor] = useState("#F4FAFC");
   const sectionRef = useRef<HTMLElement>(null);
+  const borderContainerRef = useRef<HTMLDivElement>(null);
 
   const API_BASE =
     process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000/api/v1";
@@ -151,6 +159,125 @@ export default function ContactSectionV3() {
     }
 
     return () => observer.disconnect();
+  }, []);
+
+  // GSAP animation for parcels moving clockwise around border
+  useEffect(() => {
+    if (!borderContainerRef.current) return;
+
+    const container = borderContainerRef.current;
+    const formElement = container.querySelector('.contact-form-card') as HTMLElement;
+    const parcels = Array.from(container.querySelectorAll('.parcel-icon')) as HTMLElement[];
+    
+    if (!formElement || parcels.length === 0) return;
+
+    const animateParcels = () => {
+      // Use offsetWidth/offsetHeight for accurate dimensions
+      const width = formElement.offsetWidth;
+      const height = formElement.offsetHeight;
+      const offset = 30; // Offset distance from border - closer to form
+      // Get actual icon size from the first parcel element
+      const iconSize = parcels[0]?.querySelector('svg')?.getBoundingClientRect().width || 28;
+      const halfIcon = iconSize / 2; // Center the icon on the path
+      
+      // Calculate perimeter for even spacing
+      const perimeter = (width + height) * 2;
+      const totalDuration = 40; // Total time for one complete loop
+      
+      parcels.forEach((parcel, index) => {
+        // Calculate starting position based on perimeter distribution
+        const startDistance = (index / parcels.length) * perimeter;
+        let startLeft = 0;
+        let startTop = 0;
+        
+        // Determine which edge the parcel starts on (centered on icon)
+        if (startDistance < width) {
+          // Top edge
+          startLeft = startDistance - halfIcon;
+          startTop = -offset - halfIcon;
+        } else if (startDistance < width + height) {
+          // Right edge
+          startLeft = width + offset - halfIcon;
+          startTop = (startDistance - width) - halfIcon;
+        } else if (startDistance < width * 2 + height) {
+          // Bottom edge
+          startLeft = (width - (startDistance - width - height)) - halfIcon;
+          startTop = height + offset - halfIcon;
+        } else {
+          // Left edge
+          startLeft = -offset - halfIcon;
+          startTop = (height - (startDistance - width * 2 - height)) - halfIcon;
+        }
+        
+        const tl = gsap.timeline({
+          repeat: -1
+        });
+
+        // Calculate duration for each side based on its length relative to perimeter
+        const topDuration = (width / perimeter) * totalDuration;
+        const rightDuration = (height / perimeter) * totalDuration;
+        const bottomDuration = (width / perimeter) * totalDuration;
+        const leftDuration = (height / perimeter) * totalDuration;
+
+        // Set starting position
+        tl.set(parcel, {
+          left: startLeft,
+          top: startTop
+        });
+
+        // Animate from current position around the border (clockwise)
+        // Top-right corner, bottom-right corner, bottom-left corner, top-left corner
+        if (startDistance < width) {
+          // Starting on top edge - move to top-right corner, then continue clockwise
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration * ((width - startDistance) / width), ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration, ease: "none" });
+          tl.to(parcel, { left: startLeft, top: -offset - halfIcon, duration: topDuration * (startDistance / width), ease: "none" });
+        } else if (startDistance < width + height) {
+          // Starting on right edge
+          const rightProgress = (startDistance - width) / height;
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration * (1 - rightProgress), ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: startTop, duration: rightDuration * rightProgress, ease: "none" });
+        } else if (startDistance < width * 2 + height) {
+          // Starting on bottom edge
+          const bottomProgress = (startDistance - width - height) / width;
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration * (1 - bottomProgress), ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration, ease: "none" });
+          tl.to(parcel, { left: startLeft, top: height + offset - halfIcon, duration: bottomDuration * bottomProgress, ease: "none" });
+        } else {
+          // Left edge
+          const leftProgress = (startDistance - width * 2 - height) / height;
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration * (1 - leftProgress), ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: startTop, duration: leftDuration * leftProgress, ease: "none" });
+        }
+      });
+    };
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(animateParcels, 100);
+
+    // Re-calculate on window resize
+    const handleResize = () => {
+      gsap.killTweensOf(parcels);
+      setTimeout(animateParcels, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timeoutId);
+      gsap.killTweensOf(parcels);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleInputChange = (
@@ -212,7 +339,7 @@ export default function ContactSectionV3() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div
-          className={`text-center mb-12 lg:mb-20 transition-all duration-700 ${
+          className={`text-center mb-16 lg:mb-24 transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
@@ -228,79 +355,32 @@ export default function ContactSectionV3() {
 
         {/* Contact Form Section */}
         <div
-          className={`max-w-5xl lg:max-w-6xl mx-auto transition-all duration-700 ${
+          className={`max-w-4xl lg:max-w-5xl mx-auto transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
           style={{ transitionDelay: "100ms" }}
         >
           {/* Package Border Container */}
-          <div className="relative">
-            {/* Corner packages (fill gaps) */}
-            <div className="absolute -top-14 -left-14 pointer-events-none">
-              <Package className="pkg-icon" />
-            </div>
-            <div className="absolute -top-14 -right-14 pointer-events-none">
-              <Package className="pkg-icon" />
-            </div>
-            <div className="absolute -bottom-14 -left-14 pointer-events-none">
-              <Package className="pkg-icon" />
-            </div>
-            <div className="absolute -bottom-14 -right-14 pointer-events-none">
-              <Package className="pkg-icon" />
-            </div>
+          <div ref={borderContainerRef} className="relative">
+            {/* Animated parcels moving clockwise around the border */}
+            {[...Array(32)].map((_, i) => (
+              <div
+                key={`parcel-${i}`}
+                className="parcel-icon absolute pointer-events-none"
+                style={{
+                  opacity: 0.3
+                }}
+              >
+                <Package className="h-6 w-6 md:h-7 md:w-7 text-[#EB993C]" />
+              </div>
+            ))}
 
-            {/* Top border packages - denser and unified spacing */}
-            <div className="absolute -top-14 left-6 right-6 flex justify-between items-center pointer-events-none">
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-            </div>
-
-            {/* Bottom border packages - denser and unified spacing */}
-            <div className="absolute -bottom-14 left-6 right-6 flex justify-between items-center pointer-events-none">
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-            </div>
-
-            {/* Left border packages - denser */}
-            <div className="absolute -left-14 top-10 bottom-10 flex flex-col justify-between items-center pointer-events-none">
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-            </div>
-
-            {/* Right border packages - denser */}
-            <div className="absolute -right-14 top-10 bottom-10 flex flex-col justify-between items-center pointer-events-none">
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-              <Package className="pkg-icon" />
-            </div>
-
-          <div className="rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 bg-gradient-to-br from-[#1F447B] via-[#3A6B9F] to-[#1F447B] relative overflow-hidden">
-            {/* Lighter center overlay using multiple overlapping gradients */}
-            <div className="absolute inset-0 rounded-2xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#5C8BC4]/20 to-transparent"></div>
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#5C8BC4]/15 to-transparent"></div>
-            </div>
+            <div className="contact-form-card rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 bg-gradient-to-br from-[#1F447B] via-[#3A6B9F] to-[#1F447B] relative overflow-hidden">
+              {/* Lighter center overlay using multiple overlapping gradients */}
+              <div className="absolute inset-0 rounded-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#5C8BC4]/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#5C8BC4]/15 to-transparent"></div>
+              </div>
 
             {/* Content wrapper with relative positioning */}
             <div className="relative z-10">
@@ -417,11 +497,11 @@ export default function ContactSectionV3() {
                                 <div className="text-[#EB993C]">
                                   {brand.icon}
                                 </div>
-                                <span className="font-medium text-sm lg:text-base group-hover:text-[#EB993C] text-gray-800 transition-colors">
+                                <span className="font-medium text-sm lg:text-base group-hover:text-[#EB993C] transition-colors" style={{ color: "#1F447B" }}>
                                   {brand.name}
                                 </span>
                               </div>
-                              <p className="text-xs lg:text-sm text-gray-600 leading-relaxed">
+                              <p className="text-xs lg:text-sm leading-relaxed" style={{ color: "#324A6D" }}>
                                 {brand.description}
                               </p>
                             </label>

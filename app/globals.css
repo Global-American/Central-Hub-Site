@@ -285,3 +285,72 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* Border chase animation - icons move along the perimeter */
+@keyframes border-chase-top {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.3;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+@keyframes border-chase-right {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.3;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+}
+
+@keyframes border-chase-bottom {
+  0% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.3;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+}
+
+@keyframes border-chase-left {
+  0% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.3;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+}
