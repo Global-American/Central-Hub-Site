@@ -182,7 +182,7 @@ export default function ContactSectionV3() {
       
       // Calculate perimeter for even spacing
       const perimeter = (width + height) * 2;
-      const totalDuration = 40; // Total time for one complete loop
+      const totalDuration = 120; // Total time for one complete loop - much slower for very subtle effect
       
       parcels.forEach((parcel, index) => {
         // Calculate starting position based on perimeter distribution
