@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { Package } from "lucide-react";
+import { gsap } from "gsap";
 import WarehouseLocationsSection from "@/components/warehouse-locations-section";
 
 export default function AboutPageContent() {
@@ -8,6 +10,7 @@ export default function AboutPageContent() {
   const [isTeamVisible, setIsTeamVisible] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
   const teamRef = useRef<HTMLDivElement>(null);
+  const borderContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,14 +33,159 @@ export default function AboutPageContent() {
     return () => observer.disconnect();
   }, []);
 
+  // GSAP animation for parcels moving clockwise around the border
+  useEffect(() => {
+    if (!borderContainerRef.current) return;
+
+    const container = borderContainerRef.current;
+    const contentElement = container.querySelector('.about-content-wrapper') as HTMLElement;
+    const parcels = Array.from(container.querySelectorAll('.parcel-icon')) as HTMLElement[];
+    
+    if (!contentElement || parcels.length === 0) {
+      console.log('Missing elements:', { contentElement: !!contentElement, parcelsCount: parcels.length });
+      return;
+    }
+
+    const animateParcels = () => {
+      const width = contentElement.offsetWidth;
+      const height = contentElement.offsetHeight;
+      
+      console.log('Animating parcels - dimensions:', { width, height });
+      
+      if (width === 0 || height === 0) {
+        console.log('Invalid dimensions, skipping animation');
+        return;
+      }
+      
+      const offset = 40; // Offset distance from border
+      const iconSize = parcels[0]?.querySelector('svg')?.getBoundingClientRect().width || 28;
+      const halfIcon = iconSize / 2;
+      
+      // Calculate perimeter for even spacing
+      const perimeter = (width + height) * 2;
+      const totalDuration = 120; // Total time for one complete loop
+      
+      parcels.forEach((parcel, index) => {
+        // Calculate starting position based on perimeter distribution
+        const startDistance = (index / parcels.length) * perimeter;
+        let startLeft = 0;
+        let startTop = 0;
+        
+        // Determine which edge the parcel starts on
+        if (startDistance < width) {
+          // Top edge
+          startLeft = startDistance - halfIcon;
+          startTop = -offset - halfIcon;
+        } else if (startDistance < width + height) {
+          // Right edge
+          startLeft = width + offset - halfIcon;
+          startTop = (startDistance - width) - halfIcon;
+        } else if (startDistance < width * 2 + height) {
+          // Bottom edge
+          startLeft = (width - (startDistance - width - height)) - halfIcon;
+          startTop = height + offset - halfIcon;
+        } else {
+          // Left edge
+          startLeft = -offset - halfIcon;
+          startTop = (height - (startDistance - width * 2 - height)) - halfIcon;
+        }
+        
+        const tl = gsap.timeline({
+          repeat: -1
+        });
+
+        // Calculate duration for each side based on its length relative to perimeter
+        const topDuration = (width / perimeter) * totalDuration;
+        const rightDuration = (height / perimeter) * totalDuration;
+        const bottomDuration = (width / perimeter) * totalDuration;
+        const leftDuration = (height / perimeter) * totalDuration;
+
+        // Set starting position
+        tl.set(parcel, {
+          left: startLeft,
+          top: startTop
+        });
+
+        // Animate from current position around the border (clockwise)
+        if (startDistance < width) {
+          // Starting on top edge
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration * ((width - startDistance) / width), ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration, ease: "none" });
+          tl.to(parcel, { left: startLeft, top: -offset - halfIcon, duration: topDuration * (startDistance / width), ease: "none" });
+        } else if (startDistance < width + height) {
+          // Starting on right edge
+          const rightProgress = (startDistance - width) / height;
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration * (1 - rightProgress), ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: startTop, duration: rightDuration * rightProgress, ease: "none" });
+        } else if (startDistance < width * 2 + height) {
+          // Starting on bottom edge
+          const bottomProgress = (startDistance - width - height) / width;
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration * (1 - bottomProgress), ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration, ease: "none" });
+          tl.to(parcel, { left: startLeft, top: height + offset - halfIcon, duration: bottomDuration * bottomProgress, ease: "none" });
+        } else {
+          // Left edge
+          const leftProgress = (startDistance - width * 2 - height) / height;
+          tl.to(parcel, { left: -offset - halfIcon, top: -offset - halfIcon, duration: leftDuration * (1 - leftProgress), ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: -offset - halfIcon, duration: topDuration, ease: "none" });
+          tl.to(parcel, { left: width + offset - halfIcon, top: height + offset - halfIcon, duration: rightDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: height + offset - halfIcon, duration: bottomDuration, ease: "none" });
+          tl.to(parcel, { left: -offset - halfIcon, top: startTop, duration: leftDuration * leftProgress, ease: "none" });
+        }
+      });
+    };
+
+    // Give more time for DOM to be ready and properly sized
+    const timeoutId = setTimeout(animateParcels, 500);
+
+    const handleResize = () => {
+      const resizeParcels = Array.from(container.querySelectorAll('.parcel-icon')) as HTMLElement[];
+      gsap.killTweensOf(resizeParcels);
+      setTimeout(animateParcels, 500);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timeoutId);
+      const cleanupParcels = Array.from(container.querySelectorAll('.parcel-icon')) as HTMLElement[];
+      gsap.killTweensOf(cleanupParcels);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <>
+    <div style={{ backgroundColor: "#f6fdfe" }}>
+      {/* Border Container with Animated Parcels wrapping both sections */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-28 lg:pt-36 pb-8 md:pb-12 lg:pb-16">
+        <div ref={borderContainerRef} className="relative">
+          {/* Animated parcels moving clockwise around the border */}
+          {[...Array(60)].map((_, i) => (
+            <div
+              key={`parcel-${i}`}
+              className="parcel-icon absolute pointer-events-none"
+              style={{
+                opacity: 0.3,
+                zIndex: 10
+              }}
+            >
+              <Package className="h-6 w-6 md:h-7 md:w-7 text-[#EB993C]" />
+            </div>
+          ))}
+
+          {/* Content Wrapper */}
+          <div className="about-content-wrapper">
     <section
       id="about"
-      className="py-20 md:py-28 lg:py-36"
-      style={{ backgroundColor: "#f6fdfe" }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={aboutRef}
           className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16 lg:mb-20 transition-all duration-700 ${
@@ -86,7 +234,7 @@ export default function AboutPageContent() {
         {/* Our Team Section */}
         <div
           ref={teamRef}
-          className={`text-center transition-all duration-700 ${
+          className={`text-center pb-8 md:pb-12 lg:pb-16 transition-all duration-700 ${
             isTeamVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"
@@ -207,11 +355,14 @@ export default function AboutPageContent() {
             </div>
           </div>
         </div>
-      </div>
     </section>
 
     {/* Warehouse Locations Section */}
     <WarehouseLocationsSection />
+          </div>
+        </div>
+      </div>
+    </div>
   </>
   );
 }
