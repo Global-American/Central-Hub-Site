@@ -173,7 +173,6 @@ export default function Footer() {
               {[
                 { label: "Home", href: "/" },
                 { label: "Services", href: "/#services" },
-                { label: "Integrations", href: "/#integrations" },
                 { label: "About Us", href: "/about" },
                 { label: "Contact Us", href: "/contact" },
                 { label: "Contact Us v2", href: "/contact-v2" },
