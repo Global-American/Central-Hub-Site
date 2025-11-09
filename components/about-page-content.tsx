@@ -73,7 +73,7 @@ export default function AboutPageContent() {
       const perimeter = (width * 2) + (height * 2);
       
       // Animation settings
-      const duration = 100;
+      const duration = 240; // Match contact form border animation speed
       const spacing = perimeter / parcels.length;
       
       parcels.forEach((parcel, index) => {
