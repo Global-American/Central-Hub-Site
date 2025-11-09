@@ -80,7 +80,12 @@ export default function AboutPageContentV2() {
 
   return (
     <div style={{ backgroundColor: "#f6fdfe" }}>
-      <section id="about" className="pt-20 md:pt-28 lg:pt-36 pb-8 md:pb-12 lg:pb-16">
+      {/* Divider right below header */}
+      <div className="pt-[72px]">
+        <HorizontalDivider Icon={Package} className="py-4 md:py-5" />
+      </div>
+      
+      <section id="about" className="pt-8 md:pt-12 lg:pt-16 pb-8 md:pb-12 lg:pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={aboutRef}
@@ -90,6 +95,7 @@ export default function AboutPageContentV2() {
               : "opacity-0 translate-y-4"
           }`}
         >
+          
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-[#1F447B] mb-6">
               About <span className="text-[#EB993C]">Us</span>
@@ -128,9 +134,6 @@ export default function AboutPageContentV2() {
         </div>
         </div>
       </section>
-
-      {/* Divider */}
-      <HorizontalDivider Icon={Package} className="py-3" />
 
       {/* Our Team Section */}
       <section className="py-8 md:py-12 lg:py-16">

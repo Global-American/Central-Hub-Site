@@ -55,14 +55,17 @@ export default function AboutPageContent() {
       // Calculate the content height (from top of page to top of footer)
       const contentHeight = footer.offsetTop;
       
-      // Define uniform margin for all sides
-      const margin = 20;
+      // Define margins and icon size
+      const uniformMargin = 20;
+      const headerHeight = 72; // Height of the fixed header
+      const iconSize = 28; // Approximate size of the parcel icon (h-7 w-7)
       
-      // Define the rectangular boundary
-      const left = margin;
-      const right = viewportWidth - margin;
-      const top = margin;
-      const bottom = contentHeight - margin;
+      // Define the rectangular boundary - accounting for icon size
+      // Icons are positioned by their top-left corner, so we need to offset by icon dimensions
+      const left = uniformMargin;
+      const right = viewportWidth - uniformMargin - iconSize;
+      const top = headerHeight + uniformMargin; // Start below the header with margin
+      const bottom = contentHeight - uniformMargin - iconSize;
       
       // Calculate dimensions
       const width = right - left;
@@ -164,7 +167,7 @@ export default function AboutPageContent() {
       {/* Parcel border around full viewport edges (scrolls with page) */}
       <div 
         ref={borderContainerRef} 
-        className="absolute pointer-events-none z-50" 
+        className="absolute pointer-events-none z-10" 
         style={{ 
           left: '0',
           right: '0', 
