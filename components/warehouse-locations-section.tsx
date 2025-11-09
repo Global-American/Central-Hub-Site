@@ -144,14 +144,14 @@ export default function WarehouseLocationsSection() {
     if (!mapLoaded) return "";
 
     if (selectedLocationData) {
-      // Individual location view
-      return `https://maps.google.com/maps?q=${selectedLocationData.lat},${selectedLocationData.lng}&hl=en&z=15&output=embed`;
+      // Individual location view - hide controls
+      return `https://maps.google.com/maps?q=${selectedLocationData.lat},${selectedLocationData.lng}&hl=en&z=15&output=embed&iwloc=near`;
     } else {
-      // Global view with all locations
+      // Global view with all locations - hide controls
       const allCoords = warehouseLocations
         .map((loc) => `${loc.lat},${loc.lng}`)
         .join("|");
-      return `https://maps.google.com/maps?q=${warehouseLocations[0].lat},${warehouseLocations[0].lng}&hl=en&z=2&output=embed`;
+      return `https://maps.google.com/maps?q=${warehouseLocations[0].lat},${warehouseLocations[0].lng}&hl=en&z=2&output=embed&iwloc=near`;
     }
   }, [selectedLocationData, mapLoaded]);
 
@@ -159,7 +159,7 @@ export default function WarehouseLocationsSection() {
     <section
       ref={sectionRef}
       id="warehouse-locations"
-      className="pt-6 md:pt-8 lg:pt-10 pb-16 md:pb-20"
+      className="pt-6 md:pt-8 lg:pt-10 pb-20 md:pb-24 lg:pb-28"
       style={{ backgroundColor: "#f6fdfe", marginTop: "0" }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -275,7 +275,7 @@ export default function WarehouseLocationsSection() {
               )}
 
               {/* Map Container */}
-              <div className="flex-1 relative">
+              <div className="flex-1 relative overflow-hidden">
                 {mapLoaded ? (
                   <iframe
                     src={getMapUrl()}
@@ -288,6 +288,11 @@ export default function WarehouseLocationsSection() {
                         ? `${selectedLocationData.city} location`
                         : "Global warehouse locations"
                     }
+                    style={{
+                      position: 'relative',
+                      left: '0',
+                      top: '0'
+                    }}
                   />
                 ) : (
                   <div className="w-full h-full bg-slate-200 flex items-center justify-center">

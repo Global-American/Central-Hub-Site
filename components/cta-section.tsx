@@ -43,39 +43,39 @@ export default function CTASection() {
 
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-20 z-10">
-          <div className="absolute top-10 left-10 w-20 h-20 transform rotate-12">
+          <div className="absolute top-10 left-10 w-32 h-32 transform rotate-12">
             <Image 
               src="/images/parcel1.png" 
               alt="" 
-              width={80} 
-              height={80} 
+              width={128} 
+              height={128} 
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="absolute top-20 right-20 w-16 h-16 transform -rotate-6">
+          <div className="absolute top-20 right-20 w-28 h-28 transform -rotate-6">
             <Image 
               src="/images/parcel2.png" 
               alt="" 
-              width={64} 
-              height={64} 
+              width={112} 
+              height={112} 
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 transform rotate-45">
+          <div className="absolute bottom-20 left-20 w-40 h-40 transform rotate-45">
             <Image 
               src="/images/parcel1.png" 
               alt="" 
-              width={96} 
-              height={96} 
+              width={160} 
+              height={160} 
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="absolute bottom-10 right-10 w-18 h-18 transform -rotate-12">
+          <div className="absolute bottom-10 right-10 w-32 h-32 transform -rotate-12">
             <Image 
               src="/images/parcel2.png" 
               alt="" 
-              width={72} 
-              height={72} 
+              width={128} 
+              height={128} 
               className="w-full h-full object-contain"
             />
           </div>

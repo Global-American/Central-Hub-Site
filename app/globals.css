@@ -246,7 +246,7 @@
 
   /* Infinite horizontal scrolling animation */
   .animate-scroll-infinite {
-    animation: scroll-infinite 240s linear infinite;
+    animation: scroll-infinite 40s linear infinite;
     will-change: transform;
   }
 
