@@ -59,11 +59,11 @@ export default function GlobalAmericanLandingPage() {
       <HeaderNav />
       <main className="flex-1">
         <HeroSection />
-        <HorizontalDivider Icon={Package} className="-mt-1 py-3" />
+        <HorizontalDivider Icon={Package} className="-mt-1 py-4 md:py-5" />
         <OurBrandsSection />
-        <HorizontalDivider Icon={FlippedPlane} className="py-3" />
+        <HorizontalDivider Icon={FlippedPlane} className="py-4 md:py-5" />
         <TestimonialsSection />
-        <HorizontalDivider Icon={FlippedCargoShip} className="py-3" />
+        <HorizontalDivider Icon={FlippedCargoShip} className="py-4 md:py-5" />
         <CTASection />
       </main>
     </div>

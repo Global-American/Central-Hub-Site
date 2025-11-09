@@ -223,6 +223,25 @@ export default function HeaderNav() {
             </Link>
 
             <Link
+              href="/about-v2"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
+                isActiveLink("/about-v2")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              About Us v2
+              {/* Active underline */}
+              {isActiveLink("/about-v2") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/about-v2") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
               href="/contact"
               className={`text-base font-medium transition-all duration-200 py-2 relative group ${
                 isActiveLink("/contact")
@@ -468,6 +487,26 @@ export default function HeaderNav() {
               )}
               {/* Hover underline - only show when not active */}
               {!isActiveLink("/about") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/about-v2"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
+                isActiveLink("/about-v2")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              About Us v2
+              {/* Active underline */}
+              {isActiveLink("/about-v2") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/about-v2") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>

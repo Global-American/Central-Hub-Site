@@ -94,13 +94,13 @@ export default function HeroSection() {
       {/* Dark overlay for improved text contrast */}
       <div className="absolute inset-0 bg-black/20 z-10" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 flex items-center h-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl relative z-20 flex items-center h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16 items-center w-full">
           {/* Content Column */}
-          <div className="flex flex-col items-start text-left space-y-6 max-w-2xl lg:order-1">
+          <div className="flex flex-col items-start text-left space-y-6 lg:space-y-8 max-w-2xl lg:order-1">
             {/* Main title with animations */}
             <h1
-              className={`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight ${
+              className={`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-tight ${
                 slides[currentSlideIndex].textColor
               } transition-all duration-500 ease-in-out ${
                 titleAnimation === "animate-in"
@@ -127,7 +127,7 @@ export default function HeroSection() {
                   : "opacity-0 translate-y-4 transform"
               }`}
             >
-              <p className="text-base sm:text-lg md:text-xl font-medium text-white">
+              <p className="text-base sm:text-lg md:text-xl xl:text-2xl font-medium text-white leading-relaxed">
                 {slides[currentSlideIndex].description}
               </p>
             </div>
@@ -142,7 +142,7 @@ export default function HeroSection() {
             >
               <Button
                 size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6 sm:px-8 py-3 text-base sm:text-lg w-full sm:w-auto"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 sm:px-10 xl:px-12 py-4 xl:py-5 text-base sm:text-lg xl:text-xl w-full sm:w-auto"
               >
                 Get Started →
               </Button>
@@ -162,9 +162,9 @@ export default function HeroSection() {
                 <Image
                   src={slides[currentSlideIndex].graphic}
                   alt={`${slides[currentSlideIndex].label} illustration`}
-                  width={500}
-                  height={400}
-                  className="max-w-full h-auto object-contain"
+                  width={600}
+                  height={500}
+                  className="max-w-full h-auto object-contain xl:scale-110"
                   priority={currentSlideIndex === 0}
                 />
               </div>

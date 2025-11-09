@@ -29,7 +29,7 @@ export default function CTASection() {
     <>
       <section
         ref={sectionRef}
-        className="relative py-12 md:py-15 lg:py-18 overflow-hidden"
+        className="relative py-16 md:py-20 lg:py-24 xl:py-28 overflow-hidden"
       >
         {/* Hero-matching Gradient Background */}
         <div className="absolute inset-0">
@@ -48,33 +48,33 @@ export default function CTASection() {
           <div className="absolute bottom-10 right-10 w-18 h-18 border-2 border-white rounded-lg transform -rotate-12"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl relative z-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16 items-center">
             {/* Content Column */}
             <div
               className={`transition-all duration-700 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 lg:mb-8 leading-tight">
                 Ready to Transform Your <span className="text-[#EB993C]">Logistics</span>?
               </h2>
-              <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-                Join businesses that trust Global American with their smart logistics solutions. 
+              <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-white/90 mb-8 lg:mb-10 leading-relaxed max-w-2xl">
+                Join thousands of businesses that trust Global American with their smart logistics solutions. 
                 Be smart, ship smarter with our intelligent platforms.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 lg:gap-5">
                 <Button
                   size="lg"
-                  className="bg-[#EB993C] hover:bg-[#d88730] text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                  className="bg-[#EB993C] hover:bg-[#d88730] text-white font-semibold px-8 lg:px-10 py-4 lg:py-5 text-base lg:text-lg xl:text-xl rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                 >
                   Get Started →
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-[#1F447B] font-semibold px-8 py-4 text-lg rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                  className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-[#1F447B] font-semibold px-8 lg:px-10 py-4 lg:py-5 text-base lg:text-lg xl:text-xl rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                 >
                   Contact Sales
                 </Button>
@@ -88,13 +88,13 @@ export default function CTASection() {
               }`}
               style={{ transitionDelay: "200ms" }}
             >
-              <div className="relative flex justify-end items-center">
+              <div className="relative flex justify-center lg:justify-end items-center">
                 {/* Globe Puzzle Image */}
-                <div className="relative w-96 h-96 lg:w-[500px] lg:h-[500px] xl:w-[550px] xl:h-[550px]">
+                <div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px]">
                   <img
                     src="/images/globe-jig.png"
                     alt="Global Logistics Solutions"
-                    className="w-full h-full object-contain drop-shadow-2xl"
+                    className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               </div>
