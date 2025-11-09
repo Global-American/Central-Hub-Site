@@ -159,7 +159,7 @@ export default function WarehouseLocationsSection() {
     <section
       ref={sectionRef}
       id="warehouse-locations"
-      className="pt-12 md:pt-16 lg:pt-20 pb-16 md:pb-20"
+      className="pt-6 md:pt-8 lg:pt-10 pb-16 md:pb-20"
       style={{ backgroundColor: "#f6fdfe", marginTop: "0" }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

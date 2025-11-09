@@ -239,7 +239,7 @@ export default function AboutPageContent() {
         {/* Our Team Section */}
         <div
           ref={teamRef}
-          className={`text-center pb-8 md:pb-12 lg:pb-16 transition-all duration-700 ${
+          className={`text-center pb-4 md:pb-6 lg:pb-8 transition-all duration-700 ${
             isTeamVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"

@@ -140,13 +140,13 @@ export default function AboutPageContentV2() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div
             ref={teamRef}
-            className={`text-center pb-8 md:pb-12 lg:pb-16 transition-all duration-700 ${
-              isTeamVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
-            }`}
-            style={{ transitionDelay: "100ms" }}
-          >
+          className={`text-center pb-4 md:pb-6 lg:pb-8 transition-all duration-700 ${
+            isTeamVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
+          }`}
+          style={{ transitionDelay: "100ms" }}
+        >
             <h2 className="text-3xl md:text-4xl font-bold text-[#1F447B] mb-4">
               Our <span className="text-[#EB993C]">Team</span>
             </h2>

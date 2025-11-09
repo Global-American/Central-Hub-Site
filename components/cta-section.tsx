@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { Package } from "lucide-react";
+import Image from "next/image";
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,11 +42,43 @@ export default function CTASection() {
         <div className="absolute inset-0 bg-black/20 z-10" />
 
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10 z-10">
-          <div className="absolute top-10 left-10 w-20 h-20 border-2 border-white rounded-lg transform rotate-12"></div>
-          <div className="absolute top-20 right-20 w-16 h-16 border-2 border-white rounded-lg transform -rotate-6"></div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 border-2 border-white rounded-lg transform rotate-45"></div>
-          <div className="absolute bottom-10 right-10 w-18 h-18 border-2 border-white rounded-lg transform -rotate-12"></div>
+        <div className="absolute inset-0 opacity-20 z-10">
+          <div className="absolute top-10 left-10 w-20 h-20 transform rotate-12">
+            <Image 
+              src="/images/parcel1.png" 
+              alt="" 
+              width={80} 
+              height={80} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute top-20 right-20 w-16 h-16 transform -rotate-6">
+            <Image 
+              src="/images/parcel2.png" 
+              alt="" 
+              width={64} 
+              height={64} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute bottom-20 left-20 w-24 h-24 transform rotate-45">
+            <Image 
+              src="/images/parcel1.png" 
+              alt="" 
+              width={96} 
+              height={96} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute bottom-10 right-10 w-18 h-18 transform -rotate-12">
+            <Image 
+              src="/images/parcel2.png" 
+              alt="" 
+              width={72} 
+              height={72} 
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl relative z-20">
