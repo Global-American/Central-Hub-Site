@@ -14,7 +14,7 @@ const slides = [
     description: "Fast, reliable shipping worldwide.",
     textColor: "text-white",
     label: "Shipping",
-    graphic: "/hero-variation-smart/Picture 1.png",
+    graphic: null,
   },
   {
     title: "Smart",
