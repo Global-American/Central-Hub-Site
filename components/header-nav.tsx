@@ -19,48 +19,39 @@ import {
 
 const solutions = [
   {
-    name: "ShipItSmart",
-    title: "Global Shipping Simplified",
-    description:
-      "Smart shipping solutions with global carrier connections and real-time tracking.",
-    icon: <Ship className="h-6 w-6" />,
-    color: "from-orange-600 to-orange-800",
-    bgColor: "bg-gradient-to-br from-orange-600 to-orange-800",
-    textColor: "text-white",
+    name: "Connexx",
+    title: "Label Generation Platform",
+    href: "https://connexx.co.uk",
+    enabled: true,
+    ctaLabel: "Login",
+  },
+  {
+    name: "Ship It Smart",
+    title: "Providing you simple shipping solutions",
     href: "/#brands",
+    enabled: true,
+    ctaLabel: "Visit",
   },
   {
     name: "FreightItSmart",
-    title: "Smarter Freight Solutions",
-    description:
-      "AI-driven freight optimization with comprehensive carrier network access.",
-    icon: <Truck className="h-6 w-6" />,
-    color: "from-blue-600 to-blue-800",
-    bgColor: "bg-gradient-to-br from-blue-600 to-blue-800",
-    textColor: "text-white",
-    href: "/#brands",
+    title: "Coming Soon",
+    href: "",
+    enabled: false,
+    ctaLabel: "Coming Soon",
   },
   {
     name: "ReturnItSmart",
-    title: "Seamless Returns Process",
-    description:
-      "Intelligent reverse logistics that transforms returns into customer satisfaction.",
-    icon: <RotateCcw className="h-6 w-6" />,
-    color: "from-orange-600 to-orange-800",
-    bgColor: "bg-gradient-to-br from-orange-600 to-orange-800",
-    textColor: "text-white",
-    href: "/#brands",
+    title: "Coming Soon",
+    href: "",
+    enabled: false,
+    ctaLabel: "Coming Soon",
   },
   {
     name: "FulfillItSmart",
-    title: "End-to-End Fulfillment",
-    description:
-      "Complete fulfillment solutions that scale with your business growth.",
-    icon: <Package className="h-6 w-6" />,
-    color: "from-blue-600 to-blue-800",
-    bgColor: "bg-gradient-to-br from-blue-600 to-blue-800",
-    textColor: "text-white",
-    href: "/#brands",
+    title: "Coming Soon",
+    href: "",
+    enabled: false,
+    ctaLabel: "Coming Soon",
   },
 ];
 
@@ -219,8 +210,28 @@ export default function HeaderNav() {
             </Link>
 
             <Link
-              href="/about-v2"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/about-v2")
+              href="/quote"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
+                isActiveLink("/quote")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              Quote
+              {/* Active underline */}
+              {isActiveLink("/quote") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/quote") && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/about"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
+                isActiveLink("/about")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
                 }`}
@@ -318,14 +329,16 @@ export default function HeaderNav() {
                     {solutions.map((solution) => (
                       <div
                         key={solution.name}
-                        className={`flex items-center justify-between p-3 rounded-md transition-all duration-200 ${solution.name === "ShipItSmart"
+                        className={`flex items-center justify-between p-3 rounded-md transition-all duration-200 ${
+                          solution.enabled
                             ? "hover:bg-gray-50 cursor-pointer border border-accent/20"
                             : "opacity-40 blur-[1px] cursor-not-allowed"
                           }`}
                       >
                         <div className="flex-1">
                           <h4
-                            className={`text-sm font-bold ${solution.name === "ShipItSmart"
+                            className={`text-sm font-bold ${
+                              solution.enabled
                                 ? "text-foreground"
                                 : "text-muted-foreground"
                               }`}
@@ -333,22 +346,19 @@ export default function HeaderNav() {
                             {solution.name}
                           </h4>
                           <p className="text-xs text-muted-foreground">
-                            {solution.name === "ShipItSmart"
-                              ? solution.title
-                              : "Coming Soon"}
+                            {solution.title}
                           </p>
                         </div>
-                        {solution.name === "ShipItSmart" && (
+                        {solution.enabled && (
                           <Button
                             size="sm"
                             className="bg-accent hover:bg-accent/90 text-accent-foreground text-xs px-3 py-1 ml-3"
                             onClick={() => {
                               setIsLoginDropdownOpen(false);
-                              // Redirect to connexx.co.uk
-                              window.open("https://connexx.co.uk", "_blank");
+                              window.open(solution.href, "_blank");
                             }}
                           >
-                            Login
+                            {solution.ctaLabel}
                           </Button>
                         )}
                       </div>
@@ -427,15 +437,36 @@ export default function HeaderNav() {
             </Link>
 
             <Link
-              href="/contact"
+              href="/#integrations"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${isActiveLink("/contact")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
+                isActiveLink("/#integrations")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+              }`}
+            >
+              Integrations
+              {/* Active underline */}
+              {isActiveLink("/#integrations") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/#integrations") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/quote"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
+                isActiveLink("/quote")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
                 }`}
             >
               Quote
-              {isActiveLink("/contact") && (
+              {isActiveLink("/quote") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
               )}
             </Link>
@@ -572,22 +603,23 @@ export default function HeaderNav() {
                   {solutions.map((solution) => (
                     <div
                       key={solution.name}
-                      className={`flex items-center justify-between p-3 rounded-md transition-all duration-200 ${solution.name === "ShipItSmart"
+                      className={`flex items-center justify-between p-3 rounded-md transition-all duration-200 ${
+                        solution.enabled
                           ? "bg-gray-50 cursor-pointer border border-accent/20"
                           : "opacity-40 blur-[1px] cursor-not-allowed"
                         }`}
                       onClick={() => {
-                        if (solution.name === "ShipItSmart") {
+                        if (solution.enabled) {
                           setIsMobileMenuOpen(false);
                           setIsMobileLoginOpen(false);
-                          // Redirect to connexx.co.uk
-                          window.open("https://connexx.co.uk", "_blank");
+                          window.open(solution.href, "_blank");
                         }
                       }}
                     >
                       <div className="flex-1">
                         <h5
-                          className={`text-base font-bold ${solution.name === "ShipItSmart"
+                          className={`text-base font-bold ${
+                            solution.enabled
                               ? "text-foreground"
                               : "text-muted-foreground"
                             }`}
@@ -595,14 +627,12 @@ export default function HeaderNav() {
                           {solution.name}
                         </h5>
                         <p className="text-sm text-muted-foreground">
-                          {solution.name === "ShipItSmart"
-                            ? solution.title
-                            : "Coming Soon"}
+                          {solution.title}
                         </p>
                       </div>
-                      {solution.name === "ShipItSmart" && (
+                      {solution.enabled && (
                         <div className="text-xs bg-accent text-accent-foreground px-3 py-1 rounded ml-3">
-                          Login
+                          {solution.ctaLabel}
                         </div>
                       )}
                     </div>
