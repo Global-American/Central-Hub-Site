@@ -45,24 +45,28 @@ const partnerSolutions = [
     tagline: "Be Smart, Ship itSmart",
     description:
       "Discounted express and economy shipping with FedEx, DHL, and UPS for domestic and international parcels—rate compare, book, and track in one place.",
+    logo: "/shipitsmart.svg",
   },
   {
     name: "FreightItSmart",
     tagline: "Be Smart, Freight itSmart",
     description:
       "LTL, FTL, air, and ocean freight made simple—instant quotes, multi‑carrier options, and end‑to‑end visibility for heavy and bulk shipments.",
+    logo: "/frieghtit.svg",
   },
   {
     name: "ReturnItSmart",
     tagline: "Be Smart, Return itSmart",
     description:
       "Hassle‑free returns with prepaid labels, smart routing, and status updates—improve CX while controlling costs and reverse‑logistics complexity.",
+    logo: "/returnit.svg",
   },
   {
     name: "FulfillItSmart",
     tagline: "Be Smart, Fulfill itSmart",
     description:
       "Omnichannel fulfillment and inventory sync—pick, pack, and ship with real‑time rates, automation rules, and integrations to your sales channels.",
+    logo: "/fufillit.svg",
   },
 ];
 
@@ -107,16 +111,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Logo and Partnership Section */}
           <div
-            className={`col-span-1 md:col-start-1 md:row-start-1 transition-all duration-700 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-3"
-            }`}
+            className={`col-span-1 md:col-start-1 md:row-start-1 transition-all duration-700 ${isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3"
+              }`}
           >
             {/* Logo */}
             <div className="mb-4 text-left">
               <Image
-                src="/gaLogo.png"
+                src="/gaLogo.svg"
                 alt="Global American LLC"
                 width={200}
                 height={60}
@@ -133,15 +136,20 @@ export default function Footer() {
                 <div className="min-h-[60px] flex items-center">
                   <div
                     key={`${getCurrentSolution().name}-${currentIndex}`}
-                    className={`text-left transition-all duration-500 w-full ${
-                      isVisible
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2"
-                    }`}
+                    className={`text-left transition-all duration-500 w-full ${isVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-2"
+                      }`}
                   >
-                    <p className="text-sm font-semibold text-[#1F447B] leading-tight mb-1">
-                      {getCurrentSolution().name}
-                    </p>
+                    <div className="mb-1">
+                      <Image
+                        src={getCurrentSolution().logo}
+                        alt={getCurrentSolution().name}
+                        width={140}
+                        height={40}
+                        className="h-8 w-auto object-contain object-left"
+                      />
+                    </div>
                     <p className="text-xs text-[#EB993C] font-medium">
                       {getCurrentSolution().tagline}
                     </p>
@@ -151,11 +159,10 @@ export default function Footer() {
             </div>
           </div>
           <div
-            className={`col-span-1 md:col-start-1 md:col-span-2 md:row-start-2 transition-all duration-700 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-3"
-            }`}
+            className={`col-span-1 md:col-start-1 md:col-span-2 md:row-start-2 transition-all duration-700 ${isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3"
+              }`}
             style={{ transitionDelay: "120ms" }}
           >
             <p className="text-[#1F447B] text-sm font-medium leading-relaxed mb-6">
@@ -198,11 +205,10 @@ export default function Footer() {
 
           {/* Our Brands */}
           <div
-            className={`col-span-1 md:col-start-3 md:row-start-1 flex flex-col items-start text-start md:ml-8 lg:ml-12 transition-all duration-700 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-3"
-            }`}
+            className={`col-span-1 md:col-start-3 md:row-start-1 flex flex-col items-start text-start md:ml-8 lg:ml-12 transition-all duration-700 ${isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3"
+              }`}
             style={{ transitionDelay: "200ms" }}
           >
             <h3 className="font-semibold text-lg mb-4 text-start">
@@ -236,11 +242,10 @@ export default function Footer() {
 
           {/* Global Locations and Get In Touch */}
           <div
-            className={`col-span-1 md:col-start-4 md:row-start-1 md:row-span-2 flex flex-col items-start text-start transition-all duration-700 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-3"
-            }`}
+            className={`col-span-1 md:col-start-4 md:row-start-1 md:row-span-2 flex flex-col items-start text-start transition-all duration-700 ${isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3"
+              }`}
             style={{ transitionDelay: "300ms" }}
           >
             <h3 className="font-semibold text-lg mb-4 text-start">
@@ -371,7 +376,7 @@ export default function Footer() {
           </div>
           <div className="col-span-1 md:col-start-5 md:row-start-1 md:row-span-2 flex items-start justify-center">
             <Image
-              src="/shipItSmartIcon.png"
+              src="/shipItSmartIcon.svg"
               alt="ShipItSmart Icon"
               width={195}
               height={195}

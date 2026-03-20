@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { Package } from "lucide-react";
+import Image from "next/image";
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,7 +30,7 @@ export default function CTASection() {
     <>
       <section
         ref={sectionRef}
-        className="relative py-20 md:py-28 lg:py-36 overflow-hidden"
+        className="relative py-16 md:py-20 lg:py-24 xl:py-28 overflow-hidden"
       >
         {/* Hero-matching Gradient Background */}
         <div className="absolute inset-0">
@@ -41,28 +42,95 @@ export default function CTASection() {
         <div className="absolute inset-0 bg-black/20 z-10" />
 
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10 z-10">
-          <div className="absolute top-10 left-10 w-20 h-20 border-2 border-white rounded-lg transform rotate-12"></div>
-          <div className="absolute top-20 right-20 w-16 h-16 border-2 border-white rounded-lg transform -rotate-6"></div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 border-2 border-white rounded-lg transform rotate-45"></div>
-          <div className="absolute bottom-10 right-10 w-18 h-18 border-2 border-white rounded-lg transform -rotate-12"></div>
+        <div className="absolute inset-0 opacity-20 z-10">
+          <div className="absolute top-10 left-10 w-32 h-32 transform rotate-12">
+            <Image 
+              src="/images/parcel1.png" 
+              alt="" 
+              width={128} 
+              height={128} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute top-20 right-20 w-28 h-28 transform -rotate-6">
+            <Image 
+              src="/images/parcel2.png" 
+              alt="" 
+              width={112} 
+              height={112} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute bottom-20 left-20 w-40 h-40 transform rotate-45">
+            <Image 
+              src="/images/parcel1.png" 
+              alt="" 
+              width={160} 
+              height={160} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute bottom-10 right-10 w-32 h-32 transform -rotate-12">
+            <Image 
+              src="/images/parcel2.png" 
+              alt="" 
+              width={128} 
+              height={128} 
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
 
-        {/* Illustration Column */}
-        <div
-          className={`relative transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
-          }`}
-          style={{ transitionDelay: "200ms" }}
-        >
-          <div className="relative flex justify-end items-center">
-            {/* Globe Puzzle Image */}
-            <div className="relative w-96 h-96 lg:w-[500px] lg:h-[500px] xl:w-[550px] xl:h-[550px]">
-              <img
-                src="/images/globe-jig.png"
-                alt="Global Logistics Solutions"
-                className="w-full h-full object-contain drop-shadow-2xl"
-              />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl relative z-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16 items-center">
+            {/* Content Column */}
+            <div
+              className={`transition-all duration-700 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
+              <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 lg:mb-8 leading-tight">
+                Ready to Transform Your <span className="text-[#EB993C]">Logistics</span>?
+              </h2>
+              <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-white/90 mb-8 lg:mb-10 leading-relaxed max-w-2xl">
+                Join thousands of businesses that trust Global American with their smart logistics solutions. 
+                Be smart, ship smarter with our intelligent platforms.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 lg:gap-5">
+                <Button
+                  size="lg"
+                  className="bg-[#EB993C] hover:bg-[#d88730] text-white font-semibold px-8 lg:px-10 py-4 lg:py-5 text-base lg:text-lg xl:text-xl rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                >
+                  Get Started →
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-[#1F447B] font-semibold px-8 lg:px-10 py-4 lg:py-5 text-base lg:text-lg xl:text-xl rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                >
+                  Contact Sales
+                </Button>
+              </div>
+            </div>
+
+            {/* Illustration Column */}
+            <div
+              className={`relative transition-all duration-700 ${
+                isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+              }`}
+              style={{ transitionDelay: "200ms" }}
+            >
+              <div className="relative flex justify-center lg:justify-end items-center">
+                {/* Globe Puzzle Image */}
+                <div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px]">
+                  <img
+                    src="/images/globe-jig.png"
+                    alt="Global Logistics Solutions"
+                    className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

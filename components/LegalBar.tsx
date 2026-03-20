@@ -24,7 +24,7 @@ export default function LegalBar() {
             </Link>
             <Link
               href="/cookies"
-              className="text-sm font-medium text-[#1F447B]0 hover:text-[#EB993C] transition-colors"
+              className="text-sm font-medium text-[#1F447B] hover:text-[#EB993C] transition-colors"
             >
               Cookie Policy
             </Link>

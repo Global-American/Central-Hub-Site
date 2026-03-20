@@ -138,17 +138,16 @@ export default function HeaderNav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
           ? "bg-white shadow-lg border-b border-gray-100"
           : "bg-white shadow-sm"
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center group">
             <Image
-              src="/gaLogo.png"
+              src="/gaLogo.svg"
               alt="Global American LLC"
               width={160}
               height={48}
@@ -158,11 +157,10 @@ export default function HeaderNav() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/")
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Home
               {/* Active underline */}
@@ -177,11 +175,10 @@ export default function HeaderNav() {
 
             <Link
               href="/#services"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/#services")
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/#services")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Services
               {/* Active underline */}
@@ -195,20 +192,19 @@ export default function HeaderNav() {
             </Link>
 
             <Link
-              href="/#integrations"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/#integrations")
+              href="/about"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/about")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
-              Integrations
+              About Us
               {/* Active underline */}
-              {isActiveLink("/#integrations") && (
+              {isActiveLink("/about") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
               )}
               {/* Hover underline - only show when not active */}
-              {!isActiveLink("/#integrations") && (
+              {!isActiveLink("/about") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
@@ -238,26 +234,25 @@ export default function HeaderNav() {
                 isActiveLink("/about")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
-              About Us
+              About Us v2
               {/* Active underline */}
-              {isActiveLink("/about") && (
+              {isActiveLink("/about-v2") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
               )}
               {/* Hover underline - only show when not active */}
-              {!isActiveLink("/about") && (
+              {!isActiveLink("/about-v2") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
 
             <Link
               href="/contact"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/contact")
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/contact")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Contact Us
               {/* Active underline */}
@@ -272,11 +267,10 @@ export default function HeaderNav() {
 
             <Link
               href="/contact-v2"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/contact-v2")
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/contact-v2")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Contact Us v2
               {/* Active underline */}
@@ -291,11 +285,10 @@ export default function HeaderNav() {
 
             <Link
               href="/contact-v3"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/contact-v3")
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/contact-v3")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Contact Us v3
               {/* Active underline */}
@@ -316,19 +309,17 @@ export default function HeaderNav() {
               >
                 Login
                 <ChevronDown
-                  className={`h-4 w-4 transition-transform duration-200 ${
-                    isLoginDropdownOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-4 w-4 transition-transform duration-200 ${isLoginDropdownOpen ? "rotate-180" : ""
+                    }`}
                 />
               </Button>
 
               {/* Login Solutions Dropdown */}
               <div
-                className={`absolute right-0 top-full mt-2 w-72 z-50 transition-all duration-200 ${
-                  isLoginDropdownOpen
+                className={`absolute right-0 top-full mt-2 w-72 z-50 transition-all duration-200 ${isLoginDropdownOpen
                     ? "opacity-100 visible translate-y-0"
                     : "opacity-0 invisible translate-y-1"
-                }`}
+                  }`}
               >
                 <div className="bg-white shadow-lg border border-gray-200 rounded-lg p-4">
                   <h3 className="text-lg font-bold text-foreground mb-4">
@@ -342,7 +333,7 @@ export default function HeaderNav() {
                           solution.enabled
                             ? "hover:bg-gray-50 cursor-pointer border border-accent/20"
                             : "opacity-40 blur-[1px] cursor-not-allowed"
-                        }`}
+                          }`}
                       >
                         <div className="flex-1">
                           <h4
@@ -350,7 +341,7 @@ export default function HeaderNav() {
                               solution.enabled
                                 ? "text-foreground"
                                 : "text-muted-foreground"
-                            }`}
+                              }`}
                           >
                             {solution.name}
                           </h4>
@@ -399,11 +390,10 @@ export default function HeaderNav() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-x-0 top-[80px] z-40 bg-white border-t border-gray-100 shadow-lg transition-all duration-300 ${
-          isMobileMenuOpen
+        className={`md:hidden fixed inset-x-0 top-[80px] z-40 bg-white border-t border-gray-100 shadow-lg transition-all duration-300 ${isMobileMenuOpen
             ? "opacity-100 visible translate-y-0 pointer-events-auto"
             : "opacity-0 invisible -translate-y-2 pointer-events-none"
-        }`}
+          }`}
       >
         <div className="container mx-auto px-4 py-6 space-y-6">
           {/* Navigation Links */}
@@ -411,11 +401,10 @@ export default function HeaderNav() {
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
-                isActiveLink("/")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Home
               {/* Active underline */}
@@ -431,11 +420,10 @@ export default function HeaderNav() {
             <Link
               href="/#services"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
-                isActiveLink("/#services")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/#services")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Services
               {/* Active underline */}
@@ -475,7 +463,7 @@ export default function HeaderNav() {
                 isActiveLink("/quote")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Quote
               {isActiveLink("/quote") && (
@@ -486,11 +474,10 @@ export default function HeaderNav() {
             <Link
               href="/#demo"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${
-                isActiveLink("/#demo")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative ${isActiveLink("/#demo")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Demo
               {isActiveLink("/#demo") && (
@@ -501,11 +488,10 @@ export default function HeaderNav() {
             <Link
               href="/about"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
-                isActiveLink("/about")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/about")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               About Us
               {/* Active underline */}
@@ -519,13 +505,31 @@ export default function HeaderNav() {
             </Link>
 
             <Link
-              href="/contact"
+              href="/about-v2"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
-                isActiveLink("/contact")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/about-v2")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
+            >
+              About Us v2
+              {/* Active underline */}
+              {isActiveLink("/about-v2") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
+              )}
+              {/* Hover underline - only show when not active */}
+              {!isActiveLink("/about-v2") && (
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              )}
+            </Link>
+
+            <Link
+              href="/contact"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/contact")
+                  ? "text-[#1F447B] font-semibold"
+                  : "text-muted-foreground hover:text-[#EB993C]"
+                }`}
             >
               Contact Us
               {/* Active underline */}
@@ -541,11 +545,10 @@ export default function HeaderNav() {
             <Link
               href="/contact-v2"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
-                isActiveLink("/contact-v2")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/contact-v2")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Contact Us v2
               {/* Active underline */}
@@ -561,11 +564,10 @@ export default function HeaderNav() {
             <Link
               href="/contact-v3"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${
-                isActiveLink("/contact-v3")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/contact-v3")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
-              }`}
+                }`}
             >
               Contact Us v3
               {/* Active underline */}
@@ -586,18 +588,16 @@ export default function HeaderNav() {
               >
                 Login
                 <ChevronDown
-                  className={`h-4 w-4 transition-transform duration-200 ${
-                    isMobileLoginOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-4 w-4 transition-transform duration-200 ${isMobileLoginOpen ? "rotate-180" : ""
+                    }`}
                 />
               </Button>
 
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  isMobileLoginOpen
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${isMobileLoginOpen
                     ? "max-h-96 opacity-100"
                     : "max-h-0 opacity-0"
-                }`}
+                  }`}
               >
                 <div className="space-y-3 pt-2">
                   {solutions.map((solution) => (
@@ -607,7 +607,7 @@ export default function HeaderNav() {
                         solution.enabled
                           ? "bg-gray-50 cursor-pointer border border-accent/20"
                           : "opacity-40 blur-[1px] cursor-not-allowed"
-                      }`}
+                        }`}
                       onClick={() => {
                         if (solution.enabled) {
                           setIsMobileMenuOpen(false);
@@ -622,7 +622,7 @@ export default function HeaderNav() {
                             solution.enabled
                               ? "text-foreground"
                               : "text-muted-foreground"
-                          }`}
+                            }`}
                         >
                           {solution.name}
                         </h5>
