@@ -184,8 +184,6 @@ export default function Footer() {
                 { label: "Quote", href: "/quote" },
                 { label: "About Us", href: "/about" },
                 { label: "Contact Us", href: "/contact" },
-                { label: "Contact Us v2", href: "/contact-v2" },
-                { label: "Contact Us v3", href: "/contact-v3" },
               ].map((link) => (
                 <div
                   key={link.label}

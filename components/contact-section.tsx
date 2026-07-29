@@ -452,6 +452,44 @@ const brands = [
   },
 ];
 
+const shipItSmartServices = [
+  {
+    id: "usDomestic",
+    name: "US Domestic",
+    icon: <Ship className="h-4 w-4" />,
+  },
+  {
+    id: "usExports",
+    name: "US Exports",
+    icon: <Truck className="h-4 w-4" />,
+  },
+  {
+    id: "usImports",
+    name: "US Imports",
+    icon: <RotateCcw className="h-4 w-4" />,
+  },
+  {
+    id: "ukFinalMile",
+    name: "UK Final Mile",
+    icon: <Package className="h-4 w-4" />,
+  },
+  {
+    id: "ukExports",
+    name: "UK Exports",
+    icon: <Package className="h-4 w-4" />,
+  },
+  {
+    id: "chinaExports",
+    name: "China Exports",
+    icon: <Package className="h-4 w-4" />,
+  },
+  {
+    id: "other",
+    name: "Other",
+    icon: <Package className="h-4 w-4" />,
+  },
+];
+
 export default function ContactPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -462,13 +500,11 @@ export default function ContactPage() {
     company: "",
     message: "",
     selectedBrands: [] as string[],
+    selectedShipItSmartServices: [] as string[],
   });
   const [bgColor, setBgColor] = useState("#F4FAFC");
-  const [containerColor, setContainerColor] = useState("#e6ecf7");
+  const [containerColor, setContainerColor] = useState("#dbeafe");
   const sectionRef = useRef<HTMLElement>(null);
-
-  const API_BASE =
-    process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000/api/v1";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -503,6 +539,22 @@ export default function ContactPage() {
       selectedBrands: checked
         ? [...prev.selectedBrands, brandId]
         : prev.selectedBrands.filter((id) => id !== brandId),
+      selectedShipItSmartServices:
+        brandId === "shipitsmart" && !checked
+          ? []
+          : prev.selectedShipItSmartServices,
+    }));
+  };
+
+  const handleShipItSmartServiceSelection = (
+    serviceId: string,
+    checked: boolean
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedShipItSmartServices: checked
+        ? [...prev.selectedShipItSmartServices, serviceId]
+        : prev.selectedShipItSmartServices.filter((id) => id !== serviceId),
     }));
   };
 
@@ -510,10 +562,36 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch(`${API_BASE}/contact`, {
+      const isShipItSmartSelected =
+        formData.selectedBrands.includes("shipitsmart");
+      const shipItSmartServiceDetails = isShipItSmartSelected
+        ? shipItSmartServices
+            .filter((service) =>
+              formData.selectedShipItSmartServices.includes(service.id)
+            )
+            .map((service) => ({
+              id: service.id,
+              name: service.name,
+            }))
+        : [];
+      const selectedBrands =
+        isShipItSmartSelected && shipItSmartServiceDetails.length > 0
+          ? [
+              ...formData.selectedBrands.filter((id) => id !== "shipitsmart"),
+              ...shipItSmartServiceDetails.map((service) => service.id),
+            ]
+          : formData.selectedBrands;
+      const payload = {
+        ...formData,
+        selectedBrands,
+        selectedBrandGroups: formData.selectedBrands,
+        shipItSmartServices: shipItSmartServiceDetails,
+      };
+
+      const res = await fetch("/api/contact-submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -526,6 +604,7 @@ export default function ContactPage() {
         company: "",
         message: "",
         selectedBrands: [],
+        selectedShipItSmartServices: [],
       });
       alert("Message sent successfully.");
     } catch (err) {
@@ -700,6 +779,59 @@ export default function ContactPage() {
                     </div>
                   ))}
                 </div>
+
+                {formData.selectedBrands.includes("shipitsmart") && (
+                  <div className="relative ml-0 sm:ml-8 rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-4 sm:p-5">
+                    <div className="mb-4 border-l-4 border-[#EB993C] pl-4">
+                      <p className="text-sm font-semibold text-[#1F447B]">
+                        Which ShipItSmart services are they interested in?
+                      </p>
+                      <p className="text-xs lg:text-sm text-[#324A6D]">
+                        These options only apply to the selected ShipItSmart
+                        service above.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {shipItSmartServices.map((service) => (
+                        <div
+                          key={service.id}
+                          className="group relative bg-white rounded-lg border border-[#1F447B]/40 p-4 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
+                        >
+                          <div className="flex items-start space-x-3">
+                            <SimpleCheckbox
+                              id={`shipitsmart-${service.id}`}
+                              checked={formData.selectedShipItSmartServices.includes(
+                                service.id
+                              )}
+                              onChange={(checked) =>
+                                handleShipItSmartServiceSelection(
+                                  service.id,
+                                  checked
+                                )
+                              }
+                            />
+                            <div className="flex-1 min-w-0">
+                              <label
+                                htmlFor={`shipitsmart-${service.id}`}
+                                className="cursor-pointer block"
+                              >
+                                <div className="flex items-center gap-2 mb-1">
+                                  <div className="text-[#EB993C]">
+                                    {service.icon}
+                                  </div>
+                                  <span className="font-medium text-foreground text-sm lg:text-base group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
+                                    {service.name}
+                                  </span>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Message Field */}

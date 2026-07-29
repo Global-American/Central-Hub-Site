@@ -28,12 +28,6 @@ type SeaFreightLoadType = "fcl" | "lcl";
 
 export default function QuotePage() {
   const QUOTE_SOURCE = "Global American";
-  const DEFAULT_BOOKINGS_API_BASE =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3003"
-      : "https://it-smart-admin-hub.onrender.com";
-  const BOOKINGS_API_BASE =
-    process.env.NEXT_PUBLIC_BOOKINGS_API_BASE || DEFAULT_BOOKINGS_API_BASE;
 
   const [formData, setFormData] = useState({
     contactName: "",
@@ -99,7 +93,7 @@ export default function QuotePage() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isBenefitsVisible, setIsBenefitsVisible] = useState(false);
   const [bgColor, setBgColor] = useState("#F4FAFC");
-  const [containerColor, setContainerColor] = useState("#e6ecf7");
+  const [containerColor, setContainerColor] = useState("#dbeafe");
   const headerRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const benefitsRef = useRef<HTMLDivElement>(null);
@@ -243,7 +237,7 @@ export default function QuotePage() {
     const payload = {
       shipmentMode,
       freightType: shipmentMode === "freight" ? freightType : null,
-        seaFreightLoadType:
+      seaFreightLoadType:
         shipmentMode === "freight" && freightType === "sea"
           ? seaFreightLoadType
           : null,
@@ -324,15 +318,13 @@ export default function QuotePage() {
     };
 
     try {
-      const response = await fetch(`${BOOKINGS_API_BASE}/api/bookings`, {
+      const response = await fetch("/api/quote-submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type_of_form: "quote",
-          form_data: payload,
-          location: "hub",
+          payload,
         }),
       });
 
@@ -351,7 +343,7 @@ export default function QuotePage() {
         body: JSON.stringify({
           form_data: payload,
           booking_id: result?.data?.id,
-          location: QUOTE_SOURCE,
+          location: serviceLocation,
         }),
       }).catch((notifyError) => {
         console.error("Quote email notification failed:", notifyError);
