@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Building2 } from "lucide-react";
@@ -21,7 +22,7 @@ const brands = [
       "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
-    image: "/card-thumbnails/smart-shipit.png",
+    image: "/card-thumbnails/ship-itsmart.png",
   },
   {
     id: 2,
@@ -31,7 +32,7 @@ const brands = [
       "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
-    image: "/card-thumbnails/smart-freight.png",
+    image: "/card-thumbnails/freight-itsmart.png",
   },
   {
     id: 3,
@@ -41,7 +42,7 @@ const brands = [
       "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
-    image: "/card-thumbnails/returnit.png",
+    image: "/card-thumbnails/return-itsmart.png",
   },
   {
     id: 4,
@@ -51,7 +52,7 @@ const brands = [
       "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
-    image: "/card-thumbnails/smart-fufillit.png",
+    image: "/card-thumbnails/fulfill-itsmart.png",
   },
 ];
 
@@ -152,8 +153,19 @@ export default function OurBrandsSection() {
             <div
               className={`relative w-full max-w-[83rem] rounded-3xl overflow-hidden shadow-2xl ${brand.color} border-2 border-white/20 h-[270px] sm:h-[330px] md:h-[400px] lg:h-[450px] xl:h-[500px]`}
             >
+              {/* Brand illustration */}
+              <div className="absolute inset-y-0 right-0 z-0 hidden lg:flex items-center pb-16 pr-10 xl:pr-14">
+                <Image
+                  src={brand.image}
+                  alt={`${brand.name} illustration`}
+                  width={720}
+                  height={512}
+                  className="w-[468px] h-[336px] xl:w-[530px] xl:h-[383px] object-contain drop-shadow-2xl"
+                />
+              </div>
+
               <div className="relative z-10 flex h-full flex-col p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14">
-                <div className="flex flex-1 flex-col justify-center max-w-[66rem] pb-14 sm:pb-16 md:pb-20 lg:pb-16 lg:pr-[22rem]">
+                <div className="flex flex-1 flex-col justify-center max-w-[66rem] pb-14 sm:pb-16 md:pb-20 lg:pb-16 lg:pr-[33rem] xl:pr-[37rem]">
                   <div className={brand.textColor}>
                     <div className="mb-4 sm:mb-5 md:mb-6">
                       <div className="flex items-center gap-3 md:gap-4">
