@@ -1,3 +1,4 @@
+import BackgroundFade from "@/components/background-fade";
 import HeaderNav from "@/components/header-nav";
 import Footer from "@/components/Footer";
 import AboutPageContentV2 from "@/components/about-page-content-v2";
@@ -12,7 +13,8 @@ export default function AboutPageV2() {
   return (
     <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
-      <main className="flex-1">
+      <main className="relative flex-1">
+        <BackgroundFade />
         <AboutPageContentV2 />
       </main>
     </div>

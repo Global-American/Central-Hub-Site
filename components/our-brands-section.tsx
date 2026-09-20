@@ -12,6 +12,10 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// Every brand currently points at the Ship itSmart site; swap in the real
+// URLs as the other brand sites go live.
+const SHIP_IT_SMART_URL = "https://ship-it-smart.vercel.app/";
+
 // Data for the brand cards
 const brands = [
   {
@@ -23,6 +27,7 @@ const brands = [
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
     image: "/card-thumbnails/ship-itsmart.png",
+    url: SHIP_IT_SMART_URL,
   },
   {
     id: 2,
@@ -33,6 +38,7 @@ const brands = [
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
     image: "/card-thumbnails/freight-itsmart.png",
+    url: SHIP_IT_SMART_URL,
   },
   {
     id: 3,
@@ -43,6 +49,7 @@ const brands = [
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
     image: "/card-thumbnails/return-itsmart.png",
+    url: SHIP_IT_SMART_URL,
   },
   {
     id: 4,
@@ -53,17 +60,13 @@ const brands = [
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
     image: "/card-thumbnails/fulfill-itsmart.png",
+    url: SHIP_IT_SMART_URL,
   },
 ];
 
 export default function OurBrandsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
-
-  const handleLearnMoreClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    console.log("Learn More clicked!");
-  };
 
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -171,12 +174,19 @@ export default function OurBrandsSection() {
                     </p>
                     <div>
                       <Button
+                        asChild
                         size="lg"
-                        onClick={handleLearnMoreClick}
                         className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm text-sm sm:text-base md:text-lg px-5 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 font-semibold transition-all hover:scale-105"
                       >
-                        Learn More{" "}
-                        <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        <a
+                          href={brand.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Learn more about ${brand.name}`}
+                        >
+                          Learn More{" "}
+                          <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        </a>
                       </Button>
                     </div>
                     <div className="mt-3 sm:mt-4">

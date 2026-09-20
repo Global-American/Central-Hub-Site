@@ -376,9 +376,9 @@ export default function Footer() {
             <Image
               src="/shipItSmartIcon.svg"
               alt="ShipItSmart Icon"
-              width={195}
-              height={195}
-              className="w-auto object-contain"
+              width={208}
+              height={208}
+              className="h-auto w-52 max-w-full object-contain"
               priority={false}
             />
           </div>

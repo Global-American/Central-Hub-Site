@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import BackgroundFade from "@/components/background-fade";
 import HeaderNav from "@/components/header-nav";
 
 interface Package {
@@ -361,7 +362,8 @@ export default function QuotePage() {
   return (
     <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
-      <main className="flex-1">
+      <main className="relative flex-1">
+        <BackgroundFade />
         <section
           className="py-20 md:py-28 lg:py-36"
         >

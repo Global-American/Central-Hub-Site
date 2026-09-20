@@ -325,7 +325,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Send, Building2, Truck, Ship, Package, RotateCcw } from "lucide-react";
+import {
+  Send,
+  Building2,
+  Truck,
+  Ship,
+  Package,
+  RotateCcw,
+  ChevronDown,
+} from "lucide-react";
+import { COUNTRIES, findCountry } from "@/lib/countries";
 // import ColorPicker from "../components/ColorPicker";
 
 function Building2Icon(props: { className?: string }) {
@@ -351,7 +360,7 @@ function SimpleButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className={`bg-[#EB993C] hover:bg-[#d97706] text-white font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 lg:px-12 py-4 lg:py-5 text-lg lg:text-xl border-2 border-[#1F447B] ${
+      className={`bg-[#EB993C] hover:bg-[#d97706] text-white font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 lg:px-10 py-2.5 text-base lg:text-lg border-2 border-[#1F447B] ${
         props.className ?? ""
       }`}
     >
@@ -372,7 +381,7 @@ function SimpleInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`bg-white border-2 border-[#1F447B] focus:border-[#EB993C] focus:ring-[#EB993C] rounded-md text-base lg:text-lg py-3 lg:py-4 px-4 w-full text-[#324A6D] ${
+      className={`bg-white border-2 border-[#1F447B] focus:border-[#EB993C] focus:ring-[#EB993C] rounded-md text-base py-2.5 px-4 w-full text-[#324A6D] ${
         props.className ?? ""
       }`}
     />
@@ -385,7 +394,7 @@ function SimpleTextarea(
   return (
     <textarea
       {...props}
-      className={`bg-white border-2 border-[#1F447B] focus:border-[#EB993C] focus:ring-[#EB993C] rounded-md resize-none text-base lg:text-lg py-3 lg:py-4 px-4 w-full text-[#324A6D] ${
+      className={`bg-white border-2 border-[#1F447B] focus:border-[#EB993C] focus:ring-[#EB993C] rounded-md resize-none text-base py-2.5 px-4 w-full text-[#324A6D] ${
         props.className ?? ""
       }`}
     />
@@ -497,6 +506,8 @@ export default function ContactPage() {
     name: "",
     email: "",
     phone: "",
+    phoneCountry: "",
+    country: "",
     company: "",
     message: "",
     selectedBrands: [] as string[],
@@ -522,12 +533,25 @@ export default function ContactPage() {
   }, []);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  // Choosing a country also switches the phone prefix to that country.
+  // Clearing the country clears the phone prefix as well.
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const country = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      country,
+      phoneCountry: country,
     }));
   };
 
@@ -579,8 +603,17 @@ export default function ContactPage() {
               ...shipItSmartServiceDetails.map((service) => service.id),
             ]
           : formData.selectedBrands;
+      const phoneCountry = findCountry(formData.phoneCountry);
+      const country = findCountry(formData.country);
+      const phoneNumber = formData.phone.trim();
       const payload = {
         ...formData,
+        phone: phoneNumber
+          ? `${phoneCountry?.dial ?? ""} ${phoneNumber}`.trim()
+          : "",
+        phoneCountryCode: phoneCountry?.dial ?? "",
+        country: formData.country,
+        countryName: country?.name ?? "",
         selectedBrands,
         selectedBrandGroups: formData.selectedBrands,
         shipItSmartServices: shipItSmartServiceDetails,
@@ -599,6 +632,8 @@ export default function ContactPage() {
         name: "",
         email: "",
         phone: "",
+        phoneCountry: "",
+        country: "",
         company: "",
         message: "",
         selectedBrands: [],
@@ -617,16 +652,16 @@ export default function ContactPage() {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-20 md:py-28 lg:py-36"
+      className="pt-24 pb-12 md:pb-16"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div
-          className={`text-center mb-12 lg:mb-20 transition-all duration-700 ${
+          className={`text-center mb-6 transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <h2 className="text-3xl md:text-4xl font-bold  mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-2">
             <span className="text-[#1F447B]">Contact</span>{" "}
             <span className="text-[#EB993C]">Us</span>
           </h2>
@@ -644,15 +679,15 @@ export default function ContactPage() {
           style={{ transitionDelay: "100ms" }}
         >
           <div
-            className="rounded-2xl bg-[#dbeafe] p-6 sm:p-8 lg:p-12 xl:p-16 border-2 border-[#1F447B]"
+            className="rounded-2xl bg-[#dbeafe] p-5 sm:p-6 lg:px-8 lg:py-6 border-2 border-[#1F447B]"
           >
-            <form onSubmit={handleSubmit} className="space-y-8 lg:space-y-10">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name and Company Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
-                <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                <div className="space-y-1">
                   <SimpleLabel
                     htmlFor="name"
-                    className="text-base lg:text-lg text-[#1F447B]"
+                    className="text-base text-[#1F447B]"
                   >
                     Full Name *
                   </SimpleLabel>
@@ -667,10 +702,10 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-1">
                   <SimpleLabel
                     htmlFor="company"
-                    className="text-base lg:text-lg text-[#1F447B]"
+                    className="text-base text-[#1F447B]"
                   >
                     Company Name
                   </SimpleLabel>
@@ -685,29 +720,100 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Phone and Email Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
-                <div className="space-y-3">
+              {/* Country, Phone and Email Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div className="space-y-1">
+                  <SimpleLabel
+                    htmlFor="country"
+                    className="text-base text-[#1F447B]"
+                  >
+                    Country
+                  </SimpleLabel>
+                  <div className="relative">
+                    {formData.country && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
+                      >
+                        <span
+                          className={`fi fi-${formData.country.toLowerCase()} rounded-sm`}
+                        />
+                      </span>
+                    )}
+                    <select
+                      id="country"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleCountryChange}
+                      className={`h-12 w-full appearance-none rounded-md border-2 border-[#1F447B] bg-white pr-10 text-base text-[#324A6D] focus:border-[#EB993C] focus:outline-none ${
+                        formData.country ? "pl-11" : "pl-4"
+                      }`}
+                    >
+                      <option value="">Select your country</option>
+                      {COUNTRIES.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
                   <SimpleLabel
                     htmlFor="phone"
-                    className="text-base lg:text-lg text-[#1F447B]"
+                    className="text-base text-[#1F447B]"
                   >
                     Phone Number
                   </SimpleLabel>
-                  <SimpleInput
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter your phone number"
-                  />
+                  <div className="flex h-12 overflow-hidden rounded-md border-2 border-[#1F447B] bg-white focus-within:border-[#EB993C]">
+                    <div className="relative shrink-0 border-r-2 border-[#1F447B]">
+                      {formData.phoneCountry && (
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
+                        >
+                          <span
+                            className={`fi fi-${formData.phoneCountry.toLowerCase()} rounded-sm`}
+                          />
+                        </span>
+                      )}
+                      <select
+                        id="phoneCountry"
+                        name="phoneCountry"
+                        aria-label="Phone country code"
+                        value={formData.phoneCountry}
+                        onChange={handleInputChange}
+                        className={`h-full appearance-none bg-transparent pr-8 text-base text-[#324A6D] focus:outline-none ${
+                          formData.phoneCountry ? "pl-11" : "pl-4"
+                        }`}
+                      >
+                        <option value=""></option>
+                        {COUNTRIES.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.code} {c.dial}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
+                    </div>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="555 123 4567"
+                      className="min-w-0 flex-1 bg-white px-4 text-base text-[#324A6D] focus:outline-none"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-1 md:col-span-2 lg:col-span-1">
                   <SimpleLabel
                     htmlFor="email"
-                    className="text-base lg:text-lg text-[#1F447B]"
+                    className="text-base text-[#1F447B]"
                   >
                     Email Address *
                   </SimpleLabel>
@@ -724,22 +830,22 @@ export default function ContactPage() {
               </div>
 
               {/* Services of Interest Section */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-3">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
                   <Building2Icon className="h-5 w-5" />
-                  <SimpleLabel className="text-base lg:text-lg text-[#1F447B]">
+                  <SimpleLabel className="text-base text-[#1F447B]">
                     Services of Interest
                   </SimpleLabel>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground">
                   Select the services you'd like to learn more about (optional)
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {brands.map((brand) => (
                     <div
                       key={brand.id}
-                      className="group relative bg-white rounded-xl border-2 border-[#1F447B] p-4 hover:border-[#EB993C]/30 hover:shadow-sm transition-all duration-200"
+                      className="group relative bg-white rounded-xl border-2 border-[#1F447B] p-3 hover:border-[#EB993C]/30 hover:shadow-sm transition-all duration-200"
                     >
                       <div className="flex items-start space-x-3">
                         <SimpleCheckbox
@@ -754,13 +860,13 @@ export default function ContactPage() {
                             htmlFor={brand.id}
                             className="cursor-pointer block"
                           >
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-0.5">
                               <div className="text-[#EB993C]">{brand.icon}</div>
                               <span className="font-medium text-foreground text-sm lg:text-base group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
                                 {brand.name}
                               </span>
                             </div>
-                            <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed">
+                            <p className="text-xs text-muted-foreground leading-snug">
                               {brand.description}
                             </p>
                           </label>
@@ -771,8 +877,8 @@ export default function ContactPage() {
                 </div>
 
                 {formData.selectedBrands.includes("shipitsmart") && (
-                  <div className="relative ml-0 sm:ml-8 rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-4 sm:p-5">
-                    <div className="mb-4 border-l-4 border-[#EB993C] pl-4">
+                  <div className="relative ml-0 sm:ml-8 rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-3">
+                    <div className="mb-2 border-l-4 border-[#EB993C] pl-4">
                       <p className="text-sm font-semibold text-[#1F447B]">
                         Which ShipItSmart services are they interested in?
                       </p>
@@ -782,11 +888,11 @@ export default function ContactPage() {
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                       {shipItSmartServices.map((service) => (
                         <div
                           key={service.id}
-                          className="group relative bg-white rounded-lg border border-[#1F447B]/40 p-4 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
+                          className="group relative bg-white rounded-lg border border-[#1F447B]/40 p-2 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
                         >
                           <div className="flex items-start space-x-3">
                             <SimpleCheckbox
@@ -806,7 +912,7 @@ export default function ContactPage() {
                                 htmlFor={`shipitsmart-${service.id}`}
                                 className="cursor-pointer block"
                               >
-                                <div className="flex items-center gap-2 mb-1">
+                                <div className="flex items-center gap-2">
                                   <div className="text-[#EB993C]">
                                     {service.icon}
                                   </div>
@@ -825,10 +931,10 @@ export default function ContactPage() {
               </div>
 
               {/* Message Field */}
-              <div className="space-y-3">
+              <div className="space-y-1">
                 <SimpleLabel
                   htmlFor="message"
-                  className="text-base lg:text-lg text-[#1F447B]"
+                  className="text-base text-[#1F447B]"
                 >
                   Message *
                 </SimpleLabel>
@@ -836,7 +942,7 @@ export default function ContactPage() {
                   id="message"
                   name="message"
                   required
-                  rows={5}
+                  rows={3}
                   value={formData.message}
                   onChange={handleInputChange}
                   placeholder="Tell us about your logistics needs, shipping volume, or any specific requirements..."
@@ -844,7 +950,7 @@ export default function ContactPage() {
               </div>
 
               {/* Submit Button */}
-              <div className="text-center pt-6">
+              <div className="text-center pt-1">
                 <SimpleButton type="submit" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>

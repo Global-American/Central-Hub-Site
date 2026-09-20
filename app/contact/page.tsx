@@ -1,3 +1,4 @@
+import BackgroundFade from "@/components/background-fade";
 import HeaderNav from "@/components/header-nav";
 import ContactSection from "@/components/contact-section";
 import Footer from "@/components/Footer";
@@ -10,9 +11,10 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="flex flex-col min-h-screen text-foreground">
+    <div className="flex flex-col text-foreground">
       <HeaderNav />
-      <main className="flex-1">
+      <main className="relative">
+        <BackgroundFade />
         <ContactSection />
       </main>
     </div>

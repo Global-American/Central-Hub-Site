@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { Package } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -99,17 +100,11 @@ export default function CTASection() {
               
               <div className="flex flex-col sm:flex-row gap-4 lg:gap-5">
                 <Button
+                  asChild
                   size="lg"
                   className="bg-[#EB993C] hover:bg-[#d88730] text-white font-semibold px-8 lg:px-10 py-4 lg:py-5 text-base lg:text-lg xl:text-xl rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                 >
-                  Get Started →
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-[#1F447B] font-semibold px-8 lg:px-10 py-4 lg:py-5 text-base lg:text-lg xl:text-xl rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-                >
-                  Contact Sales
+                  <Link href="/contact">Contact Sales →</Link>
                 </Button>
               </div>
             </div>

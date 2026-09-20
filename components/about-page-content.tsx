@@ -278,7 +278,7 @@ export default function AboutPageContent() {
               <h3 className="text-xl font-bold text-[#1F447B] mb-2">
                 Avi Mechlowitz
               </h3>
-              <p className="text-[#324A6D]">Founder</p>
+              <p className="text-[#EB993C]">Founder</p>
             </div>
 
             {/* Andy Ebert */}
@@ -304,7 +304,7 @@ export default function AboutPageContent() {
               <h3 className="text-xl font-bold text-[#1F447B] mb-2">
                 Andy Ebert
               </h3>
-              <p className="text-[#324A6D]">Managing Director</p>
+              <p className="text-[#EB993C]">Business Leader</p>
             </div>
 
             {/* Michael Gastwirth */}
@@ -330,7 +330,7 @@ export default function AboutPageContent() {
               <h3 className="text-xl font-bold text-[#1F447B] mb-2">
                 Michael Gastwirth
               </h3>
-              <p className="text-[#324A6D]">Sales & Operations Director</p>
+              <p className="text-[#EB993C]">Business Leader</p>
             </div>
 
             {/* Jake Geller */}
@@ -356,7 +356,7 @@ export default function AboutPageContent() {
               <h3 className="text-xl font-bold text-[#1F447B] mb-2">
                 Jake Geller
               </h3>
-              <p className="text-[#324A6D]">Onboarding & I.T Support Manager</p>
+              <p className="text-[#EB993C]">Business Support</p>
             </div>
           </div>
         </div>

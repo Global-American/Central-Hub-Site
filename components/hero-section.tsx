@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // Slideshow data with synchronized content
 const slides = [
@@ -153,10 +154,11 @@ export default function HeroSection() {
               }`}
             >
               <Button
+                asChild
                 size="lg"
                 className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 sm:px-10 xl:px-12 py-4 xl:py-5 text-base sm:text-lg xl:text-xl w-full sm:w-auto"
               >
-                Get Started →
+                <Link href="/contact">Get Started →</Link>
               </Button>
             </div>
           </div>

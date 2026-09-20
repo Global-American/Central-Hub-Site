@@ -1,3 +1,4 @@
+import BackgroundFade from "@/components/background-fade";
 import HeaderNav from "@/components/header-nav";
 import ContactSectionV2 from "@/components/contact-section-v2";
 import Footer from "@/components/Footer";
@@ -12,7 +13,8 @@ export default function ContactV2Page() {
   return (
     <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
-      <main className="flex-1">
+      <main className="relative flex-1">
+        <BackgroundFade />
         <ContactSectionV2 />
       </main>
     </div>
