@@ -40,7 +40,7 @@ export default function VideoSection() {
   }
 
   return (
-    <section ref={sectionRef} id="about" className="py-20 md:py-28 lg:py-36 bg-background">
+    <section ref={sectionRef} id="about" className="py-20 md:py-28 lg:py-36">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`text-center mb-16 lg:mb-24 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}

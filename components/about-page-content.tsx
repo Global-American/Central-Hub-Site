@@ -163,7 +163,7 @@ export default function AboutPageContent() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "#f6fdfe" }} className="relative">
+    <div className="relative">
       {/* Parcel border around full viewport edges (scrolls with page) */}
       <div 
         ref={borderContainerRef} 

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function LegalBar() {
   return (
-    <div className="border-t border-gray-200 bg-[#f6fdfe] py-6">
+    <div className="border-t border-gray-200 py-6">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-sm font-medium text-[#1F447B]">

@@ -106,7 +106,7 @@ export default function Footer() {
   };
 
   return (
-    <footer id="footer" className="bg-white py-8">
+    <footer id="footer" className="py-8">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Logo and Partnership Section */}

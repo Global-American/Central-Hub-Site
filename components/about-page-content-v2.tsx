@@ -28,7 +28,7 @@ function HorizontalDivider({
 }) {
   return (
     <div
-      className={`bg-white from-[#f6fdfe] via-[#ffffff] to-[#f6fdfe] border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
+      className={`border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
     >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
@@ -79,7 +79,7 @@ export default function AboutPageContentV2() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "#f6fdfe" }}>
+    <div>
       {/* Divider right below header */}
       <div className="pt-[72px]">
         <HorizontalDivider Icon={Package} className="py-4 md:py-5" />

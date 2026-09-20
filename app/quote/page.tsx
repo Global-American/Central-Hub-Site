@@ -92,8 +92,6 @@ export default function QuotePage() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isBenefitsVisible, setIsBenefitsVisible] = useState(false);
-  const [bgColor, setBgColor] = useState("#F4FAFC");
-  const [containerColor, setContainerColor] = useState("#dbeafe");
   const headerRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const benefitsRef = useRef<HTMLDivElement>(null);
@@ -361,12 +359,11 @@ export default function QuotePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
       <main className="flex-1">
         <section
           className="py-20 md:py-28 lg:py-36"
-          style={{ backgroundColor: bgColor }}
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             {/* Header */}
@@ -398,10 +395,7 @@ export default function QuotePage() {
             >
               <div
                 ref={formRef}
-                className="rounded-2xl shadow-lg p-6 sm:p-8 lg:p-12 xl:p-16 border-2 border-[#1F447B]"
-                style={{
-                  backgroundColor: containerColor,
-                }}
+                className="rounded-2xl bg-[#dbeafe] shadow-lg p-6 sm:p-8 lg:p-12 xl:p-16 border-2 border-[#1F447B]"
               >
                 <form
                   onSubmit={handleSubmit}

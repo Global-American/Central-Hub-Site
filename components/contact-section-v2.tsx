@@ -463,8 +463,6 @@ export default function ContactPage() {
     message: "",
     selectedBrands: [] as string[],
   });
-  const [bgColor, setBgColor] = useState("#F4FAFC");
-  const [containerColor, setContainerColor] = useState("#e6ecf7");
   const sectionRef = useRef<HTMLElement>(null);
 
   const API_BASE =
@@ -541,14 +539,7 @@ export default function ContactPage() {
       ref={sectionRef}
       id="contact"
       className="py-20 md:py-28 lg:py-36"
-      style={{ backgroundColor: bgColor }}
     >
-      {/* <ColorPicker
-        onColorChange={setBgColor}
-        onContainerColorChange={setContainerColor}
-        currentColor={bgColor}
-        currentContainerColor={containerColor}
-      /> */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div

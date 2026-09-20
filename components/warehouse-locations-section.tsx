@@ -159,8 +159,7 @@ export default function WarehouseLocationsSection() {
     <section
       ref={sectionRef}
       id="warehouse-locations"
-      className="pt-6 md:pt-8 lg:pt-10 pb-20 md:pb-24 lg:pb-28"
-      style={{ backgroundColor: "#f6fdfe", marginTop: "0" }}
+      className="mt-0 pt-6 md:pt-8 lg:pt-10 pb-20 md:pb-24 lg:pb-28"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -182,14 +181,13 @@ export default function WarehouseLocationsSection() {
         <div
           className={`relative w-full h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-sm border-2 border-[#1F447B] transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-          style={{ backgroundColor: "#f6fdfe" }}
+          } bg-background`}
         >
           <div className="flex h-full">
             {/* Left Panel - Interactive Location List */}
-            <div className="w-full lg:w-2/5 border-r-2 border-[#1F447B]" style={{ backgroundColor: "#f6fdfe" }}>
+            <div className="w-full lg:w-2/5 border-r-2 border-[#1F447B] bg-background">
               {/* Panel Header */}
-              <div className="p-4 border-b-2 border-[#1F447B]" style={{ backgroundColor: "#f6fdfe" }}>
+              <div className="p-4 border-b-2 border-[#1F447B] bg-background">
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="text-lg font-bold" style={{ color: "#1F447B" }}>
@@ -253,10 +251,10 @@ export default function WarehouseLocationsSection() {
             </div>
 
             {/* Right Panel - Dynamic Map Interface */}
-            <div className="hidden lg:flex lg:w-3/5 flex-col" style={{ backgroundColor: "#f6fdfe" }}>
+            <div className="hidden lg:flex lg:w-3/5 flex-col bg-background">
               {/* Map Header */}
               {selectedLocationData && (
-                <div className="p-3 border-b-2 border-[#1F447B] shadow-sm" style={{ backgroundColor: "#f6fdfe" }}>
+                <div className="p-3 border-b-2 border-[#1F447B] shadow-sm bg-background">
                   <div className="flex items-center gap-2">
                     <div className="text-lg">
                       {countryFlags[selectedLocationData.countryCode]}
@@ -310,7 +308,7 @@ export default function WarehouseLocationsSection() {
         {/* Mobile View Enhancement */}
         <div className="lg:hidden mt-6">
           {selectedLocationData && (
-            <Card className="shadow-sm border-2 border-[#1F447B]" style={{ backgroundColor: "#f6fdfe" }}>
+            <Card className="shadow-sm border-2 border-[#1F447B] bg-background">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
                   <div className="text-xl">

@@ -169,7 +169,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="bg-[#f6fdfe] from-gray-50 to-gray-100 py-16 md:py-20 lg:py-24 xl:py-28 relative overflow-hidden">
+    <section className="py-16 md:py-20 lg:py-24 xl:py-28 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-10 left-10 w-20 h-20 border-2 border-[#1F447B] rounded-full"></div>
@@ -252,7 +252,7 @@ export default function TestimonialsSection() {
                       {slideTestimonials.map((testimonial) => (
                         <div
                           key={testimonial.id}
-                          className="bg-[#f6fdfe] rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl border border-[#1F447B] relative group transition-all duration-300"
+                          className="bg-background rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl border border-[#1F447B] relative group transition-all duration-300"
                         >
                           {/* Quote Icon */}
                           <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">

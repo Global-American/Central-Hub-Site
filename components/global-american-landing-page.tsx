@@ -30,7 +30,7 @@ function HorizontalDivider({
 }) {
   return (
     <div
-      className={`bg-white from-[#f6fdfe] via-[#ffffff] to-[#f6fdfe] border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
+      className={`border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
     >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
@@ -55,7 +55,7 @@ function HorizontalDivider({
 
 export default function GlobalAmericanLandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
       <main className="flex-1">
         <HeroSection />

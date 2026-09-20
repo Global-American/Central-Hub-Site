@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function ContactV3Page() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
       <main className="flex-1">
         <ContactSectionV3 />

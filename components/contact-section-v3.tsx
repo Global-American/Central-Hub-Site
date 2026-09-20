@@ -137,7 +137,6 @@ export default function ContactSectionV3() {
     message: "",
     selectedBrands: [] as string[],
   });
-  const [bgColor, setBgColor] = useState("#F4FAFC");
   const sectionRef = useRef<HTMLElement>(null);
   const borderContainerRef = useRef<HTMLDivElement>(null);
 
@@ -334,7 +333,6 @@ export default function ContactSectionV3() {
       ref={sectionRef}
       id="contact"
       className="py-20 md:py-28 lg:py-36"
-      style={{ backgroundColor: bgColor }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}

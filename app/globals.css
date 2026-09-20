@@ -145,7 +145,7 @@
 
 @layer base {
   :root {
-    --background: 214 100% 96%; /* Light blue background #EBF4FF */
+    --background: 187 80% 98%; /* Page background #f6fdfe, same base as the billing platform */
     --foreground: 214 77% 35%; /* Body Text #14529f */
     --card: 0 0% 100%; /* Keep cards white for contrast */
     --card-foreground: 214 77% 35%;
@@ -221,7 +221,12 @@
     scroll-behavior: smooth;
     scroll-padding-top: 100px; /* Account for fixed header */
   }
+  html,
   body {
+    /* The one page background for the whole site (#f6fdfe via --background).
+       Sections and wrappers must not paint their own page colour; where a
+       surface needs an explicit background use the bg-background utility. */
+    background-color: hsl(var(--background));
     /* postcss-disable-next-line at-rule-no-unknown */
     /* @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;

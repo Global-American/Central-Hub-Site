@@ -502,8 +502,6 @@ export default function ContactPage() {
     selectedBrands: [] as string[],
     selectedShipItSmartServices: [] as string[],
   });
-  const [bgColor, setBgColor] = useState("#F4FAFC");
-  const [containerColor, setContainerColor] = useState("#dbeafe");
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -620,14 +618,7 @@ export default function ContactPage() {
       ref={sectionRef}
       id="contact"
       className="py-20 md:py-28 lg:py-36"
-      style={{ backgroundColor: bgColor }}
     >
-      {/* <ColorPicker
-        onColorChange={setBgColor}
-        onContainerColorChange={setContainerColor}
-        currentColor={bgColor}
-        currentContainerColor={containerColor}
-      /> */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div
@@ -653,8 +644,7 @@ export default function ContactPage() {
           style={{ transitionDelay: "100ms" }}
         >
           <div
-            className="rounded-2xl p-6 sm:p-8 lg:p-12 xl:p-16 border-2 border-[#1F447B]"
-            style={{ backgroundColor: containerColor }}
+            className="rounded-2xl bg-[#dbeafe] p-6 sm:p-8 lg:p-12 xl:p-16 border-2 border-[#1F447B]"
           >
             <form onSubmit={handleSubmit} className="space-y-8 lg:space-y-10">
               {/* Name and Company Row */}
