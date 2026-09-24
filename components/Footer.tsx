@@ -372,13 +372,13 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="col-span-1 md:col-start-5 md:row-start-1 md:row-span-2 flex items-start justify-center">
+          <div className="col-span-1 md:col-start-5 md:row-start-1 md:row-span-2 flex items-center justify-center">
             <Image
               src="/shipItSmartIcon.svg"
               alt="ShipItSmart Icon"
-              width={208}
-              height={208}
-              className="h-auto w-52 max-w-full object-contain"
+              width={229}
+              height={229}
+              className="h-auto w-[229px] max-w-full object-contain"
               priority={false}
             />
           </div>

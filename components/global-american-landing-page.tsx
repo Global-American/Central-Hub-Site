@@ -1,5 +1,4 @@
 import HeaderNav from "@/components/header-nav";
-import BackgroundFade from "@/components/background-fade";
 import HeroSection from "@/components/hero-section";
 import OurBrandsSection from "@/components/our-brands-section";
 import TestimonialsSection from "@/components/testimonials-section";
@@ -62,7 +61,6 @@ export default function GlobalAmericanLandingPage() {
         <HeroSection />
         {/* Background fade begins after the hero and ends at the CTA banner */}
         <div className="relative">
-          <BackgroundFade />
           <HorizontalDivider Icon={Package} className="-mt-1 py-4 md:py-5" />
           <OurBrandsSection />
           <HorizontalDivider Icon={FlippedPlane} className="py-4 md:py-5" />

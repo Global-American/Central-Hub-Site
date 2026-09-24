@@ -122,7 +122,10 @@ export default function OurBrandsSection() {
     <section
       ref={sectionRef}
       id="brands"
-      className="relative h-screen overflow-hidden"
+      // Card geometry lives in CSS variables so the section height can be derived
+      // from it. The section used to be a full viewport tall, which left all
+      // the space below the card empty; it now keeps only half of that gap.
+      className="relative overflow-hidden [--brand-card-top:clamp(15.5rem,31vh,19.5rem)] [--brand-card-h:320px] sm:[--brand-card-h:380px] md:[--brand-card-h:420px] lg:[--brand-card-h:490px] xl:[--brand-card-h:530px] h-[calc((100vh_+_var(--brand-card-top)_+_var(--brand-card-h))_/_2)]"
     >
       {/* Section Header */}
       <div className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 pt-20 md:pt-24 pb-4">
@@ -145,7 +148,7 @@ export default function OurBrandsSection() {
 
       <div
         ref={cardsContainerRef}
-        className="absolute inset-0 flex items-start justify-center px-2 sm:px-4 pt-[clamp(15.5rem,31vh,19.5rem)]"
+        className="absolute inset-0 flex items-start justify-center px-2 sm:px-4 pt-[var(--brand-card-top)]"
       >
         {brands.map((brand, i) => (
           <div
@@ -155,7 +158,7 @@ export default function OurBrandsSection() {
           >
             {/* Inner wrapper for border and styling */}
             <div
-              className={`relative w-full max-w-[83rem] rounded-3xl overflow-hidden shadow-2xl ${brand.color} border-2 border-white/20 h-[320px] sm:h-[380px] md:h-[420px] lg:h-[490px] xl:h-[530px]`}
+              className={`relative w-full max-w-[83rem] rounded-3xl overflow-hidden shadow-2xl ${brand.color} border-2 border-white/20 h-[var(--brand-card-h)]`}
             >
               <div className="flex h-full lg:grid lg:grid-cols-2">
                 {/* Text half */}
