@@ -97,26 +97,35 @@ export default function QuotePage() {
   const benefitsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const reveal = (target: Element) => {
+      if (target === headerRef.current) setIsHeaderVisible(true);
+      if (target === formRef.current) setIsFormVisible(true);
+      if (target === benefitsRef.current) setIsBenefitsVisible(true);
+    };
+
+    // Reveal anything already on screen at load so the page doesn't sit
+    // invisible until the user scrolls (the form is much taller than the
+    // viewport, so a percentage threshold never triggers on its own).
+    const isInViewport = (el: Element) => {
+      const rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.target === headerRef.current && entry.isIntersecting) {
-            setIsHeaderVisible(true);
-          }
-          if (entry.target === formRef.current && entry.isIntersecting) {
-            setIsFormVisible(true);
-          }
-          if (entry.target === benefitsRef.current && entry.isIntersecting) {
-            setIsBenefitsVisible(true);
-          }
+          if (entry.isIntersecting) reveal(entry.target);
         });
       },
-      { threshold: 0.3 },
+      { threshold: 0.05 },
     );
 
-    if (headerRef.current) observer.observe(headerRef.current);
-    if (formRef.current) observer.observe(formRef.current);
-    if (benefitsRef.current) observer.observe(benefitsRef.current);
+    [headerRef, formRef, benefitsRef].forEach((ref) => {
+      const el = ref.current;
+      if (!el) return;
+      if (isInViewport(el)) reveal(el);
+      observer.observe(el);
+    });
 
     return () => observer.disconnect();
   }, []);

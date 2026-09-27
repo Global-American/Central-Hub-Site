@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Building2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -21,7 +21,8 @@ const brands = [
   {
     id: 1,
     name: "Ship itSmart",
-    logo: "/shipitsmart.svg",
+    logo: "/logos/ship-itsmart-card.png",
+    tagline: "Be Smart, Ship itSmart",
     description:
       "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
@@ -32,7 +33,8 @@ const brands = [
   {
     id: 2,
     name: "Freight itSmart",
-    logo: "/frieghtit.svg",
+    logo: "/logos/freight-itsmart-card.png",
+    tagline: "Be Smart, Freight itSmart",
     description:
       "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
@@ -43,7 +45,8 @@ const brands = [
   {
     id: 3,
     name: "Return itSmart",
-    logo: "/returnit.svg",
+    logo: "/logos/return-itsmart-card.png",
+    tagline: "Be Smart, Return itSmart",
     description:
       "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
@@ -54,7 +57,8 @@ const brands = [
   {
     id: 4,
     name: "Fulfill itSmart",
-    logo: "/fufillit.svg",
+    logo: "/logos/fulfill-itsmart-card.png",
+    tagline: "Be Smart, Fulfill itSmart",
     description:
       "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
@@ -165,12 +169,16 @@ export default function OurBrandsSection() {
                 <div className="flex h-full w-full flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14">
                   <div className={brand.textColor}>
                     <div className="mb-4 sm:mb-5 md:mb-6">
-                      <div className="flex items-center gap-3 md:gap-4">
-                        <Building2 className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 opacity-80" />
-                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.6rem] xl:text-[3rem] font-bold tracking-tight leading-tight">
-                          {brand.name}
-                        </h3>
-                      </div>
+                      <h3 className="sr-only">{brand.name}</h3>
+                      <Image
+                        src={brand.logo}
+                        alt={`${brand.name} logo`}
+                        width={1480}
+                        height={390}
+                        priority={i === 0}
+                        sizes="(min-width: 1280px) 320px, (min-width: 768px) 240px, 180px"
+                        className="h-10 w-auto object-contain sm:h-12 md:h-14 lg:h-16 xl:h-20"
+                      />
                     </div>
                     <p className="text-[11px] sm:text-xs md:text-sm lg:text-base xl:text-[1.05rem] leading-relaxed opacity-90 mb-5 sm:mb-6 max-w-4xl">
                       {brand.description}
@@ -192,17 +200,9 @@ export default function OurBrandsSection() {
                         </a>
                       </Button>
                     </div>
-                    <div className="mt-3 sm:mt-4">
-                      <div className="inline-flex items-center rounded-xl bg-white px-4 py-2.5 shadow-lg sm:px-5 sm:py-3">
-                        <Image
-                          src={brand.logo}
-                          alt={`${brand.name} logo`}
-                          width={220}
-                          height={60}
-                          className="h-7 w-auto object-contain sm:h-8 md:h-9 lg:h-10"
-                        />
-                      </div>
-                    </div>
+                    <p className="mt-4 text-sm font-semibold italic tracking-wide opacity-90 sm:mt-5 sm:text-base md:text-lg">
+                      {brand.tagline}
+                    </p>
                   </div>
                 </div>
 
