@@ -145,7 +145,9 @@
 
 @layer base {
   :root {
-    --background: 187 80% 98%; /* Page background #f6fdfe, same base as the billing platform */
+    --background: 194 75% 92%; /* Page background #dcf3fa, midpoint of the soft blue gradient on html/body */
+    --page-gradient-start: #d4eff8; /* Page gradient, top-left */
+    --page-gradient-end: #e2f4fc; /* Page gradient, bottom-right */
     --foreground: 214 77% 35%; /* Body Text #14529f */
     --card: 0 0% 100%; /* Keep cards white for contrast */
     --card-foreground: 214 77% 35%;
@@ -223,10 +225,20 @@
   }
   html,
   body {
-    /* The one page background for the whole site (#f6fdfe via --background).
-       Sections and wrappers must not paint their own page colour; where a
-       surface needs an explicit background use the bg-background utility. */
+    /* The one page background for the whole site: a soft light-blue diagonal
+       gradient (#d4eff8 -> #e2f4fc), with --background (#dcf3fa) as the solid
+       fallback / midpoint. Sections and wrappers must not paint their own page
+       colour; where a surface needs an explicit background use bg-background. */
     background-color: hsl(var(--background));
+  }
+  body {
+    background-image: linear-gradient(
+      135deg,
+      var(--page-gradient-start) 0%,
+      var(--page-gradient-end) 100%
+    );
+    background-repeat: no-repeat;
+    min-height: 100vh;
     /* postcss-disable-next-line at-rule-no-unknown */
     /* @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
