@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import WarehouseLocationsSection from "@/components/warehouse-locations-section";
+import AboutGlobe from "@/components/about-globe";
 import { Package, Plane } from "lucide-react";
 import CargoShipIcon from "@/components/icons/cargo-ship";
 
@@ -28,7 +29,7 @@ function HorizontalDivider({
 }) {
   return (
     <div
-      className={`border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
+      className={`bg-white border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
     >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
@@ -123,13 +124,7 @@ export default function AboutPageContentV2() {
             </div>
           </div>
           <div className="flex justify-center">
-            <div className="relative w-full max-w-md h-96">
-              <img
-                src="/images/globe-jig.png"
-                alt="Global Logistics Solutions"
-                className="w-full h-full object-contain drop-shadow-2xl"
-              />
-            </div>
+            <AboutGlobe />
           </div>
         </div>
         </div>

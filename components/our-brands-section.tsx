@@ -200,7 +200,7 @@ export default function OurBrandsSection() {
                         </a>
                       </Button>
                     </div>
-                    <p className="mt-4 text-sm font-semibold italic tracking-wide opacity-90 sm:mt-5 sm:text-base md:text-lg">
+                    <p className="mt-4 text-[1.05rem] leading-snug font-semibold italic tracking-wide opacity-90 sm:mt-5 sm:text-[1.2rem] md:text-[1.35rem]">
                       {brand.tagline}
                     </p>
                   </div>

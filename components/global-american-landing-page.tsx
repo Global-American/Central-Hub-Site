@@ -20,7 +20,11 @@ const FlippedCargoShip = (props: any) => (
   />
 );
 
-// Horizontal Icon Divider Component with Infinite Animation
+// Horizontal Icon Divider Component with Infinite Animation.
+// `relative` matters: the first divider is pulled 4px up over the hero to hide
+// the hairline the hero's fractional vh height leaves at its bottom edge. The
+// hero is positioned, so an unpositioned divider would be painted underneath
+// it and the overlap would never show.
 function HorizontalDivider({
   Icon,
   className = "",
@@ -30,7 +34,7 @@ function HorizontalDivider({
 }) {
   return (
     <div
-      className={`border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
+      className={`relative bg-white border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
     >
       <div className="relative w-full">
         {/* Single line of infinitely repeating icons */}
@@ -61,6 +65,7 @@ export default function GlobalAmericanLandingPage() {
         <HeroSection />
         {/* Background fade begins after the hero and ends at the CTA banner */}
         <div className="relative">
+          {/* -mt-1: overlaps the hero's bottom edge by 4px to cover its hairline */}
           <HorizontalDivider Icon={Package} className="-mt-1 py-4 md:py-5" />
           <OurBrandsSection />
           <HorizontalDivider Icon={FlippedPlane} className="py-4 md:py-5" />

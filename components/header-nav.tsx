@@ -143,7 +143,7 @@ export default function HeaderNav() {
           : "bg-white shadow-sm"
         }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center group">
             <Image
@@ -340,7 +340,7 @@ export default function HeaderNav() {
             : "opacity-0 invisible -translate-y-2 pointer-events-none"
           }`}
       >
-        <div className="container mx-auto px-4 py-6 space-y-6">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Navigation Links */}
           <div className="space-y-4">
             <Link

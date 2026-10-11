@@ -5,7 +5,10 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Slideshow data with synchronized content
+// Slideshow data with synchronized content.
+// artInsetRight: transparent padding on the right edge of each PNG, as a % of
+// its width. On desktop the picture is shifted right by this amount so the
+// visible artwork (not the transparent strip) sits on the section padding edge.
 const slides = [
   {
     title: "Smart",
@@ -16,6 +19,7 @@ const slides = [
     textColor: "text-white",
     label: "Shipping",
     graphic: "/hero-variation-smart/ship-it-smart.png",
+    artInsetRight: 4.42,
   },
   {
     title: "Smart",
@@ -26,6 +30,7 @@ const slides = [
     textColor: "text-white",
     label: "Freight",
     graphic: "/hero-variation-smart/freight-it-smart.png",
+    artInsetRight: 5.21,
   },
   {
     title: "Smart",
@@ -36,6 +41,7 @@ const slides = [
     textColor: "text-white",
     label: "Returns",
     graphic: "/hero-variation-smart/return-it-smart.png",
+    artInsetRight: 7.22,
   },
   {
     title: "Smart",
@@ -45,6 +51,7 @@ const slides = [
     textColor: "text-white",
     label: "Fulfillment",
     graphic: "/hero-variation-smart/fulfil-it-smart.png",
+    artInsetRight: 8.06,
   },
 ];
 
@@ -96,7 +103,15 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative w-full h-[95vh] flex items-center justify-center overflow-hidden"
+      // From lg up the banner is 80vh tall, 10% less than the 89vh it used to
+      // take of the first screen, but never under 36rem so short screens keep
+      // room between the headline and the header. lg:pt-20 / lg:pb-16 centre
+      // the content in the band between the 5rem fixed header and the slide
+      // indicators. Phones keep 95vh: the stacked mobile layout needs the room.
+      // `isolate`: the z-10/20/30 layers inside stay inside, so the strip that
+      // overlaps the hero's bottom edge on the home page can paint over all of
+      // them, not just the gradient.
+      className="relative isolate w-full h-[95vh] lg:h-[80vh] lg:min-h-[36rem] lg:pt-20 lg:pb-16 flex items-center justify-center overflow-hidden"
     >
       {/* Gradient Background */}
       <div className="absolute inset-0">
@@ -107,8 +122,11 @@ export default function HeroSection() {
       {/* Dark overlay for improved text contrast */}
       <div className="absolute inset-0 bg-black/20 z-10" />
 
-      <div className="mx-auto w-full max-w-[120rem] px-6 sm:px-8 lg:px-12 xl:px-20 2xl:px-24 relative z-20 flex items-center h-full">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,29rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] gap-10 lg:gap-8 xl:gap-10 items-center w-full">
+      {/* zoom scales the whole composition (type, padding, artwork) to 90%,
+          the same factor as the height cut above, so the layout designed for
+          the taller banner still fits. */}
+      <div className="w-full px-6 sm:px-8 lg:px-20 xl:px-28 2xl:px-40 lg:[zoom:0.9] relative z-20 flex items-center h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,29rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] gap-10 lg:gap-8 xl:gap-10 items-center w-full">
           {/* Content Column */}
           <div className="flex flex-col items-start text-left space-y-6 lg:space-y-8 max-w-2xl lg:order-1">
             {/* Main title with animations */}
@@ -164,9 +182,9 @@ export default function HeroSection() {
           </div>
 
           {/* Graphic Column */}
-          <div className="flex justify-center items-center lg:order-2">
+          <div className="flex justify-center lg:justify-end items-center lg:order-2">
             <div
-              className={`w-full max-w-xl lg:max-w-[60rem] transition-all duration-500 ease-in-out ${
+              className={`w-full max-w-xl lg:max-w-none lg:w-[90%] transition-all duration-500 ease-in-out ${
                 titleAnimation === "animate-in"
                   ? "opacity-100 translate-y-0 transform"
                   : "opacity-0 translate-y-4 transform"
@@ -175,7 +193,7 @@ export default function HeroSection() {
               {/* All graphics stay mounted and preloaded in one grid cell;
                   only the active slide's image is visible, so the picture can
                   never lag behind the headline while a file downloads. */}
-              <div className="grid">
+              <div className="grid grid-cols-1 w-full">
                 {slides.map((slide, index) =>
                   slide.graphic ? (
                     <Image
@@ -184,12 +202,17 @@ export default function HeroSection() {
                       alt={`${slide.label} illustration`}
                       width={720}
                       height={512}
-                      sizes="(min-width: 1024px) 60vw, 100vw"
+                      sizes="(min-width: 1024px) 54vw, 100vw"
                       priority={index === 0}
                       loading={index === 0 ? undefined : "eager"}
                       aria-hidden={index !== currentSlideIndex}
                       data-slide={slide.label}
-                      className={`col-start-1 row-start-1 self-center w-full h-auto max-h-[72vh] object-contain ${
+                      style={
+                        {
+                          "--art-inset": `${slide.artInsetRight}%`,
+                        } as React.CSSProperties
+                      }
+                      className={`col-start-1 row-start-1 self-center justify-self-center lg:justify-self-end w-auto max-w-full h-auto max-h-[75vh] lg:max-h-[64vh] lg:translate-x-[var(--art-inset)] ${
                         index === currentSlideIndex
                           ? "opacity-100"
                           : "opacity-0 pointer-events-none"

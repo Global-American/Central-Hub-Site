@@ -61,9 +61,9 @@ export async function POST(req: NextRequest) {
   }
 
   const location = quoteLocation(body.payload);
-  const billingResponse = await fetch(
-    `${BILLING_API_BASE}${BILLING_QUOTES_ENDPOINT}`,
-    {
+  let billingResponse: Response;
+  try {
+    billingResponse = await fetch(`${BILLING_API_BASE}${BILLING_QUOTES_ENDPOINT}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,8 +76,19 @@ export async function POST(req: NextRequest) {
         form_data: body.payload,
         location,
       }),
-    },
-  );
+    });
+  } catch (error) {
+    // Network-level failure (e.g. the billing API isn't running locally)
+    console.error("Quote submit: billing API unreachable", error);
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "billing_unreachable",
+        message: `Could not reach the billing API at ${BILLING_API_BASE}. Set BILLING_API_BASE or start the billing service.`,
+      },
+      { status: 502 },
+    );
+  }
 
   if (!billingResponse.ok) {
     const errorText = await billingResponse.text();

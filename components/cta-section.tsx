@@ -31,7 +31,7 @@ export default function CTASection() {
     <>
       <section
         ref={sectionRef}
-        className="relative py-16 md:py-20 lg:py-24 xl:py-28 overflow-hidden"
+        className="relative py-[3.2rem] md:py-16 lg:py-[4.8rem] xl:py-[5.6rem] overflow-hidden"
       >
         {/* Hero-matching Gradient Background */}
         <div className="absolute inset-0">

@@ -681,7 +681,12 @@ export default function ContactPage() {
           <div
             className="rounded-2xl bg-[#dbeafe] p-5 sm:p-6 lg:px-8 lg:py-6 border-2 border-[#1F447B]"
           >
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Your details: name, company, country, phone, email */}
+              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-4">
+                <h3 className="text-xl font-semibold text-[#1F447B]">
+                  Your Details
+                </h3>
               {/* Name and Company Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                 <div className="space-y-1">
@@ -828,12 +833,13 @@ export default function ContactPage() {
                   />
                 </div>
               </div>
+              </div>
 
               {/* Services of Interest Section */}
-              <div className="space-y-2">
+              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-2">
                 <div className="flex items-center gap-2">
-                  <Building2Icon className="h-5 w-5" />
-                  <SimpleLabel className="text-base text-[#1F447B]">
+                  <Building2Icon className="h-5 w-5 text-[#1F447B]" />
+                  <SimpleLabel className="text-xl font-semibold text-[#1F447B]">
                     Services of Interest
                   </SimpleLabel>
                 </div>
@@ -931,10 +937,10 @@ export default function ContactPage() {
               </div>
 
               {/* Message Field */}
-              <div className="space-y-1">
+              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-3">
                 <SimpleLabel
                   htmlFor="message"
-                  className="text-base text-[#1F447B]"
+                  className="text-xl font-semibold text-[#1F447B]"
                 >
                   Message *
                 </SimpleLabel>

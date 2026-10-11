@@ -79,12 +79,52 @@ const testimonials = [
   },
 ];
 
+// Cards shown per page at each viewport width. These must match the
+// responsive `basis-*` classes on the carousel items below
+// (768px = md, 1024px = lg, 120rem/1920px = the 3xl breakpoint in globals.css).
+const perPageBreakpoints: Array<[string, number]> = [
+  ["(min-width: 120rem)", 4],
+  ["(min-width: 1024px)", 3],
+  ["(min-width: 768px)", 2],
+];
+
+function useTestimonialsPerPage() {
+  const [perPage, setPerPage] = useState(3);
+
+  useEffect(() => {
+    const queries = perPageBreakpoints.map(
+      ([query, count]) => [window.matchMedia(query), count] as const
+    );
+    const update = () => {
+      const match = queries.find(([mq]) => mq.matches);
+      setPerPage(match ? match[1] : 1);
+    };
+    update();
+    queries.forEach(([mq]) => mq.addEventListener("change", update));
+    return () =>
+      queries.forEach(([mq]) => mq.removeEventListener("change", update));
+  }, []);
+
+  return perPage;
+}
+
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
-  const testimonialsPerPage = 3;
+  const testimonialsPerPage = useTestimonialsPerPage();
   const totalPages = Math.ceil(testimonials.length / testimonialsPerPage);
+  // First card on the current page. The last page is aligned to the end so it
+  // never shows empty slots when the total isn't a multiple of the page size.
+  const firstVisible = Math.min(
+    currentIndex * testimonialsPerPage,
+    Math.max(testimonials.length - testimonialsPerPage, 0)
+  );
+
+  // Keep the current page valid when the page size changes on resize
+  useEffect(() => {
+    setCurrentIndex((prev) => Math.min(prev, totalPages - 1));
+  }, [totalPages]);
 
   // Auto-advance testimonials
   useEffect(() => {
@@ -157,17 +197,6 @@ export default function TestimonialsSection() {
     ));
   };
 
-  const getAllSlides = () => {
-    const slides = [];
-    for (let i = 0; i < totalPages; i++) {
-      const startIndex = i * testimonialsPerPage;
-      slides.push(
-        testimonials.slice(startIndex, startIndex + testimonialsPerPage)
-      );
-    }
-    return slides;
-  };
-
   return (
     <section className="py-16 md:py-20 lg:py-24 xl:py-28 relative overflow-hidden">
       {/* Background Pattern */}
@@ -178,7 +207,7 @@ export default function TestimonialsSection() {
         <div className="absolute bottom-40 right-10 w-24 h-24 border-2 border-[#EB993C] rounded-lg transform rotate-12"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+      <div className="w-full px-6 sm:px-8 lg:px-20 xl:px-28 2xl:px-40 relative z-10">
         {/* Header */}
         <div className={`text-center mb-12 lg:mb-16 xl:mb-20`}>
           <Badge
@@ -241,54 +270,53 @@ export default function TestimonialsSection() {
             {/* Testimonials Container with Smooth Sliding Animation */}
             <div className="overflow-hidden rounded-2xl border-[#1F447B]">
               <div
-                className="flex transition-transform duration-700 ease-in-out"
+                data-per-page={testimonialsPerPage}
+                className="flex -mx-3 lg:-mx-4 transition-transform duration-700 ease-in-out"
                 style={{
-                  transform: `translateX(-${currentIndex * 100}%)`,
+                  transform: `translateX(-${
+                    (firstVisible * 100) / testimonialsPerPage
+                  }%)`,
                 }}
               >
-                {getAllSlides().map((slideTestimonials, slideIndex) => (
-                  <div key={slideIndex} className="w-full flex-shrink-0 ">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                      {slideTestimonials.map((testimonial) => (
-                        <div
-                          key={testimonial.id}
-                          className="bg-background rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl border border-[#1F447B] relative group transition-all duration-300"
+                {testimonials.map((testimonial) => (
+                  <div
+                    key={testimonial.id}
+                    className="shrink-0 basis-full md:basis-1/2 lg:basis-1/3 3xl:basis-1/4 px-3 lg:px-4"
+                  >
+                    <div className="h-full flex flex-col bg-background rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl border border-[#1F447B] relative group transition-all duration-300">
+                      {/* Quote Icon */}
+                      <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                        <svg
+                          className="w-8 h-8 text-[#EB993C]"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          {/* Quote Icon */}
-                          <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
-                            <svg
-                              className="w-8 h-8 text-[#EB993C]"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                            </svg>
-                          </div>
+                          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                        </svg>
+                      </div>
 
-                          {/* Stars */}
-                          <div className="flex mb-5 lg:mb-6">
-                            {renderStars(testimonial.rating)}
-                          </div>
+                      {/* Stars */}
+                      <div className="flex mb-5 lg:mb-6">
+                        {renderStars(testimonial.rating)}
+                      </div>
 
-                          {/* Quote */}
-                          <blockquote className="text-[#324A6D] leading-relaxed mb-6 lg:mb-8 text-sm lg:text-base font-medium">
-                            "{testimonial.text}"
-                          </blockquote>
+                      {/* Quote */}
+                      <blockquote className="text-[#324A6D] leading-relaxed mb-6 lg:mb-8 text-sm lg:text-base font-medium">
+                        "{testimonial.text}"
+                      </blockquote>
 
-                          {/* Author Info */}
-                          <div className="border-t border-[#1F447B] pt-6">
-                            <h4 className="font-bold text-[#1F447B] text-lg mb-1">
-                              {testimonial.name}
-                            </h4>
-                            <p className="text-[#324A6D] text-sm mb-1">
-                              {testimonial.title}
-                            </p>
-                            <p className="text-[#EB993C] font-semibold text-sm">
-                              {testimonial.company}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                      {/* Author Info */}
+                      <div className="border-t border-[#1F447B] pt-6 mt-auto">
+                        <h4 className="font-bold text-[#1F447B] text-lg mb-1">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-[#324A6D] text-sm mb-1">
+                          {testimonial.title}
+                        </p>
+                        <p className="text-[#EB993C] font-semibold text-sm">
+                          {testimonial.company}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}

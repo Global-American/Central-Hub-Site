@@ -6,66 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MapPin, ExternalLink, RotateCcw } from "lucide-react";
-import Image from "next/image";
-
-// Enhanced warehouse location data
-const warehouseLocations = [
-  {
-    id: "new-york",
-    city: "Englewood, NJ",
-    country: "United States",
-    countryCode: "US",
-    lat: 40.8929,
-    lng: -73.9726,
-    address: "40 North Van Brunt Street Ste 23, Englewood, NJ 07631, USA",
-    image: "/warehouses/new-york.jpg",
-    description:
-      "Our flagship North American distribution hub strategically positioned to serve the entire East Coast with advanced logistics capabilities and multimodal transport connections.",
-    features: ["Primary Hub", "East Coast Gateway", "Multimodal Transport"],
-  },
-  {
-    id: "belfast",
-    city: "Strabane",
-    country: "Northern Ireland",
-    countryCode: "GB",
-    lat: 54.8275,
-    lng: -7.4642,
-    address:
-      "ShipItSmart Consulting Unit 1 Mahon Building, 39/49 Dock St, Strabane BT82 8EE, United Kingdom",
-    image: "/warehouses/belfast.jpg",
-    description:
-      "Northern Ireland operations center providing comprehensive logistics solutions with direct access to UK and EU markets through strategic port connections.",
-    features: ["UK-EU Gateway", "Port Access", "Cross-Border Logistics"],
-  },
-  {
-    id: "dublin",
-    city: "Convoy, Donegal",
-    country: "Republic of Ireland",
-    countryCode: "IE",
-    lat: 54.8656,
-    lng: -7.6644,
-    address:
-      "Unit 4 Lower, Convoy Enterprise Centre, Convoy, Donegal, F93 H5F9, Ireland",
-    image: "/warehouses/dublin.jpg",
-    description:
-      "European Union distribution hub with advanced automation systems, strategic location for EU market access, and comprehensive logistics capabilities.",
-    features: ["EU Distribution Hub", "Automated Systems", "Cold Chain"],
-  },
-  {
-    id: "manchester",
-    city: "Heywood, Manchester",
-    country: "United Kingdom",
-    countryCode: "GB",
-    lat: 53.595,
-    lng: -2.215,
-    address:
-      "Unit A, Birch Business Park, Heywood Manchester OL10 2SX, United Kingdom",
-    image: "/warehouses/manchester.jpg",
-    description:
-      "UK headquarters facility with comprehensive e-commerce fulfillment capabilities and direct connections to major UK transport networks.",
-    features: ["UK Headquarters", "E-commerce Hub", "Transport Networks"],
-  },
-];
+import LogisticsGlobe from "@/components/logistics-globe";
+import {
+  warehouseLocations,
+  globeHubs,
+  mapsSearchUrl,
+  mapsEmbedUrl,
+} from "@/lib/warehouse-locations";
 
 // Country flag emojis
 const countryFlags: { [key: string]: string } = {
@@ -79,7 +26,6 @@ const countryFlags: { [key: string]: string } = {
 export default function WarehouseLocationsSection() {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [mapLoaded, setMapLoaded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   // Check for URL parameters to preselect location and scroll into view
@@ -117,8 +63,6 @@ export default function WarehouseLocationsSection() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Simulate map loading
-          setTimeout(() => setMapLoaded(true), 500);
         }
       },
       { threshold: 0.2 }
@@ -139,21 +83,6 @@ export default function WarehouseLocationsSection() {
     (loc) => loc.id === selectedLocation
   );
 
-  // Generate map URL based on selection
-  const getMapUrl = useCallback(() => {
-    if (!mapLoaded) return "";
-
-    if (selectedLocationData) {
-      // Individual location view - hide controls
-      return `https://maps.google.com/maps?q=${selectedLocationData.lat},${selectedLocationData.lng}&hl=en&z=15&output=embed&iwloc=near`;
-    } else {
-      // Global view with all locations - hide controls
-      const allCoords = warehouseLocations
-        .map((loc) => `${loc.lat},${loc.lng}`)
-        .join("|");
-      return `https://maps.google.com/maps?q=${warehouseLocations[0].lat},${warehouseLocations[0].lng}&hl=en&z=2&output=embed&iwloc=near`;
-    }
-  }, [selectedLocationData, mapLoaded]);
 
   return (
     <section
@@ -272,32 +201,59 @@ export default function WarehouseLocationsSection() {
                 </div>
               )}
 
-              {/* Map Container */}
+              {/* Globe + street-level inset */}
               <div className="flex-1 relative overflow-hidden">
-                {mapLoaded ? (
-                  <iframe
-                    src={getMapUrl()}
-                    className="w-full h-full border-0"
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={
-                      selectedLocationData
-                        ? `${selectedLocationData.city} location`
-                        : "Global warehouse locations"
-                    }
-                    style={{
-                      position: 'relative',
-                      left: '0',
-                      top: '0'
-                    }}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-slate-200 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                      <p className="text-slate-600">Loading map...</p>
+                <LogisticsGlobe
+                  hubs={globeHubs}
+                  selectedId={selectedLocation}
+                  onHubSelect={handleLocationSelect}
+                  className="absolute inset-0"
+                  fallback={
+                    <iframe
+                      src={`https://maps.google.com/maps?q=${warehouseLocations[0].lat},${warehouseLocations[0].lng}&hl=en&z=2&output=embed&iwloc=near`}
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Global warehouse locations"
+                    />
+                  }
+                />
+
+                {!selectedLocationData && (
+                  <div
+                    className="pointer-events-none absolute left-4 top-4 rounded-full bg-white/80 px-3 py-1 text-xs font-medium shadow-sm backdrop-blur"
+                    style={{ color: "#324A6D" }}
+                  >
+                    Drag to rotate · click a facility to zoom in
+                  </div>
+                )}
+
+                {selectedLocationData && (
+                  <div
+                    key={selectedLocationData.id}
+                    className="globe-inset absolute bottom-4 right-4 w-[46%] max-w-[380px] overflow-hidden rounded-xl border-2 border-[#1F447B] bg-white shadow-xl"
+                  >
+                    <div className="flex items-center justify-between border-b border-[#1F447B]/15 px-3 py-1.5">
+                      <span className="text-xs font-semibold" style={{ color: "#1F447B" }}>
+                        Street map
+                      </span>
+                      <a
+                        href={mapsSearchUrl(selectedLocationData.address)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-[#EB993C] hover:underline"
+                      >
+                        Open in Google Maps
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
                     </div>
+                    <iframe
+                      src={mapsEmbedUrl(selectedLocationData.address)}
+                      className="block w-full aspect-[4/3] border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title={`${selectedLocationData.city} street map`}
+                    />
                   </div>
                 )}
               </div>
@@ -341,7 +297,7 @@ export default function WarehouseLocationsSection() {
                     className="w-full"
                     onClick={() =>
                       window.open(
-                        `https://maps.google.com/maps?q=${selectedLocationData.lat},${selectedLocationData.lng}`,
+                        mapsSearchUrl(selectedLocationData.address),
                         "_blank"
                       )
                     }

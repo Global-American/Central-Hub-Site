@@ -336,8 +336,12 @@ export default function QuotePage() {
       });
 
       if (!response.ok) {
+        const detail = await response
+          .json()
+          .then((data: { message?: string }) => data?.message)
+          .catch(() => undefined);
         throw new Error(
-          `Failed to submit quote request: ${response.statusText}`,
+          `Failed to submit quote request: ${detail || response.statusText}`,
         );
       }
 
@@ -363,7 +367,12 @@ export default function QuotePage() {
       // window.location.href = '/quote/success';
     } catch (error) {
       console.error("Error submitting quote request:", error);
-      alert("Failed to submit quote request. Please try again.");
+      const reason = error instanceof Error ? error.message : "";
+      alert(
+        reason
+          ? `${reason}\n\nPlease try again.`
+          : "Failed to submit quote request. Please try again.",
+      );
     }
   };
 
@@ -410,7 +419,7 @@ export default function QuotePage() {
                   onSubmit={handleSubmit}
                   className="space-y-8 lg:space-y-10"
                 >
-                  <div>
+                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
                     <h3 className="text-xl font-semibold text-[#1F447B] mb-4">
                       Shipment Type
                     </h3>
@@ -459,7 +468,7 @@ export default function QuotePage() {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
                     <h3 className="text-xl font-semibold text-[#1F447B] mb-4">
                       Contact Details
                     </h3>
@@ -527,6 +536,10 @@ export default function QuotePage() {
                   </div>
 
                   {/* Addresses */}
+                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
+                    <h3 className="text-xl font-semibold text-[#1F447B] mb-4">
+                      Addresses
+                    </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <h4 className="text-lg font-medium text-[#1F447B]">
@@ -667,9 +680,10 @@ export default function QuotePage() {
                   )}
                 </div>
               </div>
+                  </div>
 
                   {/* Additional Options Toggles */}
-                  <div>
+                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
                     <h3 className="text-xl font-semibold text-[#1F447B] mb-4">
                       Additional Options
                     </h3>
@@ -834,7 +848,6 @@ export default function QuotePage() {
                         </>
                       )}
                     </div>
-                  </div>
 
                   {/* Dangerous Goods Category Dropdown */}
                   {formData.dangerousGoods && (
@@ -866,9 +879,9 @@ export default function QuotePage() {
                   {/* Insurance Details */}
                   {formData.requiresInsurance && (
                     <div className="mt-4">
-                      <h3 className="text-xl font-semibold text-[#1F447B] mb-4">
+                      <h4 className="text-lg font-semibold text-[#1F447B] mb-4">
                         Insurance Details
-                      </h3>
+                      </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-[#324A6D] mb-2">
@@ -907,9 +920,10 @@ export default function QuotePage() {
                       </div>
                     </div>
                   )}
+                  </div>
 
               {/* Package Details */}
-              <div>
+              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
                 <div className="mb-4">
                   <h3 className="text-xl font-semibold text-[#1F447B]">
                     {shipmentMode === "freight"
