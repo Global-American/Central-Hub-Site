@@ -36,34 +36,41 @@ const globalLocations = [
       "Unit A, Birch Business Park\nHeywood Manchester OL10 2SX\nUnited Kingdom",
     locationId: "manchester",
   },
+  {
+    countryCode: "cn",
+    city: "Xiamen, China",
+    fullAddress:
+      "ITD Global Logistics (Xiamen) Ltd\nRoom 301, Building 31, Nanshan Road\nHuli District, Xiamen City, Fujian, China",
+    locationId: "xiamen",
+  },
 ];
 
 // Main 4 solutions with taglines
 const partnerSolutions = [
   {
     name: "ShipItSmart",
-    tagline: "Be Smart, Ship itSmart",
+    tagline: "Playing it smart, shipping solutions",
     description:
       "Discounted express and economy shipping with FedEx, DHL, and UPS for domestic and international parcels—rate compare, book, and track in one place.",
     logo: "/shipitsmart.svg",
   },
   {
     name: "FreightItSmart",
-    tagline: "Be Smart, Freight itSmart",
+    tagline: "Playing it smart, freight solutions",
     description:
       "LTL, FTL, air, and ocean freight made simple—instant quotes, multi‑carrier options, and end‑to‑end visibility for heavy and bulk shipments.",
     logo: "/frieghtit.svg",
   },
   {
     name: "ReturnItSmart",
-    tagline: "Be Smart, Return itSmart",
+    tagline: "Playing it smart, returns solutions",
     description:
       "Hassle‑free returns with prepaid labels, smart routing, and status updates—improve CX while controlling costs and reverse‑logistics complexity.",
     logo: "/returnit.svg",
   },
   {
     name: "FulfillItSmart",
-    tagline: "Be Smart, Fulfill itSmart",
+    tagline: "Playing it smart, fulfillment solutions",
     description:
       "Omnichannel fulfillment and inventory sync—pick, pack, and ship with real‑time rates, automation rules, and integrations to your sales channels.",
     logo: "/fufillit.svg",
@@ -179,8 +186,7 @@ export default function Footer() {
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               {[
                 { label: "Home", href: "/" },
-                { label: "Services", href: "/#services" },
-                { label: "Integrations", href: "/#integrations" },
+                { label: "Services", href: "/services" },
                 { label: "Quote", href: "/quote" },
                 { label: "About Us", href: "/about" },
                 { label: "Contact Us", href: "/contact" },

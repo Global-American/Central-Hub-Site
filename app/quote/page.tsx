@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import HeaderNav from "@/components/header-nav";
+import Image from "next/image";
+import { Zap } from "lucide-react";
 
 interface Package {
   id: string;
@@ -381,25 +383,21 @@ export default function QuotePage() {
       <HeaderNav />
       <main className="relative flex-1">
         <section
-          className="py-20 md:py-28 lg:py-36"
+          className="pt-24 pb-12 md:pb-16"
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             {/* Header */}
             <div
               ref={headerRef}
-              className={`text-center mb-12 lg:mb-20 transition-all duration-700 ${
+              className={`text-center mb-6 transition-all duration-700 ${
                 isHeaderVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4"
               }`}
             >
-              <h1 className="text-3xl md:text-4xl font-bold text-[#1F447B] mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-[#1F447B]">
                 Get Your <span className="text-[#EB993C]">Shipping Quote</span>
               </h1>
-              <p className="text-lg text-[#324A6D] max-w-2xl mx-auto">
-                Compare shipping rates from multiple carriers and find the best
-                option for your needs.
-              </p>
             </div>
 
             {/* Quote Form */}
@@ -1334,7 +1332,7 @@ export default function QuotePage() {
                         <button
                           type="button"
                           onClick={addSeaContainer}
-                          className="bg-[#1F447B] hover:bg-[#1a3a6b] text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center gap-2 border-2 border-[#EB993C]"
+                          className="bg-[#1F447B] hover:bg-[#1a3a6b] text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center gap-2"
                         >
                           <span className="text-lg">+</span>
                           Add Another Container
@@ -1600,7 +1598,7 @@ export default function QuotePage() {
                                   : packageShipmentType === "pallets"
                                     ? "lg:grid-cols-4"
                                     : "lg:grid-cols-5"
-                              } gap-4`}
+                              } gap-4 items-end`}
                             >
                               <div>
                                 <label className="block text-sm font-medium text-[#324A6D] mb-2">
@@ -1625,7 +1623,7 @@ export default function QuotePage() {
                               {shipmentMode === "parcel" && (
                                 <div>
                                   <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                                    Package Type
+                                    Type
                                   </label>
                                   <select
                                     value={pkg.packageType}
@@ -1681,8 +1679,8 @@ export default function QuotePage() {
                               <div>
                                 <label className="block text-sm font-medium text-[#324A6D] mb-2">
                                   {shipmentMode === "freight"
-                                    ? freightItemLabel
-                                    : "Package"}{" "}
+                                    ? `${freightItemLabel} `
+                                    : ""}
                                   Weight (
                                   {formData.measurementUnit === "metric"
                                     ? "kg"
@@ -1710,8 +1708,8 @@ export default function QuotePage() {
                                   <div>
                                     <label className="block text-sm font-medium text-[#324A6D] mb-2">
                                       {shipmentMode === "freight"
-                                        ? freightItemLabel
-                                        : "Package"}{" "}
+                                        ? `${freightItemLabel} `
+                                        : ""}
                                       Length (
                                       {formData.measurementUnit === "metric"
                                         ? "cm"
@@ -1735,8 +1733,8 @@ export default function QuotePage() {
                                   <div>
                                     <label className="block text-sm font-medium text-[#324A6D] mb-2">
                                       {shipmentMode === "freight"
-                                        ? freightItemLabel
-                                        : "Package"}{" "}
+                                        ? `${freightItemLabel} `
+                                        : ""}
                                       Width (
                                       {formData.measurementUnit === "metric"
                                         ? "cm"
@@ -1762,8 +1760,8 @@ export default function QuotePage() {
                               <div>
                                 <label className="block text-sm font-medium text-[#324A6D] mb-2">
                                   {shipmentMode === "freight"
-                                    ? freightItemLabel
-                                    : "Package"}{" "}
+                                    ? `${freightItemLabel} `
+                                    : ""}
                                   Height (
                                   {formData.measurementUnit === "metric"
                                     ? "cm"
@@ -1794,7 +1792,7 @@ export default function QuotePage() {
                             <button
                               type="button"
                               onClick={addPackage}
-                              className="bg-[#1F447B] hover:bg-[#1a3a6b] text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center gap-2 border-2 border-[#EB993C]"
+                              className="bg-[#1F447B] hover:bg-[#1a3a6b] text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center gap-2"
                             >
                               <span className="text-lg">+</span>
                               Add Another{" "}
@@ -1832,8 +1830,25 @@ export default function QuotePage() {
               style={{ transitionDelay: "400ms" }}
             >
               <div className="text-center">
-                <div className="w-16 h-16 bg-[#e6ecf7] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#1F447B]">
-                  <span className="text-[#1F447B] text-2xl font-bold">$</span>
+                <div className="w-20 h-20 bg-[#e6ecf7] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#1F447B]">
+                  <Zap
+                    className="h-9 w-9 text-[#EB993C]"
+                    fill="currentColor"
+                    strokeWidth={1.5}
+                    aria-hidden
+                  />
+                </div>
+                <h3 className="text-xl font-semibold text-[#1F447B] mb-2">
+                  Instant Quotes
+                </h3>
+                <p className="text-[#324A6D]">
+                  View real-time pricing in seconds with our advanced quoting
+                  engine.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-20 h-20 bg-[#e6ecf7] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#1F447B]">
+                  <span className="text-[#EB993C] text-4xl font-bold leading-none">$</span>
                 </div>
                 <h3 className="text-xl font-semibold text-[#1F447B] mb-2">
                   Best Rates
@@ -1844,27 +1859,20 @@ export default function QuotePage() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-[#e6ecf7] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#1F447B]">
-                  <span className="text-[#1F447B] text-2xl font-bold">⚡</span>
-                </div>
-                <h3 className="text-xl font-semibold text-[#1F447B] mb-2">
-                  Instant Quotes
-                </h3>
-                <p className="text-[#324A6D]">
-                  Get real-time shipping quotes in seconds with our advanced
-                  pricing engine.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#e6ecf7] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#1F447B]">
-                  <span className="text-[#1F447B] text-2xl font-bold">📦</span>
+                <div className="w-20 h-20 bg-[#e6ecf7] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#1F447B]">
+                  <Image
+                    src="/images/parcel1.png"
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 object-contain"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold text-[#1F447B] mb-2">
                   Multiple Carriers
                 </h3>
                 <p className="text-[#324A6D]">
-                  Choose from Royal Mail, DPD, UPS, FedEx, DHL and many more
-                  carriers.
+                  Choose from UPS, FedEx, DHL and many more carriers.
                 </p>
               </div>
             </div>

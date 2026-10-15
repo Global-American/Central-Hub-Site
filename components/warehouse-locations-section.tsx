@@ -4,8 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin, ExternalLink, RotateCcw } from "lucide-react";
+import { MapPin, ExternalLink, RotateCcw, Phone } from "lucide-react";
 import LogisticsGlobe from "@/components/logistics-globe";
 import {
   warehouseLocations,
@@ -21,6 +20,7 @@ const countryFlags: { [key: string]: string } = {
   AU: "🇦🇺",
   GB: "🇬🇧",
   CA: "🇨🇦",
+  CN: "🇨🇳",
 };
 
 export default function WarehouseLocationsSection() {
@@ -108,15 +108,15 @@ export default function WarehouseLocationsSection() {
 
         {/* Main Interface Container */}
         <div
-          className={`relative w-full h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-sm border-2 border-[#1F447B] transition-all duration-700 ${
+          className={`relative w-full min-h-[500px] lg:min-h-[600px] transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          } bg-background`}
+          }`}
         >
-          <div className="flex h-full">
+          <div className="flex h-full gap-6">
             {/* Left Panel - Interactive Location List */}
-            <div className="w-full lg:w-2/5 border-r-2 border-[#1F447B] bg-background">
+            <div className="w-full lg:w-2/5 flex flex-col rounded-2xl overflow-hidden shadow-sm border-2 border-[#1F447B] bg-background">
               {/* Panel Header */}
-              <div className="p-4 border-b-2 border-[#1F447B] bg-background">
+              <div className="shrink-0 p-4 border-b-2 border-[#1F447B] bg-background">
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="text-lg font-bold" style={{ color: "#1F447B" }}>
@@ -141,7 +141,7 @@ export default function WarehouseLocationsSection() {
               </div>
 
               {/* Scrollable Location List */}
-              <ScrollArea className="h-full">
+              <div className="flex-1">
                 <div className="p-2">
                   {warehouseLocations.map((location, index) => (
                     <Card
@@ -153,7 +153,7 @@ export default function WarehouseLocationsSection() {
                       }`}
                       onClick={() => handleLocationSelect(location.id)}
                     >
-                      <CardContent className="p-3">
+                      <CardContent className="px-3 py-2.5">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="text-xl">
                             {countryFlags[location.countryCode]}
@@ -168,19 +168,50 @@ export default function WarehouseLocationsSection() {
                           </div>
                         </div>
 
-                        {/* Simple description */}
-                        <p className="text-xs leading-relaxed mt-1" style={{ color: "#324A6D" }}>
-                          {location.description}
-                        </p>
+                        {/* Street address */}
+                        <div
+                          className="mt-1 flex items-start gap-1.5 text-xs leading-snug"
+                          style={{ color: "#324A6D" }}
+                        >
+                          <MapPin
+                            className="mt-0.5 h-3.5 w-3.5 shrink-0"
+                            style={{ color: "#EB993C" }}
+                          />
+                          <div>
+                            {location.addressLines.map((line) => (
+                              <div key={line}>{line}</div>
+                            ))}
+                          </div>
+                        </div>
+                        {location.phone && (
+                          <div
+                            className="mt-1 flex items-center gap-1.5 text-xs"
+                            style={{ color: "#324A6D" }}
+                          >
+                            <Phone
+                              className="h-3.5 w-3.5 shrink-0"
+                              style={{ color: "#EB993C" }}
+                            />
+                            <span>{location.phone}</span>
+                          </div>
+                        )}
+
                       </CardContent>
                     </Card>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
 
-            {/* Right Panel - Dynamic Map Interface */}
-            <div className="hidden lg:flex lg:w-3/5 flex-col bg-background">
+            {/* Right Panel - Dynamic Map Interface. The globe floats freely
+                until a facility is selected, then gets framed like the list. */}
+            <div
+              className={`hidden lg:flex lg:w-3/5 flex-col rounded-2xl overflow-hidden border-2 transition-[border-color,background-color,box-shadow] duration-500 ${
+                selectedLocationData
+                  ? "border-[#1F447B] bg-background shadow-sm"
+                  : "border-transparent"
+              }`}
+            >
               {/* Map Header */}
               {selectedLocationData && (
                 <div className="p-3 border-b-2 border-[#1F447B] shadow-sm bg-background">
@@ -196,6 +227,17 @@ export default function WarehouseLocationsSection() {
                         <MapPin className="h-3 w-3" />
                         <span>{selectedLocationData.address}</span>
                       </div>
+                      {selectedLocationData.phone && (
+                        <div className="flex items-center gap-1 text-xs mt-0.5" style={{ color: "#324A6D" }}>
+                          <Phone className="h-3 w-3" />
+                          <a href={`tel:${selectedLocationData.phone.replace(/\s+/g, "")}`} className="hover:underline">
+                            {selectedLocationData.phone}
+                          </a>
+                        </div>
+                      )}
+                      <p className="mt-1 text-xs leading-relaxed" style={{ color: "#324A6D" }}>
+                        {selectedLocationData.description}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -288,6 +330,18 @@ export default function WarehouseLocationsSection() {
                       {selectedLocationData.address}
                     </span>
                   </div>
+                  {selectedLocationData.phone && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="h-4 w-4" style={{ color: "#324A6D" }} />
+                      <a
+                        href={`tel:${selectedLocationData.phone.replace(/\s+/g, "")}`}
+                        className="hover:underline"
+                        style={{ color: "#324A6D" }}
+                      >
+                        {selectedLocationData.phone}
+                      </a>
+                    </div>
+                  )}
 
                   <p className="text-sm leading-relaxed" style={{ color: "#324A6D" }}>
                     {selectedLocationData.description}

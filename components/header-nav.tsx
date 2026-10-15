@@ -174,19 +174,19 @@ export default function HeaderNav() {
             </Link>
 
             <Link
-              href="/#services"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/#services")
+              href="/services"
+              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/services")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
                 }`}
             >
               Services
               {/* Active underline */}
-              {isActiveLink("/#services") && (
+              {isActiveLink("/services") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
               )}
               {/* Hover underline - only show when not active */}
-              {!isActiveLink("/#services") && (
+              {!isActiveLink("/services") && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>
@@ -363,20 +363,20 @@ export default function HeaderNav() {
             </Link>
 
             <Link
-              href="/#services"
+              href="/services"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/#services")
+              className={`block text-lg font-medium transition-all duration-200 py-2 w-full text-left relative group ${isActiveLink("/services")
                   ? "text-[#1F447B] font-semibold"
                   : "text-muted-foreground hover:text-[#EB993C]"
                 }`}
             >
               Services
               {/* Active underline */}
-              {isActiveLink("/#services") && (
+              {isActiveLink("/services") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#1F447B] rounded-full"></div>
               )}
               {/* Hover underline - only show when not active */}
-              {!isActiveLink("/#services") && (
+              {!isActiveLink("/services") && (
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               )}
             </Link>

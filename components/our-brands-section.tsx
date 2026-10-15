@@ -7,66 +7,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { brands } from "@/lib/brands";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-// Every brand currently points at the Ship itSmart site; swap in the real
-// URLs as the other brand sites go live.
-const SHIP_IT_SMART_URL = "https://ship-it-smart.vercel.app/";
-
-// Data for the brand cards
-const brands = [
-  {
-    id: 1,
-    name: "Ship itSmart",
-    logo: "/logos/ship-itsmart-card.png",
-    tagline: "Be Smart, Ship itSmart",
-    description:
-      "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
-    color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
-    textColor: "text-white",
-    image: "/card-thumbnails/ship-itsmart.png",
-    url: SHIP_IT_SMART_URL,
-  },
-  {
-    id: 2,
-    name: "Freight itSmart",
-    logo: "/logos/freight-itsmart-card.png",
-    tagline: "Be Smart, Freight itSmart",
-    description:
-      "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
-    color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
-    textColor: "text-white",
-    image: "/card-thumbnails/freight-itsmart.png",
-    url: SHIP_IT_SMART_URL,
-  },
-  {
-    id: 3,
-    name: "Return itSmart",
-    logo: "/logos/return-itsmart-card.png",
-    tagline: "Be Smart, Return itSmart",
-    description:
-      "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
-    color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
-    textColor: "text-white",
-    image: "/card-thumbnails/return-itsmart.png",
-    url: SHIP_IT_SMART_URL,
-  },
-  {
-    id: 4,
-    name: "Fulfill itSmart",
-    logo: "/logos/fulfill-itsmart-card.png",
-    tagline: "Be Smart, Fulfill itSmart",
-    description:
-      "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
-    color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
-    textColor: "text-white",
-    image: "/card-thumbnails/fulfill-itsmart.png",
-    url: SHIP_IT_SMART_URL,
-  },
-];
 
 export default function OurBrandsSection() {
   const sectionRef = useRef<HTMLElement>(null);

@@ -45,14 +45,13 @@ export default function AboutGlobe({ className = "" }: { className?: string }) {
         <span className="inline-flex items-center gap-1.5">
           <span
             className="inline-block h-2.5 w-2.5 rounded-full ring-2 ring-offset-1"
-            style={{ backgroundColor: ORANGE, ["--tw-ring-color" as string]: `${ORANGE}66` }}
+            style={{ backgroundColor: "#3C91FC", ["--tw-ring-color" as string]: ORANGE }}
           />
           Our facilities
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span
-            className="inline-block h-0.5 w-5 rounded-full"
-            style={{ background: `linear-gradient(90deg, ${ORANGE}, ${NAVY}33)` }}
+            className="inline-block h-1 w-5 rounded-full bg-[#3C91FC]"
           />
           Shipping lanes
         </span>

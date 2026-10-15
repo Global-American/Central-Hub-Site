@@ -661,14 +661,10 @@ export default function ContactPage() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">
+          <h2 className="text-3xl md:text-4xl font-bold">
             <span className="text-[#1F447B]">Contact</span>{" "}
             <span className="text-[#EB993C]">Us</span>
           </h2>
-          <p className="text-lg text-[#324A6D] max-w-2xl mx-auto">
-            Tell us about your logistics needs and we'll get back to you within
-            2 hours.
-          </p>
         </div>
 
         {/* Contact Form Section */}

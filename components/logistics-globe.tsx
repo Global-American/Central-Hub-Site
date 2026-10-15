@@ -101,8 +101,8 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
       startLng: h.dLng,
       endLat: c.lat,
       endLng: c.lng,
-      color: ["rgba(235,153,60,1)", "rgba(235,153,60,0.35)"],
-      stroke: 0.45,
+      color: ["rgba(60,145,252,1)", "rgba(60,145,252,0.65)"],
+      stroke: 0.5,
       dashLength: 0.35 + jitter(i, 1) * 0.3,
       dashGap: 0.6 + jitter(i, 2) * 0.6,
       dashTime: 2800 + jitter(i, 3) * 2600,
@@ -122,8 +122,8 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
       startLng: primary.dLng,
       endLat: h.dLat,
       endLng: h.dLng,
-      color: ["rgba(255,255,255,0.95)", "rgba(235,153,60,0.9)"],
-      stroke: 0.8,
+      color: ["rgba(60,145,252,1)", "rgba(60,145,252,0.95)"],
+      stroke: 0.85,
       dashLength: 0.5,
       dashGap: 0.25,
       dashTime: 2200 + i * 400,
@@ -133,11 +133,19 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
   return [...trunk, ...lanes];
 }
 
-type DisplayHub = GlobeHub & { dLat: number; dLng: number };
+type DisplayHub = GlobeHub & {
+  dLat: number;
+  dLng: number;
+  /** Index of the cluster this site belongs to */
+  cluster: number;
+  /** Position within a stacked cluster, or null for a lone site */
+  stackPos: "top" | "middle" | "bottom" | null;
+};
 
-// Sites within ~120 km would sit on top of each other, so fan them out
-// around their shared centre far enough to be told apart and clicked.
-// `spread` is in degrees; the camera still flies to the true location.
+// Sites within ~120 km would sit on top of each other, so stack them
+// north-to-south (in the order they're listed) around their shared centre.
+// `spread` is the total spacing in degrees; the camera still flies to the
+// true location.
 function spreadHubs(hubs: GlobeHub[], spread: number): DisplayHub[] {
   const clusters: GlobeHub[][] = [];
   hubs.forEach((h) => {
@@ -146,30 +154,20 @@ function spreadHubs(hubs: GlobeHub[], spread: number): DisplayHub[] {
     else clusters.push([h]);
   });
 
-  const display = new Map<string, { dLat: number; dLng: number }>();
-  clusters.forEach((members) => {
-    if (members.length === 1) {
-      const h = members[0];
-      display.set(h.id, { dLat: h.lat, dLng: h.lng });
-      return;
-    }
+  const display = new Map<string, Omit<DisplayHub, keyof GlobeHub>>();
+  clusters.forEach((members, ci) => {
     const n = members.length;
     const cLat = members.reduce((sum, h) => sum + h.lat, 0) / n;
     const cLng = members.reduce((sum, h) => sum + h.lng, 0) / n;
     members.forEach((h, i) => {
-      // Push each site outwards along its real bearing from the centre
-      let dx = h.lng - cLng;
-      let dy = h.lat - cLat;
-      const len = Math.hypot(dx, dy);
-      if (len < 1e-6) {
-        const a = (i / n) * Math.PI * 2;
-        dx = Math.cos(a);
-        dy = Math.sin(a);
-      } else {
-        dx /= len;
-        dy /= len;
-      }
-      display.set(h.id, { dLat: cLat + dy * spread, dLng: cLng + dx * spread });
+      const offset = n === 1 ? 0 : ((n - 1) / 2 - i) * spread;
+      display.set(h.id, {
+        dLat: n === 1 ? h.lat : cLat + offset,
+        dLng: n === 1 ? h.lng : cLng,
+        cluster: ci,
+        stackPos:
+          n === 1 ? null : i === 0 ? "top" : i === n - 1 ? "bottom" : "middle",
+      });
     });
   });
 
@@ -178,26 +176,54 @@ function spreadHubs(hubs: GlobeHub[], spread: number): DisplayHub[] {
 
 type Label = { id: string; text: string; lat: number; lng: number };
 
-// One label per site, hung just below its pin. Text runs east from the
-// anchor, so a western neighbour is pushed up and the eastern one down
-// when they'd otherwise overlap. `s` scales everything with zoom level.
-function buildLabels(hubs: DisplayHub[], s: number): Label[] {
-  const labels: Label[] = hubs.map((h) => ({
-    id: h.id,
-    text: h.label,
-    lat: h.dLat - 1.2 * s,
-    lng: h.dLng - 0.4 * s,
-  }));
+// Rough width of a label in degrees of longitude. Text height is `size`
+// degrees of arc; glyphs average ~0.6 of that, and a degree of arc spans
+// more longitude the further from the equator you are.
+function labelWidthLng(text: string, size: number, lat: number) {
+  const arc = text.length * 0.6 * size;
+  return arc / Math.max(0.2, Math.cos((lat * Math.PI) / 180));
+}
+
+// One label per site. Lone sites hang their label just below the pin.
+// Stacked sites instead put their label to the WEST of the pin, vertically
+// centred on it, so the stack reads as a tidy column of callouts and never
+// runs into neighbours to the east. Text runs east from its anchor, so for
+// lone sites an eastern label that would collide with a western one is
+// nudged apart. `s` scales offsets with zoom; `size` is the text height.
+function buildLabels(hubs: DisplayHub[], s: number, size: number): Label[] {
+  const labels = hubs.map((h) => {
+    const stacked = h.stackPos !== null;
+    if (stacked) {
+      const gap = (1.0 * s) / Math.max(0.2, Math.cos((h.dLat * Math.PI) / 180));
+      return {
+        id: h.id,
+        cluster: h.cluster,
+        stacked,
+        text: h.label,
+        lat: h.dLat - size / 2,
+        lng: h.dLng - labelWidthLng(h.label, size, h.dLat) - gap,
+      };
+    }
+    return {
+      id: h.id,
+      cluster: h.cluster,
+      stacked,
+      text: h.label,
+      lat: h.dLat - 1.2 * s,
+      lng: h.dLng - 0.4 * s,
+    };
+  });
   const sorted = [...labels].sort((a, b) => a.lng - b.lng);
   for (let i = 0; i < sorted.length - 1; i++) {
     const a = sorted[i];
     const b = sorted[i + 1];
+    if (a.stacked || b.stacked) continue;
     if (b.lng - a.lng < 8 * s && Math.abs(a.lat - b.lat) < 3 * s) {
       a.lat += 1.6 * s;
       b.lat -= 1.6 * s;
     }
   }
-  return labels;
+  return labels.map(({ id, text, lat, lng }) => ({ id, text, lat, lng }));
 }
 
 type Marker = { kind: "city" | "hub"; id?: string; name: string; lat: number; lng: number };
@@ -251,9 +277,13 @@ export default function LogisticsGlobe({
   const zoomed = !!selectedId && hubs.some((h) => h.id === selectedId);
 
   // Tighter spread and smaller text once zoomed in on a site
-  const displayHubs = useMemo(() => spreadHubs(hubs, zoomed ? 0.6 : 1.1), [hubs, zoomed]);
+  const displayHubs = useMemo(() => spreadHubs(hubs, zoomed ? 0.9 : 2.0), [hubs, zoomed]);
   const arcs = useMemo(() => buildArcs(displayHubs), [displayHubs]);
-  const labels = useMemo(() => buildLabels(displayHubs, zoomed ? 0.4 : 1), [displayHubs, zoomed]);
+  const labelSize = zoomed ? 0.6 : 1.3;
+  const labels = useMemo(
+    () => buildLabels(displayHubs, zoomed ? 0.4 : 1, labelSize),
+    [displayHubs, zoomed, labelSize]
+  );
   const markers = useMemo<Marker[]>(
     () => [
       ...cities.map((c) => ({ kind: "city" as const, name: c.name, lat: c.lat, lng: c.lng })),
@@ -370,7 +400,7 @@ export default function LogisticsGlobe({
 
   // Layer accessors (memoised so react-globe.gl doesn't re-digest each render)
   const pointColor = useCallback(
-    (d: object) => (asMarker(d).kind === "hub" ? ORANGE : "rgba(255,255,255,0.9)"),
+    (d: object) => (asMarker(d).kind === "hub" ? "#3C91FC" : "rgba(60,145,252,0.9)"),
     []
   );
   const pointRadius = useCallback(
@@ -456,8 +486,7 @@ export default function LogisticsGlobe({
             width={size.w}
             height={size.h}
             backgroundColor="rgba(0,0,0,0)"
-            globeImageUrl="/globe/earth-blue-marble.jpg"
-            bumpImageUrl="/globe/earth-topology.png"
+            globeImageUrl="/globe/earth-brand.png"
             showAtmosphere
             atmosphereColor="#7FB2F0"
             atmosphereAltitude={0.18}
@@ -493,7 +522,7 @@ export default function LogisticsGlobe({
             labelsData={labels}
             labelText="text"
             labelColor={labelColor}
-            labelSize={zoomed ? 0.6 : 1.5}
+            labelSize={labelSize}
             labelAltitude={0.02}
             labelIncludeDot={false}
             labelResolution={2}

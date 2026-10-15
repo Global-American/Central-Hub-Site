@@ -525,18 +525,18 @@ export default function AccountFormPage() {
       <HeaderNav />
       <main className="relative flex-1">
         <section
-          className="py-20 md:py-28 lg:py-36"
+          className="pt-24 pb-12 md:pb-16"
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div
               ref={headerRef}
-              className={`text-center mb-12 lg:mb-20 transition-all duration-700 ${
+              className={`text-center mb-6 transition-all duration-700 ${
                 isHeaderVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4"
               }`}
             >
-              <h1 className="text-3xl md:text-4xl font-bold text-[#1F447B] mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-[#1F447B]">
                 Setup Your <span className="text-[#EB993C]">Account</span>
               </h1>
             </div>
