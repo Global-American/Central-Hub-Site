@@ -5,6 +5,8 @@ import { useState, useEffect, useRef } from "react";
 import { Package } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import LogisticsGlobe from "@/components/logistics-globe";
+import { globeHubs } from "@/lib/warehouse-locations";
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -31,7 +33,7 @@ export default function CTASection() {
     <>
       <section
         ref={sectionRef}
-        className="relative py-[3.2rem] md:py-16 lg:py-[4.8rem] xl:py-[5.6rem] overflow-hidden"
+        className="relative py-8 md:py-10 xl:py-12 overflow-hidden"
       >
         {/* Hero-matching Gradient Background */}
         <div className="absolute inset-0">
@@ -53,12 +55,13 @@ export default function CTASection() {
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="absolute top-20 right-20 w-28 h-28 transform -rotate-6">
-            <Image 
-              src="/images/parcel2.png" 
-              alt="" 
-              width={112} 
-              height={112} 
+          {/* Mirror of the top-left parcel, facing inwards */}
+          <div className="absolute top-10 right-10 w-32 h-32 transform -rotate-12 -scale-x-100">
+            <Image
+              src="/images/parcel1.png"
+              alt=""
+              width={128}
+              height={128}
               className="w-full h-full object-contain"
             />
           </div>
@@ -71,12 +74,13 @@ export default function CTASection() {
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="absolute bottom-10 right-10 w-32 h-32 transform -rotate-12">
-            <Image 
-              src="/images/parcel2.png" 
-              alt="" 
-              width={128} 
-              height={128} 
+          {/* Mirror of the bottom-left parcel, facing inwards */}
+          <div className="absolute bottom-20 right-20 w-40 h-40 transform -rotate-45 -scale-x-100">
+            <Image
+              src="/images/parcel1.png"
+              alt=""
+              width={160}
+              height={160}
               className="w-full h-full object-contain"
             />
           </div>
@@ -117,12 +121,23 @@ export default function CTASection() {
               style={{ transitionDelay: "200ms" }}
             >
               <div className="relative flex justify-center lg:justify-end items-center">
-                {/* Globe Puzzle Image */}
-                <div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px]">
-                  <img
-                    src="/images/globe-jig.png"
-                    alt="Global Logistics Solutions"
-                    className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                {/* Spinning globe with our facilities and shipping lanes */}
+                <div
+                  className="relative w-72 h-72 md:w-[22rem] md:h-[22rem] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px]"
+                  role="img"
+                  aria-label="Globe showing our facilities and shipping lanes"
+                >
+                  <LogisticsGlobe
+                    hubs={globeHubs}
+                    simplified
+                    className="absolute inset-0"
+                    fallback={
+                      <img
+                        src="/images/globe-jig.png"
+                        alt="Global Logistics Solutions"
+                        className="w-full h-full object-contain drop-shadow-2xl"
+                      />
+                    }
                   />
                 </div>
               </div>

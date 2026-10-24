@@ -83,20 +83,42 @@ export const warehouseLocations: WarehouseLocation[] = [
     features: ["UK Headquarters", "E-commerce Hub", "Transport Networks"],
   },
   {
-    id: "xiamen",
-    city: "Xiamen, China",
-    label: "Xiamen",
+    id: "quanzhou",
+    city: "Quanzhou, China",
+    label: "Quanzhou",
     country: "China",
     countryCode: "CN",
-    lat: 24.51,
-    lng: 118.12,
+    lat: 24.91,
+    lng: 118.6,
     address:
-      "ITD Global Logistics (Xiamen) Ltd, Room 301, Building 31, Nanshan Road, Huli District, Xiamen City, Fujian, China",
-    addressLines: ["Room 301, Building 31, Nanshan Road", "Huli District, Xiamen, Fujian"],
-    image: "/warehouses/xiamen.jpg",
+      "Room 701, Building 3B, No. 20 Fengze Street, ShengshiTianjiao, Quanzhou City 362000, China",
+    addressLines: [
+      "Room 701, Building 3B, No. 20 Fengze Street",
+      "ShengshiTianjiao, Quanzhou City 362000",
+    ],
+    image: "/warehouses/quanzhou.jpg",
     description:
-      "Our China operations base in Xiamen's Huli District, close to the port and airport, giving direct access to Chinese manufacturing hubs and Asia-Pacific sea and air freight routes.",
-    features: ["Asia-Pacific Gateway", "Sea & Air Freight", "China Sourcing Support"],
+      "Our China office in Quanzhou, Fujian, coordinating sourcing, supplier relationships and freight bookings across China and the Asia-Pacific.",
+    features: ["China Office", "Supplier Coordination", "Asia-Pacific Freight"],
+  },
+  {
+    id: "shenzhen",
+    city: "Shenzhen, China",
+    label: "Shenzhen",
+    country: "China",
+    countryCode: "CN",
+    lat: 22.69,
+    lng: 114.12,
+    address:
+      "No. 2, 1st Floor, Building 2#, No. 2 Hehualing Road, Pinghu Street, Longgang District, Shenzhen 518111, China",
+    addressLines: [
+      "No. 2, 1st Floor, Building 2#, No. 2 Hehualing Rd",
+      "Pinghu Street, Longgang District, Shenzhen 518111",
+    ],
+    image: "/warehouses/shenzhen.jpg",
+    description:
+      "Our Shenzhen warehouse in Longgang District, handling consolidation and dispatch for goods leaving South China by sea and air.",
+    features: ["South China Warehouse", "Consolidation", "Sea & Air Export"],
   },
 ];
 

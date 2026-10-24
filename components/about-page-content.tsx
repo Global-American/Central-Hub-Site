@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import WarehouseLocationsSection from "@/components/warehouse-locations-section";
-import AboutGlobe from "@/components/about-globe";
+import Image from "next/image";
 
 export default function AboutPageContent() {
   const [isAboutVisible, setIsAboutVisible] = useState(false);
@@ -71,7 +71,15 @@ export default function AboutPageContent() {
             </div>
           </div>
           <div className="flex justify-center">
-            <AboutGlobe />
+            {/* Placeholder until the team photo is ready: replace the file to swap it */}
+            <Image
+              src="/images/team-placeholder.png"
+              alt="The Global American team"
+              width={446}
+              height={241}
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="w-full max-w-[560px] h-auto rounded-2xl border-2 border-[#1F447B] shadow-lg"
+            />
           </div>
         </div>
 

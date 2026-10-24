@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
+import { Minus, Plus } from "lucide-react";
 import type { GlobeMethods, GlobeProps } from "react-globe.gl";
 import type { GlobeDecorations, PinFactory } from "@/components/globe-decorations";
 
@@ -21,9 +22,16 @@ const ARC_ALTITUDE_SCALE = 0.4;
 const PIN_HEIGHT = 7;
 const PIN_HEIGHT_ZOOMED = 2.4;
 const PIN_HEIGHT_SELECTED = 2.9;
+// Camera altitude limits (globe radii) for the zoom buttons
+const MIN_ALTITUDE = 0.25;
+const MAX_ALTITUDE = 3.5;
+const ZOOM_STEP = 1.5;
+
 // Height of a pin's head above its tip, as a fraction of the pin
 const PIN_HEAD = 0.55;
 const UNITS_PER_DEG = (100 * Math.PI) / 180;
+
+const NO_CITIES: typeof cities = [];
 
 export type GlobeHub = { id: string; label: string; lat: number; lng: number };
 export type GlobeView = { lat: number; lng: number; altitude: number };
@@ -42,9 +50,14 @@ type Props = {
   fallback?: ReactNode;
   /** Must position and size the element (e.g. "absolute inset-0") */
   className?: string;
+  /** Leave out the clouds and the dots on destination cities */
+  simplified?: boolean;
+  /** Show zoom in/out buttons in the top-right corner */
+  zoomControls?: boolean;
 };
 
-// Markets we ship to; each is drawn as a lane from its nearest hub
+// Markets we ship to; each is drawn as a lane from its nearest hub, or from
+// the hub named in `from`
 const cities = [
   { name: "Los Angeles", lat: 34.05, lng: -118.24 },
   { name: "Chicago", lat: 41.88, lng: -87.63 },
@@ -72,10 +85,20 @@ const cities = [
   { name: "Hong Kong", lat: 22.32, lng: 114.17 },
   { name: "Johannesburg", lat: -26.2, lng: 28.05 },
   { name: "Lagos", lat: 6.52, lng: 3.38 },
+  { name: "Honolulu", lat: 21.31, lng: -157.86, from: "quanzhou" },
 ];
 
 // Lanes (besides the trunk lanes) that get a plane flying along them
-const FLIGHT_CITIES = new Set(["Los Angeles", "São Paulo", "Dubai", "Tokyo", "Sydney"]);
+const FLIGHT_CITIES = new Set(["Los Angeles", "São Paulo", "Dubai", "Tokyo", "Sydney", "Honolulu"]);
+
+// Extra air lanes across the Pacific, through Honolulu, each with a plane.
+// Ends are facility ids or city names.
+const PACIFIC_LANES: [string, string][] = [
+  ["quanzhou", "Los Angeles"],
+  ["Los Angeles", "Honolulu"],
+  ["Honolulu", "Tokyo"],
+  ["Honolulu", "Sydney"],
+];
 
 type LatLng = { lat: number; lng: number };
 
@@ -112,9 +135,9 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
   if (!hubs.length) return [];
 
   const lanes: Arc[] = cities.map((c, i) => {
-    const h = hubs.reduce((best, cur) =>
-      distanceKm(cur, c) < distanceKm(best, c) ? cur : best
-    );
+    const h =
+      hubs.find((x) => x.id === c.from) ??
+      hubs.reduce((best, cur) => (distanceKm(cur, c) < distanceKm(best, c) ? cur : best));
     return {
       startLat: h.dLat,
       startLng: h.dLng,
@@ -151,7 +174,31 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
     });
   });
 
-  return [...trunk, ...lanes];
+  const endpoint = (key: string): LatLng | undefined => {
+    const h = hubs.find((x) => x.id === key);
+    return h ? { lat: h.dLat, lng: h.dLng } : cities.find((c) => c.name === key);
+  };
+  const pacific: Arc[] = PACIFIC_LANES.flatMap(([from, to], i) => {
+    const a = endpoint(from);
+    const b = endpoint(to);
+    if (!a || !b) return [];
+    return [
+      {
+        startLat: a.lat,
+        startLng: a.lng,
+        endLat: b.lat,
+        endLng: b.lng,
+        color: ["rgba(60,145,252,1)", "rgba(60,145,252,0.65)"],
+        stroke: 0.5,
+        dashLength: 0.35 + jitter(i, 11) * 0.3,
+        dashGap: 0.6 + jitter(i, 12) * 0.6,
+        dashTime: 2800 + jitter(i, 13) * 2600,
+        flight: true,
+      },
+    ];
+  });
+
+  return [...trunk, ...lanes, ...pacific];
 }
 
 type DisplayHub = GlobeHub & {
@@ -286,6 +333,8 @@ export default function LogisticsGlobe({
   focusAltitude = 0.7,
   fallback,
   className = "",
+  simplified = false,
+  zoomControls = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
@@ -390,16 +439,18 @@ export default function LogisticsGlobe({
     if (!g || !ready || !decorationsMod) return;
     const decorations = decorationsMod.createGlobeDecorations(g.scene(), {
       arcAltitudeAutoScale: ARC_ALTITUDE_SCALE,
+      showClouds: !simplified,
     });
     decorationsRef.current = decorations;
     return () => {
       decorations.dispose();
       decorationsRef.current = null;
     };
-  }, [ready, decorationsMod]);
+  }, [ready, decorationsMod, simplified]);
 
   useEffect(() => {
     decorationsRef.current?.setFlights(arcs.filter((a) => a.flight));
+    decorationsRef.current?.setParcels(arcs.filter((a) => !a.flight));
   }, [arcs, ready, decorationsMod]);
 
   useEffect(() => {
@@ -509,6 +560,16 @@ export default function LogisticsGlobe({
 
   const cursor = hoveringHub && interactive ? "pointer" : "grab";
 
+  // Wheel zoom stays off so the page scrolls; these buttons zoom instead
+  const zoomBy = (factor: number) => {
+    const g = globeRef.current;
+    if (!g) return;
+    g.controls().autoRotate = false;
+    const view = g.pointOfView();
+    const altitude = Math.min(MAX_ALTITUDE, Math.max(MIN_ALTITUDE, view.altitude * factor));
+    g.pointOfView({ ...view, altitude }, 400);
+  };
+
   return (
     <div
       ref={containerRef}
@@ -561,7 +622,7 @@ export default function LogisticsGlobe({
             ringPropagationSpeed={1.6}
             ringRepeatPeriod={1100}
             // Destination dots
-            pointsData={cities}
+            pointsData={simplified ? NO_CITIES : cities}
             pointColor={cityColor}
             pointAltitude={0.004}
             pointRadius={0.4}
@@ -590,6 +651,28 @@ export default function LogisticsGlobe({
             onLabelClick={interactive ? onLabelClick : undefined}
             onLabelHover={interactive ? onHubHover : undefined}
           />
+        </div>
+      )}
+
+      {zoomControls && ready && (
+        <div className="absolute right-4 top-4 z-10 flex flex-col overflow-hidden rounded-lg border-2 border-[#1F447B] bg-white/90 shadow-sm backdrop-blur">
+          <button
+            type="button"
+            onClick={() => zoomBy(1 / ZOOM_STEP)}
+            aria-label="Zoom in"
+            className="flex h-9 w-9 items-center justify-center text-[#1F447B] transition-colors hover:bg-[#EB993C] hover:text-white"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+          <div className="h-px bg-[#1F447B]/30" />
+          <button
+            type="button"
+            onClick={() => zoomBy(ZOOM_STEP)}
+            aria-label="Zoom out"
+            className="flex h-9 w-9 items-center justify-center text-[#1F447B] transition-colors hover:bg-[#EB993C] hover:text-white"
+          >
+            <Minus className="h-4 w-4" />
+          </button>
         </div>
       )}
     </div>

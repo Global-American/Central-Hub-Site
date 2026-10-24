@@ -4,58 +4,6 @@ import OurBrandsSection from "@/components/our-brands-section";
 import TestimonialsSection from "@/components/testimonials-section";
 import CTASection from "@/components/cta-section";
 import Footer from "@/components/Footer";
-import CargoShipIcon from "@/components/icons/cargo-ship";
-import { Package, Ship, MapPin, Plane, Warehouse } from "lucide-react";
-
-// Flipped Plane icon (horizontal mirror)
-const FlippedPlane = (props: any) => (
-  <Plane {...props} className={`${props?.className ?? ""} scale-x-[-1]`} />
-);
-
-// Already sized/stylable via props
-const FlippedCargoShip = (props: any) => (
-  <CargoShipIcon
-    {...props}
-    className={`${props?.className ?? ""} scale-x-[-1]`}
-  />
-);
-
-// Horizontal Icon Divider Component with Infinite Animation.
-// `relative` matters: the first divider is pulled 4px up over the hero to hide
-// the hairline the hero's fractional vh height leaves at its bottom edge. The
-// hero is positioned, so an unpositioned divider would be painted underneath
-// it and the overlap would never show.
-function HorizontalDivider({
-  Icon,
-  className = "",
-}: {
-  Icon: React.ComponentType<any>;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`relative bg-white border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
-    >
-      <div className="relative w-full">
-        {/* Single line of infinitely repeating icons */}
-        <div className="flex items-center animate-scroll-infinite opacity-60">
-          {/* First set of icons */}
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div key={`icon-${i}`} className="flex-shrink-0 mx-12">
-              <Icon size={24} className="text-accent" />
-            </div>
-          ))}
-          {/* Duplicate set for seamless loop */}
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div key={`icon-duplicate-${i}`} className="flex-shrink-0 mx-12">
-              <Icon size={24} className="text-accent" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function GlobalAmericanLandingPage() {
   return (
@@ -65,12 +13,8 @@ export default function GlobalAmericanLandingPage() {
         <HeroSection />
         {/* Background fade begins after the hero and ends at the CTA banner */}
         <div className="relative">
-          {/* -mt-1: overlaps the hero's bottom edge by 4px to cover its hairline */}
-          <HorizontalDivider Icon={Package} className="-mt-1 py-4 md:py-5" />
           <OurBrandsSection />
-          <HorizontalDivider Icon={FlippedPlane} className="py-4 md:py-5" />
           <TestimonialsSection />
-          <HorizontalDivider Icon={FlippedCargoShip} className="py-4 md:py-5" />
         </div>
         <CTASection />
       </main>

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
+import ScrollProgress from "@/components/scroll-progress";
 import {
   Menu,
   X,
@@ -53,6 +54,15 @@ const solutions = [
     enabled: false,
     ctaLabel: "Coming Soon",
   },
+];
+
+// Desktop links; Log In is the orange button on the right
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About Us" },
+  { href: "/quote", label: "Quote" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export default function HeaderNav() {
@@ -137,210 +147,144 @@ export default function HeaderNav() {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? "bg-white shadow-lg border-b border-gray-100"
-          : "bg-white shadow-sm"
+    // Floating pill bar; the strip around it lets clicks through to the page
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-4 sm:px-4">
+      {/* Home page only; the strip above the bar stays everywhere so the nav doesn't shift */}
+      {pathname === "/" && <ScrollProgress />}
+      <div
+        className={`pointer-events-auto mx-auto flex h-16 max-w-6xl items-center rounded-2xl border border-[#1F447B]/10 bg-white/95 px-4 backdrop-blur-md transition-shadow duration-300 sm:px-5 ${
+          isScrolled
+            ? "shadow-[0_12px_32px_-10px_rgba(31,68,123,0.3)]"
+            : "shadow-[0_8px_24px_-12px_rgba(31,68,123,0.22)]"
         }`}
-    >
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center group">
-            <Image
-              src="/gaLogo.svg"
-              alt="Global American LLC"
-              width={160}
-              height={48}
-              className="hover:scale-105 transition-transform duration-300"
-            />
-          </Link>
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/")
-                  ? "text-[#1F447B] font-semibold"
-                  : "text-muted-foreground hover:text-[#EB993C]"
-                }`}
-            >
-              Home
-              {/* Active underline */}
-              {isActiveLink("/") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
-              )}
-              {/* Hover underline - only show when not active */}
-              {!isActiveLink("/") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-              )}
-            </Link>
+      >
+        <Link href="/" className="flex shrink-0 items-center">
+          <Image
+            src="/gaLogo.svg"
+            alt="Global American LLC"
+            width={136}
+            height={41}
+            className="hover:scale-105 transition-transform duration-300"
+          />
+        </Link>
 
-            <Link
-              href="/services"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/services")
-                  ? "text-[#1F447B] font-semibold"
-                  : "text-muted-foreground hover:text-[#EB993C]"
-                }`}
-            >
-              Services
-              {/* Active underline */}
-              {isActiveLink("/services") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
-              )}
-              {/* Hover underline - only show when not active */}
-              {!isActiveLink("/services") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-              )}
-            </Link>
+        <span className="mx-5 hidden h-6 w-px bg-[#1F447B]/15 lg:block" aria-hidden="true" />
 
+        <nav className="hidden items-center gap-1 lg:flex">
+          {navLinks.map(({ href, label }) => (
             <Link
-              href="/about"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/about")
-                  ? "text-[#1F447B] font-semibold"
-                  : "text-muted-foreground hover:text-[#EB993C]"
-                }`}
-            >
-              About Us
-              {/* Active underline */}
-              {isActiveLink("/about") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
-              )}
-              {/* Hover underline - only show when not active */}
-              {!isActiveLink("/about") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-              )}
-            </Link>
-
-            <Link
-              href="/quote"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${
-                isActiveLink("/quote")
-                  ? "text-[#1F447B] font-semibold"
-                  : "text-muted-foreground hover:text-[#EB993C]"
+              key={href}
+              href={href}
+              className={`rounded-lg px-3 py-2 text-[15px] transition-colors duration-200 ${
+                isActiveLink(href)
+                  ? "bg-[#DBEAFE] font-semibold text-[#1F447B]"
+                  : "font-medium text-[#1F447B]/75 hover:bg-[#DBEAFE] hover:text-[#1F447B]"
               }`}
             >
-              Quote
-              {/* Active underline */}
-              {isActiveLink("/quote") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
-              )}
-              {/* Hover underline - only show when not active */}
-              {!isActiveLink("/quote") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-              )}
+              {label}
             </Link>
+          ))}
+        </nav>
 
-            <Link
-              href="/contact"
-              className={`text-base font-medium transition-all duration-200 py-2 relative group ${isActiveLink("/contact")
-                  ? "text-[#1F447B] font-semibold"
-                  : "text-muted-foreground hover:text-[#EB993C]"
+        <div className="ml-auto hidden items-center lg:flex">
+          <span className="mr-3 h-6 w-px bg-[#1F447B]/15" aria-hidden="true" />
+
+          {/* Log In with platform dropdown */}
+          <div ref={loginDropdownRef} className="relative">
+            <button
+              type="button"
+              aria-expanded={isLoginDropdownOpen}
+              className="inline-flex h-10 items-center gap-2 rounded-full border-2 border-[#1F447B] bg-[#EB993C] px-6 text-[15px] font-semibold text-white shadow-[0_4px_10px_-4px_rgba(235,153,60,0.6)] transition-all duration-200 hover:bg-[#d88730] hover:shadow-[0_4px_10px_-3px_rgba(235,153,60,0.7)]"
+              onClick={() => setIsLoginDropdownOpen(!isLoginDropdownOpen)}
+            >
+              Log In
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${isLoginDropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {/* Login Solutions Dropdown */}
+            <div
+              className={`absolute right-0 top-full mt-3 w-72 z-50 transition-all duration-200 ${isLoginDropdownOpen
+                  ? "opacity-100 visible translate-y-0"
+                  : "opacity-0 invisible translate-y-1"
                 }`}
             >
-              Contact Us
-              {/* Active underline */}
-              {isActiveLink("/contact") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1F447B] rounded-full"></div>
-              )}
-              {/* Hover underline - only show when not active */}
-              {!isActiveLink("/contact") && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EB993C] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-              )}
-            </Link>
-
-            {/* Login Button with Dropdown */}
-            <div ref={loginDropdownRef} className="relative">
-              <Button
-                className="bg-[#EB993C] hover:bg-[#EB993C]/90 text-white font-medium px-6 py-2 rounded-full border-2 border-[#1F447B] transition-all duration-200 flex items-center gap-2"
-                onClick={() => setIsLoginDropdownOpen(!isLoginDropdownOpen)}
-              >
-                Login
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform duration-200 ${isLoginDropdownOpen ? "rotate-180" : ""
-                    }`}
-                />
-              </Button>
-
-              {/* Login Solutions Dropdown */}
-              <div
-                className={`absolute right-0 top-full mt-2 w-72 z-50 transition-all duration-200 ${isLoginDropdownOpen
-                    ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible translate-y-1"
-                  }`}
-              >
-                <div className="bg-white shadow-lg border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-lg font-bold text-foreground mb-4">
-                    Choose Your Platform
-                  </h3>
-                  <div className="space-y-2">
-                    {solutions.map((solution) => (
-                      <div
-                        key={solution.name}
-                        className={`flex items-center justify-between p-3 rounded-md transition-all duration-200 ${
-                          solution.enabled
-                            ? "hover:bg-gray-50 cursor-pointer border border-accent/20"
-                            : "opacity-40 blur-[1px] cursor-not-allowed"
-                          }`}
-                      >
-                        <div className="flex-1">
-                          <h4
-                            className={`text-sm font-bold ${
-                              solution.enabled
-                                ? "text-foreground"
-                                : "text-muted-foreground"
-                              }`}
-                          >
-                            {solution.name}
-                          </h4>
-                          <p className="text-xs text-muted-foreground">
-                            {solution.title}
-                          </p>
-                        </div>
-                        {solution.enabled && (
-                          <Button
-                            size="sm"
-                            className="bg-accent hover:bg-accent/90 text-accent-foreground text-xs px-3 py-1 ml-3"
-                            onClick={() => {
-                              setIsLoginDropdownOpen(false);
-                              window.open(solution.href, "_blank");
-                            }}
-                          >
-                            {solution.ctaLabel}
-                          </Button>
-                        )}
+              <div className="rounded-2xl border border-[#1F447B]/10 bg-white p-4 shadow-[0_16px_40px_-12px_rgba(31,68,123,0.3)]">
+                <h3 className="text-lg font-bold text-foreground mb-4">
+                  Choose Your Platform
+                </h3>
+                <div className="space-y-2">
+                  {solutions.map((solution) => (
+                    <div
+                      key={solution.name}
+                      className={`flex items-center justify-between p-3 rounded-md transition-all duration-200 ${
+                        solution.enabled
+                          ? "hover:bg-gray-50 cursor-pointer border border-accent/20"
+                          : "opacity-40 blur-[1px] cursor-not-allowed"
+                        }`}
+                    >
+                      <div className="flex-1">
+                        <h4
+                          className={`text-sm font-bold ${
+                            solution.enabled
+                              ? "text-foreground"
+                              : "text-muted-foreground"
+                            }`}
+                        >
+                          {solution.name}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          {solution.title}
+                        </p>
                       </div>
-                    ))}
-                  </div>
+                      {solution.enabled && (
+                        <Button
+                          size="sm"
+                          className="bg-accent hover:bg-accent/90 text-accent-foreground text-xs px-3 py-1 ml-3"
+                          onClick={() => {
+                            setIsLoginDropdownOpen(false);
+                            window.open(solution.href, "_blank");
+                          }}
+                        >
+                          {solution.ctaLabel}
+                        </Button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </nav>
-          <div className="md:hidden">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="bg-accent text-accent-foreground border-accent hover:bg-accent/90"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-              <span className="sr-only">
-                {isMobileMenuOpen ? "Close menu" : "Open menu"}
-              </span>
-            </Button>
           </div>
+
+        </div>
+
+        <div className="ml-auto lg:hidden">
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#1F447B] bg-[#EB993C] text-white shadow-[0_4px_10px_-4px_rgba(235,153,60,0.6)] transition-colors duration-200 hover:bg-[#d88730]"
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+            <span className="sr-only">
+              {isMobileMenuOpen ? "Close menu" : "Open menu"}
+            </span>
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-x-0 top-[80px] z-40 bg-white border-t border-gray-100 shadow-lg transition-all duration-300 ${isMobileMenuOpen
+        className={`lg:hidden mx-auto mt-2 max-w-6xl max-h-[calc(100vh-6rem)] overflow-y-auto rounded-2xl border border-[#1F447B]/10 bg-white shadow-[0_16px_40px_-12px_rgba(31,68,123,0.3)] transition-all duration-300 ${isMobileMenuOpen
             ? "opacity-100 visible translate-y-0 pointer-events-auto"
             : "opacity-0 invisible -translate-y-2 pointer-events-none"
           }`}
       >
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="w-full px-5 py-5 space-y-6">
           {/* Navigation Links */}
           <div className="space-y-4">
             <Link
@@ -471,10 +415,10 @@ export default function HeaderNav() {
             {/* Mobile Login Button with Dropdown */}
             <div className="space-y-3">
               <Button
-                className="bg-[#EB993C] hover:bg-[#EB993C]/90 text-white font-medium w-full py-3 rounded-full border-2 border-[#1F447B] transition-all duration-200 flex items-center justify-center gap-2"
+                className="bg-[#EB993C] hover:bg-[#d88730] text-white font-semibold w-full h-11 rounded-full border-2 border-[#1F447B] shadow-[0_4px_10px_-4px_rgba(235,153,60,0.6)] transition-all duration-200 flex items-center justify-center gap-2"
                 onClick={() => setIsMobileLoginOpen(!isMobileLoginOpen)}
               >
-                Login
+                Log In
                 <ChevronDown
                   className={`h-4 w-4 transition-transform duration-200 ${isMobileLoginOpen ? "rotate-180" : ""
                     }`}

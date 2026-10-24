@@ -212,6 +212,7 @@ export default function WarehouseLocationsSection() {
                   hubs={globeHubs}
                   selectedId={selectedLocation}
                   onHubSelect={handleLocationSelect}
+                  zoomControls
                   className="absolute inset-0"
                   fallback={
                     <iframe

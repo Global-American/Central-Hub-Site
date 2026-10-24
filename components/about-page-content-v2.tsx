@@ -3,54 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import WarehouseLocationsSection from "@/components/warehouse-locations-section";
 import AboutGlobe from "@/components/about-globe";
-import { Package, Plane } from "lucide-react";
-import CargoShipIcon from "@/components/icons/cargo-ship";
-
-// Flipped Plane icon (horizontal mirror)
-const FlippedPlane = (props: any) => (
-  <Plane {...props} className={`${props?.className ?? ""} scale-x-[-1]`} />
-);
-
-// Flipped Cargo Ship icon
-const FlippedCargoShip = (props: any) => (
-  <CargoShipIcon
-    {...props}
-    className={`${props?.className ?? ""} scale-x-[-1]`}
-  />
-);
-
-// Horizontal Icon Divider Component with Infinite Animation
-function HorizontalDivider({
-  Icon,
-  className = "",
-}: {
-  Icon: React.ComponentType<any>;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`bg-white border-t border-b border-muted/20 overflow-hidden transition-all duration-300 ${className}`}
-    >
-      <div className="relative w-full">
-        {/* Single line of infinitely repeating icons */}
-        <div className="flex items-center animate-scroll-infinite opacity-60">
-          {/* First set of icons */}
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div key={`icon-${i}`} className="flex-shrink-0 mx-12">
-              <Icon size={24} className="text-accent" />
-            </div>
-          ))}
-          {/* Duplicate set for seamless loop */}
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div key={`icon-duplicate-${i}`} className="flex-shrink-0 mx-12">
-              <Icon size={24} className="text-accent" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function AboutPageContentV2() {
   const [isAboutVisible, setIsAboutVisible] = useState(false);
@@ -81,12 +33,7 @@ export default function AboutPageContentV2() {
 
   return (
     <div>
-      {/* Divider right below header */}
-      <div className="pt-[72px]">
-        <HorizontalDivider Icon={Package} className="py-4 md:py-5" />
-      </div>
-      
-      <section id="about" className="pt-8 md:pt-12 lg:pt-16 pb-8 md:pb-12 lg:pb-16">
+      <section id="about" className="pt-[104px] md:pt-[120px] lg:pt-[136px] pb-8 md:pb-12 lg:pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={aboutRef}
@@ -259,14 +206,8 @@ export default function AboutPageContentV2() {
         </div>
       </section>
 
-      {/* Divider */}
-      <HorizontalDivider Icon={FlippedPlane} className="py-3" />
-
       {/* Warehouse Locations Section */}
       <WarehouseLocationsSection />
-
-      {/* Divider above footer */}
-      <HorizontalDivider Icon={FlippedCargoShip} className="py-3" />
     </div>
   );
 }

@@ -333,8 +333,13 @@ import {
   Package,
   RotateCcw,
   ChevronDown,
+  Phone,
+  Mail,
 } from "lucide-react";
+import Link from "next/link";
+import SocialLinks from "@/components/social-links";
 import { COUNTRIES, findCountry } from "@/lib/countries";
+import { warehouseLocations } from "@/lib/warehouse-locations";
 // import ColorPicker from "../components/ColorPicker";
 
 function Building2Icon(props: { className?: string }) {
@@ -522,7 +527,9 @@ export default function ContactPage() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      // Low threshold: the section is much taller than a phone held sideways,
+      // so a larger fraction might never be on screen at once
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -648,49 +655,51 @@ export default function ContactPage() {
     }
   };
 
+  const fade = isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4";
+
   return (
     <section
       ref={sectionRef}
       id="contact"
-      className="pt-24 pb-12 md:pb-16"
+      className="pt-28 pb-16 md:pt-32 md:pb-20"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <div
-          className={`text-center mb-6 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold">
-            <span className="text-[#1F447B]">Contact</span>{" "}
-            <span className="text-[#EB993C]">Us</span>
-          </h2>
-        </div>
-
-        {/* Contact Form Section */}
-        <div
-          className={`max-w-5xl lg:max-w-6xl mx-auto transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-          style={{ transitionDelay: "100ms" }}
-        >
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        {/* Intro and contact details on the left, the form card on the right.
+            On phones it stacks intro → form → details so the form stays near the top. */}
+        <div className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:grid-rows-[auto_1fr] lg:gap-x-14 lg:gap-y-10">
           <div
-            className="rounded-2xl bg-[#dbeafe] p-5 sm:p-6 lg:px-8 lg:py-6 border-2 border-[#1F447B]"
+            className={`lg:col-start-1 lg:row-start-1 transition-all duration-700 ${fade}`}
+          >
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+              <span className="text-[#1F447B]">Get in</span>{" "}
+              <span className="text-[#EB993C]">Touch</span>
+            </h1>
+            <p className="mt-4 max-w-md text-lg font-semibold leading-relaxed text-[#324A6D]/70">
+              We would like to hear from you!
+            </p>
+            <p className="mt-2 max-w-md text-base leading-relaxed text-[#324A6D]/70">
+              Let us know how we can best serve you. Use the contact form to
+              select the services of interest that best suit your logistics
+              needs. It would be a pleasure to support you towards smarter
+              shipping solutions.
+            </p>
+          </div>
+
+          {/* Contact Form. On desktop it drops below the heading so its first
+              labels line up with "We would like to hear from you!" */}
+          <div
+            className={`lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:pt-[4.875rem] transition-all duration-700 ${fade}`}
+            style={{ transitionDelay: "100ms" }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Your details: name, company, country, phone, email */}
-              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-4">
-                <h3 className="text-xl font-semibold text-[#1F447B]">
-                  Your Details
-                </h3>
-              {/* Name and Company Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+              {/* Your details: name, company, email, country, phone */}
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="space-y-1">
                   <SimpleLabel
                     htmlFor="name"
-                    className="text-base text-[#1F447B]"
+                    className="text-sm font-semibold text-[#1F447B]"
                   >
-                    Full Name *
+                    Full Name <span className="text-[#E53935]">*</span>
                   </SimpleLabel>
                   <SimpleInput
                     id="name"
@@ -700,13 +709,14 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Enter your full name"
+                    className="h-12"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <SimpleLabel
                     htmlFor="company"
-                    className="text-base text-[#1F447B]"
+                    className="text-sm font-semibold text-[#1F447B]"
                   >
                     Company Name
                   </SimpleLabel>
@@ -717,106 +727,16 @@ export default function ContactPage() {
                     value={formData.company}
                     onChange={handleInputChange}
                     placeholder="Enter your company name"
+                    className="h-12"
                   />
                 </div>
-              </div>
 
-              {/* Country, Phone and Email Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                <div className="space-y-1">
-                  <SimpleLabel
-                    htmlFor="country"
-                    className="text-base text-[#1F447B]"
-                  >
-                    Country
-                  </SimpleLabel>
-                  <div className="relative">
-                    {formData.country && (
-                      <span
-                        aria-hidden
-                        className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
-                      >
-                        <span
-                          className={`fi fi-${formData.country.toLowerCase()} rounded-sm`}
-                        />
-                      </span>
-                    )}
-                    <select
-                      id="country"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleCountryChange}
-                      className={`h-12 w-full appearance-none rounded-md border-2 border-[#1F447B] bg-white pr-10 text-base text-[#324A6D] focus:border-[#EB993C] focus:outline-none ${
-                        formData.country ? "pl-11" : "pl-4"
-                      }`}
-                    >
-                      <option value="">Select your country</option>
-                      {COUNTRIES.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <SimpleLabel
-                    htmlFor="phone"
-                    className="text-base text-[#1F447B]"
-                  >
-                    Phone Number
-                  </SimpleLabel>
-                  <div className="flex h-12 overflow-hidden rounded-md border-2 border-[#1F447B] bg-white focus-within:border-[#EB993C]">
-                    <div className="relative shrink-0 border-r-2 border-[#1F447B]">
-                      {formData.phoneCountry && (
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
-                        >
-                          <span
-                            className={`fi fi-${formData.phoneCountry.toLowerCase()} rounded-sm`}
-                          />
-                        </span>
-                      )}
-                      <select
-                        id="phoneCountry"
-                        name="phoneCountry"
-                        aria-label="Phone country code"
-                        value={formData.phoneCountry}
-                        onChange={handleInputChange}
-                        className={`h-full appearance-none bg-transparent pr-8 text-base text-[#324A6D] focus:outline-none ${
-                          formData.phoneCountry ? "pl-11" : "pl-4"
-                        }`}
-                      >
-                        <option value=""></option>
-                        {COUNTRIES.map((c) => (
-                          <option key={c.code} value={c.code}>
-                            {c.code} {c.dial}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
-                    </div>
-                    <input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="555 123 4567"
-                      className="min-w-0 flex-1 bg-white px-4 text-base text-[#324A6D] focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1 md:col-span-2 lg:col-span-1">
+                <div className="space-y-1 sm:col-span-2">
                   <SimpleLabel
                     htmlFor="email"
-                    className="text-base text-[#1F447B]"
+                    className="text-sm font-semibold text-[#1F447B]"
                   >
-                    Email Address *
+                    Email Address <span className="text-[#E53935]">*</span>
                   </SimpleLabel>
                   <SimpleInput
                     id="email"
@@ -826,24 +746,117 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Enter your email address"
+                    className="h-12"
                   />
                 </div>
-              </div>
-              </div>
 
-              {/* Services of Interest Section */}
-              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Building2Icon className="h-5 w-5 text-[#1F447B]" />
-                  <SimpleLabel className="text-xl font-semibold text-[#1F447B]">
-                    Services of Interest
-                  </SimpleLabel>
+                {/* Phone gets the wider share: its prefix picker takes room */}
+                <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-[minmax(0,9fr)_minmax(0,11fr)]">
+                  <div className="space-y-1">
+                    <SimpleLabel
+                      htmlFor="country"
+                      className="text-sm font-semibold text-[#1F447B]"
+                    >
+                      Country
+                    </SimpleLabel>
+                    <div className="relative">
+                      {formData.country && (
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
+                        >
+                          <span
+                            className={`fi fi-${formData.country.toLowerCase()} rounded-sm`}
+                          />
+                        </span>
+                      )}
+                      <select
+                        id="country"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleCountryChange}
+                        className={`h-12 w-full appearance-none rounded-md border-2 border-[#1F447B] bg-white pr-10 text-base text-[#324A6D] focus:border-[#EB993C] focus:outline-none ${
+                          formData.country ? "pl-11" : "pl-4"
+                        }`}
+                      >
+                        <option value="">Select your country</option>
+                        {COUNTRIES.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <SimpleLabel
+                      htmlFor="phone"
+                      className="text-sm font-semibold text-[#1F447B]"
+                    >
+                      Phone Number
+                    </SimpleLabel>
+                    <div className="flex h-12 overflow-hidden rounded-md border-2 border-[#1F447B] bg-white focus-within:border-[#EB993C]">
+                      <div className="relative shrink-0 border-r-2 border-[#1F447B]">
+                        {formData.phoneCountry && (
+                          <span
+                            aria-hidden
+                            className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
+                          >
+                            <span
+                              className={`fi fi-${formData.phoneCountry.toLowerCase()} rounded-sm`}
+                            />
+                          </span>
+                        )}
+                        <select
+                          id="phoneCountry"
+                          name="phoneCountry"
+                          aria-label="Phone country code"
+                          value={formData.phoneCountry}
+                          onChange={handleInputChange}
+                          className={`h-full appearance-none bg-transparent pr-8 text-base text-[#324A6D] focus:outline-none ${
+                            formData.phoneCountry ? "pl-11" : "pl-4"
+                          }`}
+                        >
+                          <option value=""></option>
+                          {COUNTRIES.map((c) => (
+                            <option key={c.code} value={c.code}>
+                              {c.code} {c.dial}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
+                      </div>
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="555 123 4567"
+                        className="min-w-0 flex-1 bg-white px-4 text-base text-[#324A6D] focus:outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Select the services you'd like to learn more about (optional)
-                </p>
+              </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* Services of Interest */}
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-semibold text-[#1F447B]">
+                    Services of Interest{" "}
+                    <span className="font-normal text-[#324A6D]/70">
+                      (optional)
+                    </span>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Select the services you&apos;d like to learn more about
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {brands.map((brand) => (
                     <div
                       key={brand.id}
@@ -864,7 +877,7 @@ export default function ContactPage() {
                           >
                             <div className="flex items-center gap-2 mb-0.5">
                               <div className="text-[#EB993C]">{brand.icon}</div>
-                              <span className="font-medium text-foreground text-sm lg:text-base group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
+                              <span className="font-medium text-sm group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
                                 {brand.name}
                               </span>
                             </div>
@@ -879,18 +892,18 @@ export default function ContactPage() {
                 </div>
 
                 {formData.selectedBrands.includes("shipitsmart") && (
-                  <div className="relative ml-0 sm:ml-8 rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-3">
+                  <div className="relative rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-3">
                     <div className="mb-2 border-l-4 border-[#EB993C] pl-4">
                       <p className="text-sm font-semibold text-[#1F447B]">
                         Which ShipItSmart services are they interested in?
                       </p>
-                      <p className="text-xs lg:text-sm text-[#324A6D]">
+                      <p className="text-xs text-[#324A6D]">
                         These options only apply to the selected ShipItSmart
                         service above.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       {shipItSmartServices.map((service) => (
                         <div
                           key={service.id}
@@ -918,7 +931,7 @@ export default function ContactPage() {
                                   <div className="text-[#EB993C]">
                                     {service.icon}
                                   </div>
-                                  <span className="font-medium text-foreground text-sm lg:text-base group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
+                                  <span className="font-medium text-sm group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
                                     {service.name}
                                   </span>
                                 </div>
@@ -932,28 +945,27 @@ export default function ContactPage() {
                 )}
               </div>
 
-              {/* Message Field */}
-              <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-3">
+              {/* Message */}
+              <div className="space-y-1">
                 <SimpleLabel
                   htmlFor="message"
-                  className="text-xl font-semibold text-[#1F447B]"
+                  className="text-sm font-semibold text-[#1F447B]"
                 >
-                  Message *
+                  Message <span className="text-[#E53935]">*</span>
                 </SimpleLabel>
                 <SimpleTextarea
                   id="message"
                   name="message"
                   required
-                  rows={3}
+                  rows={5}
                   value={formData.message}
                   onChange={handleInputChange}
                   placeholder="Tell us about your logistics needs, shipping volume, or any specific requirements..."
                 />
               </div>
 
-              {/* Submit Button */}
-              <div className="text-center pt-1">
-                <SimpleButton type="submit" disabled={isSubmitting}>
+              <div className="flex sm:justify-end">
+                <SimpleButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
                   {isSubmitting ? (
                     <>
                       <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></span>
@@ -965,6 +977,76 @@ export default function ContactPage() {
                 </SimpleButton>
               </div>
             </form>
+          </div>
+
+          {/* Contact details, split by navy rules */}
+          <div
+            className={`lg:col-start-1 lg:row-start-2 transition-all duration-700 ${fade}`}
+            style={{ transitionDelay: "200ms" }}
+          >
+            <div className="border-t border-[#1F447B] pt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EB993C]">
+                Call us
+              </p>
+              <a
+                href="tel:+15512059492"
+                className="mt-2 inline-flex items-center gap-2 text-xl font-semibold text-[#1F447B] transition-colors hover:text-[#EB993C]"
+              >
+                <Phone className="h-5 w-5 text-[#EB993C]" aria-hidden="true" />
+                +1 551-205-9492
+              </a>
+            </div>
+
+            <div className="mt-6 border-t border-[#1F447B] pt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EB993C]">
+                Email us
+              </p>
+              <a
+                href="mailto:sales@globalamerican.us"
+                className="mt-2 inline-flex items-center gap-2 text-xl font-semibold text-[#1F447B] transition-colors hover:text-[#EB993C]"
+              >
+                <Mail className="h-5 w-5 text-[#EB993C]" aria-hidden="true" />
+                sales@globalamerican.us
+              </a>
+            </div>
+
+            <div className="mt-6 border-t border-[#1F447B] pt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EB993C]">
+                Follow us
+              </p>
+              <SocialLinks className="mt-3" />
+            </div>
+
+            <div className="mt-6 border-t border-[#1F447B] pt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EB993C]">
+                Our locations
+              </p>
+              <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                {warehouseLocations.map((location) => (
+                  <li key={location.id}>
+                    <Link
+                      href={`/about?location=${location.id}#warehouse-locations`}
+                      className="group flex items-start gap-2.5"
+                    >
+                      <span
+                        className={`fi fi-${location.countryCode.toLowerCase()} mt-1 shrink-0 rounded-sm shadow-sm`}
+                        aria-hidden="true"
+                      />
+                      <span>
+                        <span className="block text-sm font-semibold text-[#1F447B] transition-colors group-hover:text-[#EB993C]">
+                          {location.city}
+                        </span>
+                        {!location.city.includes(location.country) && (
+                          <span className="block text-xs text-[#324A6D]">
+                            {location.country}
+                          </span>
+                        )}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

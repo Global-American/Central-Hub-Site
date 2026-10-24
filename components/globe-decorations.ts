@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import borders from "@/lib/country-borders.json";
 
 // Loaded lazily alongside react-globe.gl so three.js stays out of the page bundle
@@ -34,6 +35,45 @@ function slerp(a: THREE.Vector3, b: THREE.Vector3, t: number) {
     .multiplyScalar(Math.sin((1 - t) * angle))
     .addScaledVector(b, Math.sin(t * angle))
     .divideScalar(Math.sin(angle));
+}
+
+// ---------------------------------------------------------------------------
+// Parcel badge: the navy "it" roundel from our parcel artwork
+
+function drawParcelBadge() {
+  const size = 128;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const c = size / 2;
+
+  ctx.beginPath();
+  ctx.arc(c, c, c - 2, 0, Math.PI * 2);
+  ctx.fillStyle = NAVY;
+  ctx.fill();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 64px Helvetica, Arial, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("it", c - 8, c + 4);
+
+  // Little arrow kicking up and out of the "t"
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 8;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(c + 6, c + 28);
+  ctx.lineTo(c + 34, c - 4);
+  ctx.moveTo(c + 18, c - 6);
+  ctx.lineTo(c + 34, c - 4);
+  ctx.lineTo(c + 34, c + 12);
+  ctx.stroke();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
 }
 
 // ---------------------------------------------------------------------------
@@ -149,16 +189,21 @@ export type FlightLane = {
   endLng: number;
 };
 
-// Sea routes as [lat, lng] waypoints, kept clear of land
-const SEA_ROUTES: [number, number][][] = [
+// Sea routes as [lat, lng] waypoints, kept clear of land. No two routes cross
+// or share a port, so ships on different routes never meet.
+const SEA_ROUTES: { ships: number; path: [number, number][] }[] = [
   // New York – English Channel
-  [[40.45, -73.7], [40.2, -69], [41.5, -55], [45, -40], [48.5, -25], [49.6, -12], [49.7, -5.5], [50.2, -1]],
-  // Xiamen – Los Angeles, out through the Luzon Strait
-  [[24.3, 118.3], [23.0, 119.6], [21.4, 121.2], [24, 130], [30, 150], [35, 170], [37, -170], [36, -150], [34.6, -130], [33.6, -118.6]],
+  { ships: 2, path: [[40.45, -73.7], [40.2, -69], [41.5, -55], [45, -40], [48.5, -25], [49.6, -12], [49.7, -5.5], [50.2, -1]] },
+  // Fujian coast – Los Angeles, out through the Luzon Strait
+  { ships: 3, path: [[24.3, 118.3], [23.0, 119.6], [21.4, 121.2], [24, 130], [30, 150], [35, 170], [37, -170], [36, -150], [34.6, -130], [33.6, -118.6]] },
+  // Tokyo – Vancouver, south of the Aleutians and in through Juan de Fuca
+  { ships: 2, path: [[35.1, 139.75], [34.6, 140.3], [38, 150], [45, 165], [48.5, -175], [49, -150], [48.6, -128], [48.45, -124.9]] },
+  // Sydney – Honolulu – Panama, past Oahu and south of the Big Island
+  { ships: 3, path: [[-33.9, 151.5], [-33, 154], [-28, 163], [-20, 173], [-10, -178], [5, -167], [17, -160], [21.15, -157.9], [19.5, -157.2], [18.4, -155.6], [15, -140], [12, -110], [8, -87], [6.8, -81.5], [7.4, -79.7], [8.8, -79.5]] },
   // Singapore – Dubai, via the Malacca Strait and Hormuz
-  [[1.25, 103.9], [2.5, 101.2], [4.0, 99.8], [6.0, 96.5], [5.8, 90], [5.6, 82], [7.5, 75], [14, 63], [22.6, 60.6], [25.0, 57.5], [26.6, 56.45], [25.35, 55.0]],
-  // Santos – Lisbon, west of the Canaries
-  [[-24.1, -46.2], [-23.5, -42], [-18, -37.5], [-8, -32], [3, -27], [14.5, -19.5], [24, -20], [30, -19], [36.5, -10.5], [38.55, -9.5]],
+  { ships: 2, path: [[1.25, 103.9], [2.5, 101.2], [4.0, 99.8], [6.0, 96.5], [5.8, 90], [5.6, 82], [7.5, 75], [14, 63], [22.6, 60.6], [25.0, 57.5], [26.6, 56.45], [25.35, 55.0]] },
+  // Santos – Lisbon, well west of the Canaries
+  { ships: 2, path: [[-24.1, -46.2], [-23.5, -42], [-18, -37.5], [-8, -32], [3, -27], [14.5, -20.5], [24, -22], [30, -21], [36.5, -11], [38.55, -9.5]] },
 ];
 
 // Bands chosen to drift clear of our facilities' latitudes
@@ -184,10 +229,16 @@ const PUFFS: [number, number, number, number][][] = [
 ];
 
 const PLANE_SPEED = 22; // scene units per second
-const PLANE_SCALE = 1.6;
+const PLANE_SCALE = 2.4;
 const BOAT_SPEED = 3;
-const BOAT_SCALE = 1.5;
+const BOAT_SCALE = 2.4; // matches the planes
+const PARCEL_SPEED = 12;
+const PARCEL_SCALE = 2.4;
 const BOAT_ALTITUDE = 0.002;
+// Ships keep this far right of their route (scaled with the ship), so two
+// passing each other stay a hull's width apart; it eases to 0 near either port
+const BOAT_LANE = BOAT_SCALE * 1.25;
+const LANE_TAPER = 16;
 
 // Deterministic pseudo-random so every visitor sees the same traffic
 const jitter = (i: number, salt: number) => {
@@ -203,22 +254,52 @@ type Traveller = {
   speed: number; // scene units per second
   scale: number;
   fade: number; // distance from either end over which it grows/shrinks
+  lane?: number; // keep-right offset from the route, in scene units
   u: number; // 0..1 along the route
   dir: 1 | -1;
   wait: number; // seconds spent "in port" before heading back
   rest: number;
 };
 
+/** Puts a traveller where it would be `time` seconds after leaving the start of its route */
+function setTimeAlong(t: Traveller, time: number) {
+  const trip = t.length / t.speed;
+  const cycle = 2 * (trip + t.wait);
+  let s = ((time % cycle) + cycle) % cycle;
+  t.u = 0;
+  t.dir = 1;
+  t.rest = 0;
+  if (s < trip) {
+    t.u = s / trip;
+    return;
+  }
+  s -= trip;
+  if (s < t.wait) {
+    t.u = 1;
+    t.dir = -1;
+    t.rest = t.wait - s;
+    return;
+  }
+  s -= t.wait;
+  if (s < trip) {
+    t.u = 1 - s / trip;
+    t.dir = -1;
+    return;
+  }
+  t.rest = t.wait - (s - trip);
+}
+
 export type GlobeDecorations = ReturnType<typeof createGlobeDecorations>;
 
 /**
- * Adds country borders, drifting clouds, planes flying the shipping lanes and
- * boats on sea routes to a globe.gl scene. `arcAltitudeAutoScale` must match
- * the globe's so planes ride exactly on the drawn lanes.
+ * Adds country borders, drifting clouds, planes and parcels travelling the
+ * shipping lanes and boats on sea routes to a globe.gl scene. `arcAltitudeAutoScale` must match
+ * the globe's so planes ride exactly on the drawn lanes. `showClouds: false`
+ * leaves the clouds out.
  */
 export function createGlobeDecorations(
   scene: THREE.Scene,
-  { arcAltitudeAutoScale }: { arcAltitudeAutoScale: number }
+  { arcAltitudeAutoScale, showClouds = true }: { arcAltitudeAutoScale: number; showClouds?: boolean }
 ) {
   const root = new THREE.Group();
   scene.add(root);
@@ -297,8 +378,26 @@ export function createGlobeDecorations(
     boatModel.add(hull, ...containers, bridge, new THREE.Mesh(wakeGeo, wake));
   }
 
+  // Our branded parcel (as in /images/parcel1.png): a rounded orange box,
+  // a navy band of tape round it and the "it" badge on each side
+  const parcelModel = new THREE.Group();
+  {
+    const box = new THREE.Mesh(track(new RoundedBoxGeometry(1.2, 1.2, 1.2, 3, 0.16)), lambert("#F0A21E"));
+    const tape = new THREE.Mesh(track(new RoundedBoxGeometry(0.34, 1.22, 1.22, 3, 0.16)), lambert(NAVY));
+    const badgeMat = track(new THREE.MeshLambertMaterial({ map: track(drawParcelBadge()), transparent: true }));
+    const badgeGeo = track(new THREE.CircleGeometry(0.3, 24));
+    const badges = [1, -1].map((side) => {
+      const badge = new THREE.Mesh(badgeGeo, badgeMat);
+      badge.position.set(0.605 * side, -0.05, 0.12 * side);
+      badge.rotation.y = (side * Math.PI) / 2;
+      return badge;
+    });
+    parcelModel.add(box, tape, ...badges);
+    parcelModel.children.forEach((m) => (m.position.y += 0.6));
+  }
+
   const puffGeo = track(new THREE.SphereGeometry(1, 10, 7));
-  const clouds = CLOUDS.map((c, i) => {
+  const clouds = (showClouds ? CLOUDS : []).map((c, i) => {
     const cloud = new THREE.Group();
     PUFFS[i % PUFFS.length].forEach(([x, y, z, r]) => {
       const puff = new THREE.Mesh(puffGeo, cloudWhite);
@@ -310,40 +409,50 @@ export function createGlobeDecorations(
     return { ...c, obj: cloud };
   });
 
-  const boats: Traveller[] = SEA_ROUTES.flatMap((route, i) => {
+  const boats: Traveller[] = SEA_ROUTES.flatMap(({ ships, path }, i) => {
     const curve = new THREE.CatmullRomCurve3(
-      route.map(([lat, lng]) => toUnit(lat, lng)),
+      path.map(([lat, lng]) => toUnit(lat, lng)),
       false,
       "centripetal"
     );
     const pointAt = (u: number) =>
       curve.getPointAt(u).normalize().multiplyScalar(R * (1 + BOAT_ALTITUDE));
     const length = curve.getLength() * R;
-    // Two ships per route, heading opposite ways
-    return [0, 1].map((k) => {
+    const speed = BOAT_SPEED * (0.85 + jitter(i, 1) * 0.3);
+    const wait = 2;
+    const cycle = 2 * (length / speed + wait);
+    // Ships on a route share a speed and are evenly spaced in time, so they
+    // never catch each other up or sit in port together: they only ever pass
+    // head-on, each on its own side of the route
+    return Array.from({ length: ships }, (_, k) => {
       const obj = boatModel.clone();
       root.add(obj);
-      return {
+      const t: Traveller = {
         obj,
         pointAt,
         length,
-        speed: BOAT_SPEED * (0.85 + jitter(i * 2 + k, 1) * 0.3),
+        speed,
         scale: BOAT_SCALE,
-        fade: 4,
-        u: k ? 0.7 - jitter(i, 2) * 0.2 : 0.15 + jitter(i, 3) * 0.2,
-        dir: k ? -1 : 1,
-        wait: 2,
+        fade: 10,
+        lane: BOAT_LANE,
+        u: 0,
+        dir: 1,
+        wait,
         rest: 0,
-      } satisfies Traveller;
+      };
+      setTimeAlong(t, ((k + jitter(i, 2)) / ships) * cycle);
+      return t;
     });
   });
 
   let planes: Traveller[] = [];
+  let parcels: Traveller[] = [];
   let sizeFactor = 1;
   let paused = false;
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1;
 
   const ahead = new THREE.Vector3();
+  const side = new THREE.Vector3();
   function place(t: Traveller) {
     if (t.rest > 0) {
       t.obj.visible = false;
@@ -353,11 +462,18 @@ export function createGlobeDecorations(
     // Heading from points just behind and ahead, so it never degenerates at the ends
     const d = 1 / t.length;
     const back = t.pointAt(Math.max(0, Math.min(1, t.u - t.dir * d)));
-    ahead.copy(t.pointAt(Math.max(0, Math.min(1, t.u + t.dir * d)))).sub(back).add(p);
+    ahead.copy(t.pointAt(Math.max(0, Math.min(1, t.u + t.dir * d)))).sub(back);
+    const edge = Math.min(t.u, 1 - t.u) * t.length;
+    if (t.lane) {
+      // Heading × up points to the traveller's right
+      const offset = t.lane * sizeFactor * THREE.MathUtils.smoothstep(edge, 0, LANE_TAPER);
+      side.crossVectors(ahead, p).setLength(offset);
+      p.add(side).setLength(R * (1 + BOAT_ALTITUDE));
+    }
+    ahead.add(p);
     t.obj.position.copy(p);
     t.obj.up.copy(p).normalize();
     t.obj.lookAt(ahead);
-    const edge = Math.min(t.u, 1 - t.u) * t.length;
     const grow = THREE.MathUtils.smoothstep(edge, 0, t.fade);
     t.obj.visible = grow > 0.01;
     t.obj.scale.setScalar(t.scale * sizeFactor * Math.max(grow, 0.01));
@@ -390,6 +506,7 @@ export function createGlobeDecorations(
     clouds.forEach(placeCloud);
     boats.forEach(place);
     planes.forEach(place);
+    parcels.forEach(place);
   }
 
   let last = performance.now();
@@ -403,26 +520,31 @@ export function createGlobeDecorations(
     });
     boats.forEach((t) => advance(t, dt));
     planes.forEach((t) => advance(t, dt));
+    parcels.forEach((t) => advance(t, dt));
     placeAll();
   });
 
   placeAll();
+
+  /** Same curve three-globe draws for an arc with auto-scaled altitude */
+  function laneCurve(lane: FlightLane) {
+    const a = toUnit(lane.startLat, lane.startLng);
+    const b = toUnit(lane.endLat, lane.endLng);
+    const ctrlR = R * (1 + (a.angleTo(b) / 2) * arcAltitudeAutoScale * 1.5);
+    return new THREE.CubicBezierCurve3(
+      a.clone().multiplyScalar(R),
+      slerp(a, b, 0.25).multiplyScalar(ctrlR),
+      slerp(a, b, 0.75).multiplyScalar(ctrlR),
+      b.clone().multiplyScalar(R)
+    );
+  }
 
   return {
     /** Planes fly back and forth along these lanes */
     setFlights(lanes: FlightLane[]) {
       planes.forEach((t) => root.remove(t.obj));
       planes = lanes.map((lane, i) => {
-        const a = toUnit(lane.startLat, lane.startLng);
-        const b = toUnit(lane.endLat, lane.endLng);
-        // Same curve three-globe draws for an arc with auto-scaled altitude
-        const ctrlR = R * (1 + (a.angleTo(b) / 2) * arcAltitudeAutoScale * 1.5);
-        const curve = new THREE.CubicBezierCurve3(
-          a.clone().multiplyScalar(R),
-          slerp(a, b, 0.25).multiplyScalar(ctrlR),
-          slerp(a, b, 0.75).multiplyScalar(ctrlR),
-          b.clone().multiplyScalar(R)
-        );
+        const curve = laneCurve(lane);
         const obj = planeModel.clone();
         root.add(obj);
         const t: Traveller = {
@@ -435,6 +557,29 @@ export function createGlobeDecorations(
           u: jitter(i, 4),
           dir: jitter(i, 5) > 0.5 ? 1 : -1,
           wait: 1.5 + jitter(i, 6) * 2,
+          rest: 0,
+        };
+        place(t);
+        return t;
+      });
+    },
+    /** Parcels ride back and forth along these lanes */
+    setParcels(lanes: FlightLane[]) {
+      parcels.forEach((t) => root.remove(t.obj));
+      parcels = lanes.map((lane, i) => {
+        const curve = laneCurve(lane);
+        const obj = parcelModel.clone();
+        root.add(obj);
+        const t: Traveller = {
+          obj,
+          pointAt: (u) => curve.getPointAt(u),
+          length: curve.getLength(),
+          speed: PARCEL_SPEED * (0.85 + jitter(i, 7) * 0.3),
+          scale: PARCEL_SCALE,
+          fade: 10,
+          u: jitter(i, 8),
+          dir: jitter(i, 9) > 0.5 ? 1 : -1,
+          wait: 1 + jitter(i, 10) * 2,
           rest: 0,
         };
         place(t);

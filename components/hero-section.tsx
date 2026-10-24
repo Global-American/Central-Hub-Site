@@ -1,9 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Truck } from "lucide-react";
+
+// How long each slide shows before the banner moves on
+const SLIDE_MS = 15000;
+// Fade-out before the next slide is swapped in
+const FADE_MS = 300;
 
 // Slideshow data with synchronized content.
 // artInsetRight: transparent padding on the right edge of each PNG, as a % of
@@ -59,6 +65,11 @@ export default function HeroSection() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [titleAnimation, setTitleAnimation] = useState("animate-in");
   const pendingTransition = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const indicatorsRef = useRef<HTMLDivElement>(null);
+  const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const truckRef = useRef<HTMLDivElement>(null);
+  // Centre x of each slide dot, relative to the indicator row
+  const [dotCenters, setDotCenters] = useState<number[]>([]);
 
   // Fade out, then swap the slide index and fade back in. Starting a new
   // transition cancels a pending one so a timer tick and a manual click can
@@ -70,7 +81,7 @@ export default function HeroSection() {
       pendingTransition.current = null;
       setCurrentSlideIndex(resolveIndex);
       setTitleAnimation("animate-in");
-    }, 300);
+    }, FADE_MS);
   };
 
   // Function to go to next slide
@@ -95,10 +106,55 @@ export default function HeroSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
-    }, 15000); // 15 seconds
+    }, SLIDE_MS);
 
     return () => clearInterval(interval);
   }, [currentSlideIndex]); // Dependency on currentSlideIndex to reset timer on manual navigation
+
+  // Measure the slide dots so the truck's road runs between them
+  useLayoutEffect(() => {
+    const row = indicatorsRef.current;
+    if (!row) return;
+    const measure = () => {
+      const left = row.getBoundingClientRect().left;
+      setDotCenters(
+        dotRefs.current.map((dot) => {
+          const r = dot?.getBoundingClientRect();
+          return r ? r.left + r.width / 2 - left : 0;
+        })
+      );
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(row);
+    return () => ro.disconnect();
+  }, []);
+
+  // Drive the truck from the current dot to the next one over the slide's
+  // lifetime, so it pulls in just as the banner moves on. Each leg runs dot
+  // centre to dot centre (the dots cover it at the stops) and lasts until the
+  // next slide is actually swapped in, after the fade, so one leg flows
+  // straight into the next. After the last slide it turns round and heads
+  // back to the first.
+  const nextIndex = (currentSlideIndex + 1) % slides.length;
+  const headingBack = nextIndex < currentSlideIndex;
+  useEffect(() => {
+    const truck = truckRef.current;
+    if (!truck || dotCenters.length !== slides.length) return;
+    const from = dotCenters[currentSlideIndex];
+    const to = dotCenters[nextIndex];
+    const at = (x: number) => `translateX(${x}px) translateX(-50%)`;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      truck.style.transform = at(from);
+      return;
+    }
+    const drive = truck.animate([{ transform: at(from) }, { transform: at(to) }], {
+      duration: SLIDE_MS + FADE_MS,
+      easing: "linear",
+      fill: "forwards",
+    });
+    return () => drive.cancel();
+  }, [currentSlideIndex, nextIndex, headingBack, dotCenters]);
 
   return (
     <section
@@ -227,10 +283,41 @@ export default function HeroSection() {
       </div>
 
       {/* Slide indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center space-x-6">
+      <div
+        ref={indicatorsRef}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center gap-6"
+      >
+        {/* Dotted road joining the dots, and the truck that drives it to
+            show when the next slide is coming */}
+        {dotCenters.length === slides.length && (
+          <>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute top-[5px] h-0 border-t-2 border-dotted border-white/40"
+              style={{
+                left: dotCenters[0],
+                width: dotCenters[dotCenters.length - 1] - dotCenters[0],
+              }}
+            />
+            <div
+              ref={truckRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute left-0 -top-[3px]"
+            >
+              <Truck
+                className={`h-[18px] w-[18px] text-accent drop-shadow ${headingBack ? "-scale-x-100" : ""}`}
+                fill="white"
+                strokeWidth={2.25}
+              />
+            </div>
+          </>
+        )}
         {slides.map((slide, index) => (
-          <div key={index} className="flex flex-col items-center space-y-2">
+          <div key={index} className="relative flex flex-col items-center space-y-2">
             <button
+              ref={(el) => {
+                dotRefs.current[index] = el;
+              }}
               onClick={() => goToSlide(index)}
               className="relative group"
               aria-label={`Go to ${slide.label} slide`}
