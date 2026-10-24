@@ -44,9 +44,8 @@ export const warehouseLocations: WarehouseLocation[] = [
     countryCode: "GB",
     lat: 54.8275,
     lng: -7.4642,
-    address:
-      "ShipItSmart Consulting Unit 1 Mahon Building, 39/49 Dock St, Strabane BT82 8EE, United Kingdom",
-    addressLines: ["Unit 1 Mahon Building, 39/49 Dock St", "Strabane BT82 8EE"],
+    address: "Strabane, Co. Tyrone, Northern Ireland",
+    addressLines: ["Strabane, Co. Tyrone"],
     image: "/warehouses/belfast.jpg",
     description:
       "Northern Ireland operations center providing comprehensive logistics solutions with direct access to UK and EU markets through strategic port connections.",
@@ -60,9 +59,8 @@ export const warehouseLocations: WarehouseLocation[] = [
     countryCode: "IE",
     lat: 54.8656,
     lng: -7.6644,
-    address:
-      "Unit 4 Lower, Convoy Enterprise Centre, Convoy, Donegal, F93 H5F9, Ireland",
-    addressLines: ["Unit 4 Lower, Convoy Enterprise Centre", "Convoy, Co. Donegal F93 H5F9"],
+    address: "Convoy, Co. Donegal, Ireland",
+    addressLines: ["Convoy, Co. Donegal"],
     image: "/warehouses/dublin.jpg",
     description:
       "European Union distribution hub with advanced automation systems, strategic location for EU market access, and comprehensive logistics capabilities.",

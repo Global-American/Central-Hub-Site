@@ -1051,7 +1051,7 @@ export default function AccountFormPage() {
                       {contacts.map((contact, index) => (
                         <div
                           key={contact.id}
-                          className="rounded-lg border border-[#1F447B]/20 p-5 bg-white"
+                          className="rounded-lg border-2 border-[#1F447B] p-5 bg-white"
                         >
                           <div className="flex items-center justify-between mb-4">
                             <p className="text-sm font-semibold text-[#1F447B]">

@@ -421,7 +421,7 @@ export default function QuotePage() {
                     <h3 className="text-xl font-semibold text-[#1F447B] mb-4">
                       Shipment Type
                     </h3>
-                    <div className="rounded-lg border border-[#1F447B]/20 bg-white p-6">
+                    <div className="rounded-lg border-2 border-[#1F447B] bg-white p-6">
                       <p className="text-lg font-semibold text-[#1F447B] mb-4">
                         How would you like to ship your parcels?
                       </p>
@@ -432,7 +432,7 @@ export default function QuotePage() {
                           className={`p-6 rounded-lg border-2 transition-all ${
                             shipmentMode === "parcel"
                               ? "border-[#EB993C] bg-[#EB993C]/10"
-                              : "border-[#1F447B]/20 bg-white hover:border-[#1F447B]/40"
+                              : "border-[#1F447B] bg-white hover:border-[#EB993C]/30"
                           }`}
                         >
                           <div className="text-center">
@@ -450,7 +450,7 @@ export default function QuotePage() {
                           className={`p-6 rounded-lg border-2 transition-all ${
                             shipmentMode === "freight"
                               ? "border-[#EB993C] bg-[#EB993C]/10"
-                              : "border-[#1F447B]/20 bg-white hover:border-[#1F447B]/40"
+                              : "border-[#1F447B] bg-white hover:border-[#EB993C]/30"
                           }`}
                         >
                           <div className="text-center">
@@ -687,7 +687,7 @@ export default function QuotePage() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {shipmentMode !== "freight" && (
-                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                       <div>
                         <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                           Residential Address
@@ -710,7 +710,7 @@ export default function QuotePage() {
                   )}
 
                   {shipmentMode !== "freight" && (
-                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                       <div>
                         <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                           Request Pickup
@@ -732,7 +732,7 @@ export default function QuotePage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                  <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                     <div>
                       <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                         Pallet Stackable
@@ -757,7 +757,7 @@ export default function QuotePage() {
                     </label>
                   </div>
 
-                      <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                      <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                         <div>
                           <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                             Dangerous Goods
@@ -778,7 +778,7 @@ export default function QuotePage() {
                         </label>
                       </div>
 
-                      <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                      <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                         <div>
                           <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                             Requires Insurance
@@ -801,7 +801,7 @@ export default function QuotePage() {
 
                       {shipmentMode === "freight" && (
                         <>
-                          <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                          <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                             <div>
                               <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                                 Export Customs Clearance
@@ -823,7 +823,7 @@ export default function QuotePage() {
                             </label>
                           </div>
 
-                          <div className="flex items-center justify-between p-4 bg-white rounded-lg border">
+                          <div className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-[#1F447B]">
                             <div>
                               <label className="text-sm font-medium text-[#324A6D] cursor-pointer">
                                 Import Customs Clearance
@@ -931,7 +931,7 @@ export default function QuotePage() {
                 </div>
 
                 {shipmentMode === "freight" && (
-                  <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                  <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                     <h4 className="text-lg font-semibold text-[#1F447B] mb-4">
                       What type of freight do you require?
                         </h4>
@@ -942,7 +942,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               freightType === "sea"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -961,7 +961,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               freightType === "air"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -979,7 +979,7 @@ export default function QuotePage() {
                 )}
 
                 {shipmentMode === "freight" && freightType === "air" && (
-                  <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                  <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-lg font-semibold text-[#1F447B] mb-4">
@@ -1018,7 +1018,7 @@ export default function QuotePage() {
                 )}
 
                 {shipmentMode === "freight" && (
-                  <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                  <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                     <div className="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
                       <h4 className="text-xl font-semibold text-[#1F447B]">
                         {freightType === "sea"
@@ -1035,7 +1035,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               seaFreightLoadType === "fcl"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -1053,7 +1053,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               seaFreightLoadType === "lcl"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -1086,7 +1086,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               packageShipmentType === "cartons"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -1112,7 +1112,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               packageShipmentType === "pallets"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -1133,7 +1133,7 @@ export default function QuotePage() {
                 {shipmentMode === "freight" &&
                   freightType === "sea" &&
                   seaFreightLoadType === "lcl" && (
-                    <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                    <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                       <div className="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
                         <h4 className="text-xl font-semibold text-[#1F447B]">
                           What are you shipping?
@@ -1158,7 +1158,7 @@ export default function QuotePage() {
                           className={`p-6 rounded-lg border-2 transition-all ${
                             packageShipmentType === "cartons"
                               ? "border-[#EB993C] bg-[#EB993C]/10"
-                              : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                              : "border-[#1F447B] hover:border-[#EB993C]/30"
                           }`}
                         >
                           <div className="text-center">
@@ -1184,7 +1184,7 @@ export default function QuotePage() {
                           className={`p-6 rounded-lg border-2 transition-all ${
                             packageShipmentType === "pallets"
                               ? "border-[#EB993C] bg-[#EB993C]/10"
-                              : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                              : "border-[#1F447B] hover:border-[#EB993C]/30"
                           }`}
                         >
                           <div className="text-center">
@@ -1201,7 +1201,7 @@ export default function QuotePage() {
                   )}
 
                 {shipmentMode === "freight" && freightType === "sea" && (
-                  <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                  <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-lg font-semibold text-[#1F447B] mb-4">
@@ -1242,7 +1242,7 @@ export default function QuotePage() {
                 {shipmentMode === "freight" &&
                   freightType === "sea" &&
                   seaFreightLoadType === "fcl" && (
-                    <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                    <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                       <div className="space-y-6">
                         {seaContainers.map((container, index) => (
                           <div
@@ -1342,7 +1342,7 @@ export default function QuotePage() {
                   )}
 
                 {showsFreightDimensions && (
-                  <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                  <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
                         <label className="flex items-center cursor-pointer">
@@ -1465,7 +1465,7 @@ export default function QuotePage() {
                 )}
 
                 {shipmentMode === "parcel" && (
-                  <div className="mb-6 bg-white rounded-lg p-6 border border-[#1F447B]/20">
+                  <div className="mb-6 bg-white rounded-lg p-6 border-2 border-[#1F447B]">
                     <div className="flex flex-col gap-4 mb-4 md:flex-row md:items-center md:justify-between">
                       <h4 className="text-lg font-semibold text-[#1F447B]">
                         What are you shipping?
@@ -1517,7 +1517,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               packageShipmentType === "cartons"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -1543,7 +1543,7 @@ export default function QuotePage() {
                             className={`p-6 rounded-lg border-2 transition-all ${
                               packageShipmentType === "pallets"
                                 ? "border-[#EB993C] bg-[#EB993C]/10"
-                                : "border-[#1F447B]/20 hover:border-[#1F447B]/40"
+                                : "border-[#1F447B] hover:border-[#EB993C]/30"
                             }`}
                           >
                             <div className="text-center">
@@ -1566,7 +1566,7 @@ export default function QuotePage() {
                         packages.map((pkg, index) => (
                           <div
                             key={pkg.id}
-                            className="bg-white rounded-xl p-6 border border-[#1F447B]/10 shadow-sm"
+                            className="bg-white rounded-xl p-6 border-2 border-[#1F447B] shadow-sm"
                           >
                             <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:items-end lg:justify-between">
                               <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:gap-6">

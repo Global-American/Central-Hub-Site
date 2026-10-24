@@ -894,7 +894,7 @@ export default function ContactPage() {
                       {shipItSmartServices.map((service) => (
                         <div
                           key={service.id}
-                          className="group relative bg-white rounded-lg border border-[#1F447B]/40 p-2 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
+                          className="group relative bg-white rounded-lg border-2 border-[#1F447B] p-2 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
                         >
                           <div className="flex items-start space-x-3">
                             <SimpleCheckbox

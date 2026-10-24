@@ -1,11 +1,12 @@
 "use client";
 
+import { MapPin } from "lucide-react";
 import LogisticsGlobe from "@/components/logistics-globe";
 import { globeHubs } from "@/lib/warehouse-locations";
 
 // Brand palette
 const NAVY = "#1F447B";
-const ORANGE = "#EB993C";
+const MARKER_RED = "#E53935";
 
 export default function AboutGlobe({ className = "" }: { className?: string }) {
   return (
@@ -43,10 +44,7 @@ export default function AboutGlobe({ className = "" }: { className?: string }) {
         style={{ color: "#324A6D" }}
       >
         <span className="inline-flex items-center gap-1.5">
-          <span
-            className="inline-block h-2.5 w-2.5 rounded-full ring-2 ring-offset-1"
-            style={{ backgroundColor: "#3C91FC", ["--tw-ring-color" as string]: ORANGE }}
-          />
+          <MapPin className="h-4 w-4" fill={MARKER_RED} stroke="#ffffff" strokeWidth={1.5} />
           Our facilities
         </span>
         <span className="inline-flex items-center gap-1.5">

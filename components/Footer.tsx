@@ -18,15 +18,13 @@ const globalLocations = [
   {
     countryCode: "gb",
     city: "Strabane, Northern Ireland",
-    fullAddress:
-      "ShipItSmart Consulting Unit 1 Mahon Building\n39/49 Dock St, Strabane BT82 8EE\nUnited Kingdom",
+    fullAddress: "Strabane, Co. Tyrone\nNorthern Ireland",
     locationId: "belfast",
   },
   {
     countryCode: "ie",
     city: "Convoy, Donegal",
-    fullAddress:
-      "Unit 4 Lower, Convoy Enterprise Centre\nConvoy, Donegal, F93 H5F9\nIreland",
+    fullAddress: "Convoy, Co. Donegal\nIreland",
     locationId: "dublin",
   },
   {
@@ -49,28 +47,28 @@ const globalLocations = [
 const partnerSolutions = [
   {
     name: "ShipItSmart",
-    tagline: "Playing it smart, shipping solutions",
+    tagline: "Playing it smart, Shipping solutions",
     description:
       "Discounted express and economy shipping with FedEx, DHL, and UPS for domestic and international parcels—rate compare, book, and track in one place.",
     logo: "/shipitsmart.svg",
   },
   {
     name: "FreightItSmart",
-    tagline: "Playing it smart, freight solutions",
+    tagline: "Playing it smart, Freight solutions",
     description:
       "LTL, FTL, air, and ocean freight made simple—instant quotes, multi‑carrier options, and end‑to‑end visibility for heavy and bulk shipments.",
     logo: "/frieghtit.svg",
   },
   {
     name: "ReturnItSmart",
-    tagline: "Playing it smart, returns solutions",
+    tagline: "Playing it smart, Returns solutions",
     description:
       "Hassle‑free returns with prepaid labels, smart routing, and status updates—improve CX while controlling costs and reverse‑logistics complexity.",
     logo: "/returnit.svg",
   },
   {
     name: "FulfillItSmart",
-    tagline: "Playing it smart, fulfillment solutions",
+    tagline: "Playing it smart, Fulfillment solutions",
     description:
       "Omnichannel fulfillment and inventory sync—pick, pack, and ship with real‑time rates, automation rules, and integrations to your sales channels.",
     logo: "/fufillit.svg",

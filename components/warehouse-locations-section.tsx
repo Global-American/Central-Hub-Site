@@ -14,14 +14,15 @@ import {
 } from "@/lib/warehouse-locations";
 
 // Country flag emojis
-const countryFlags: { [key: string]: string } = {
-  IE: "🇮🇪",
-  US: "🇺🇸",
-  AU: "🇦🇺",
-  GB: "🇬🇧",
-  CA: "🇨🇦",
-  CN: "🇨🇳",
-};
+// Image flags from the flag-icons package; emoji flags don't render on Windows
+function CountryFlag({ code }: { code: string }) {
+  return (
+    <span
+      className={`fi fi-${code.toLowerCase()} rounded-sm shadow-sm`}
+      aria-hidden="true"
+    />
+  );
+}
 
 export default function WarehouseLocationsSection() {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
@@ -108,13 +109,13 @@ export default function WarehouseLocationsSection() {
 
         {/* Main Interface Container */}
         <div
-          className={`relative w-full min-h-[500px] lg:min-h-[600px] transition-all duration-700 ${
+          className={`relative w-full min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden shadow-sm border-2 border-[#1F447B] bg-background transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="flex h-full gap-6">
+          <div className="flex h-full">
             {/* Left Panel - Interactive Location List */}
-            <div className="w-full lg:w-2/5 flex flex-col rounded-2xl overflow-hidden shadow-sm border-2 border-[#1F447B] bg-background">
+            <div className="w-full lg:w-2/5 flex flex-col lg:border-r-2 border-[#1F447B] bg-background">
               {/* Panel Header */}
               <div className="shrink-0 p-4 border-b-2 border-[#1F447B] bg-background">
                 <div className="flex items-start justify-between">
@@ -156,7 +157,7 @@ export default function WarehouseLocationsSection() {
                       <CardContent className="px-3 py-2.5">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="text-xl">
-                            {countryFlags[location.countryCode]}
+                            <CountryFlag code={location.countryCode} />
                           </div>
                           <div>
                             <h4 className="font-semibold text-base" style={{ color: "#1F447B" }}>
@@ -203,46 +204,8 @@ export default function WarehouseLocationsSection() {
               </div>
             </div>
 
-            {/* Right Panel - Dynamic Map Interface. The globe floats freely
-                until a facility is selected, then gets framed like the list. */}
-            <div
-              className={`hidden lg:flex lg:w-3/5 flex-col rounded-2xl overflow-hidden border-2 transition-[border-color,background-color,box-shadow] duration-500 ${
-                selectedLocationData
-                  ? "border-[#1F447B] bg-background shadow-sm"
-                  : "border-transparent"
-              }`}
-            >
-              {/* Map Header */}
-              {selectedLocationData && (
-                <div className="p-3 border-b-2 border-[#1F447B] shadow-sm bg-background">
-                  <div className="flex items-center gap-2">
-                    <div className="text-lg">
-                      {countryFlags[selectedLocationData.countryCode]}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-base" style={{ color: "#1F447B" }}>
-                        {selectedLocationData.city}
-                      </h4>
-                      <div className="flex items-center gap-1 text-xs" style={{ color: "#324A6D" }}>
-                        <MapPin className="h-3 w-3" />
-                        <span>{selectedLocationData.address}</span>
-                      </div>
-                      {selectedLocationData.phone && (
-                        <div className="flex items-center gap-1 text-xs mt-0.5" style={{ color: "#324A6D" }}>
-                          <Phone className="h-3 w-3" />
-                          <a href={`tel:${selectedLocationData.phone.replace(/\s+/g, "")}`} className="hover:underline">
-                            {selectedLocationData.phone}
-                          </a>
-                        </div>
-                      )}
-                      <p className="mt-1 text-xs leading-relaxed" style={{ color: "#324A6D" }}>
-                        {selectedLocationData.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
+            {/* Right Panel - Dynamic Map Interface */}
+            <div className="hidden lg:flex lg:w-3/5 flex-col bg-background">
               {/* Globe + street-level inset */}
               <div className="flex-1 relative overflow-hidden">
                 <LogisticsGlobe
@@ -263,8 +226,7 @@ export default function WarehouseLocationsSection() {
 
                 {!selectedLocationData && (
                   <div
-                    className="pointer-events-none absolute left-4 top-4 rounded-full bg-white/80 px-3 py-1 text-xs font-medium shadow-sm backdrop-blur"
-                    style={{ color: "#324A6D" }}
+                    className="pointer-events-none absolute left-4 top-4 rounded-full bg-[#EB993C] px-3 py-1 text-xs font-medium text-[#324A6D] shadow-sm"
                   >
                     Drag to rotate · click a facility to zoom in
                   </div>
@@ -310,7 +272,7 @@ export default function WarehouseLocationsSection() {
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
                   <div className="text-xl">
-                    {countryFlags[selectedLocationData.countryCode]}
+                    <CountryFlag code={selectedLocationData.countryCode} />
                   </div>
                   <div>
                     <h4 className="font-semibold text-lg" style={{ color: "#1F447B" }}>

@@ -3,12 +3,27 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
 import type { GlobeMethods, GlobeProps } from "react-globe.gl";
+import type { GlobeDecorations, PinFactory } from "@/components/globe-decorations";
+
+type DecorationsModule = typeof import("@/components/globe-decorations");
 
 // Brand palette
 const ORANGE = "#EB993C";
+const MARKER_RED = "#E53935";
 
 // 1 = globe.gl's default lighting; higher is brighter
 const LIGHT_LEVEL = 1.4;
+
+// Lane height relative to its length; planes need the same value to ride the lanes
+const ARC_ALTITUDE_SCALE = 0.4;
+
+// Facility pin heights in scene units (the globe's radius is 100)
+const PIN_HEIGHT = 7;
+const PIN_HEIGHT_ZOOMED = 2.4;
+const PIN_HEIGHT_SELECTED = 2.9;
+// Height of a pin's head above its tip, as a fraction of the pin
+const PIN_HEAD = 0.55;
+const UNITS_PER_DEG = (100 * Math.PI) / 180;
 
 export type GlobeHub = { id: string; label: string; lat: number; lng: number };
 export type GlobeView = { lat: number; lng: number; altitude: number };
@@ -59,6 +74,9 @@ const cities = [
   { name: "Lagos", lat: 6.52, lng: 3.38 },
 ];
 
+// Lanes (besides the trunk lanes) that get a plane flying along them
+const FLIGHT_CITIES = new Set(["Los Angeles", "São Paulo", "Dubai", "Tokyo", "Sydney"]);
+
 type LatLng = { lat: number; lng: number };
 
 const toRad = (d: number) => (d * Math.PI) / 180;
@@ -87,6 +105,7 @@ type Arc = {
   dashLength: number;
   dashGap: number;
   dashTime: number;
+  flight: boolean;
 };
 
 function buildArcs(hubs: DisplayHub[]): Arc[] {
@@ -106,6 +125,7 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
       dashLength: 0.35 + jitter(i, 1) * 0.3,
       dashGap: 0.6 + jitter(i, 2) * 0.6,
       dashTime: 2800 + jitter(i, 3) * 2600,
+      flight: FLIGHT_CITIES.has(c.name),
     };
   });
 
@@ -127,6 +147,7 @@ function buildArcs(hubs: DisplayHub[]): Arc[] {
       dashLength: 0.5,
       dashGap: 0.25,
       dashTime: 2200 + i * 400,
+      flight: true,
     });
   });
 
@@ -184,13 +205,14 @@ function labelWidthLng(text: string, size: number, lat: number) {
   return arc / Math.max(0.2, Math.cos((lat * Math.PI) / 180));
 }
 
-// One label per site. Lone sites hang their label just below the pin.
-// Stacked sites instead put their label to the WEST of the pin, vertically
-// centred on it, so the stack reads as a tidy column of callouts and never
-// runs into neighbours to the east. Text runs east from its anchor, so for
-// lone sites an eastern label that would collide with a western one is
-// nudged apart. `s` scales offsets with zoom; `size` is the text height.
-function buildLabels(hubs: DisplayHub[], s: number, size: number): Label[] {
+// One label per site. Lone sites hang their label just below the pin's tip.
+// Stacked sites instead put their label to the WEST of the pin, level with
+// its head (`pinLift` degrees above the tip), so the stack reads as a tidy
+// column of callouts and never runs into neighbours to the east. Text runs
+// east from its anchor, so for lone sites an eastern label that would collide
+// with a western one is nudged apart. `s` scales offsets with zoom; `size` is
+// the text height.
+function buildLabels(hubs: DisplayHub[], s: number, size: number, pinLift: number): Label[] {
   const labels = hubs.map((h) => {
     const stacked = h.stackPos !== null;
     if (stacked) {
@@ -200,7 +222,7 @@ function buildLabels(hubs: DisplayHub[], s: number, size: number): Label[] {
         cluster: h.cluster,
         stacked,
         text: h.label,
-        lat: h.dLat - size / 2,
+        lat: h.dLat + pinLift - size / 2,
         lng: h.dLng - labelWidthLng(h.label, size, h.dLat) - gap,
       };
     }
@@ -223,13 +245,20 @@ function buildLabels(hubs: DisplayHub[], s: number, size: number): Label[] {
       b.lat -= 1.6 * s;
     }
   }
-  return labels.map(({ id, text, lat, lng }) => ({ id, text, lat, lng }));
+  // Draw each label a few times, nudged slightly, to thicken the strokes
+  // beyond what the bold font alone gives
+  const nudge = 0.03 * size;
+  const offsets = [[0, 0], [nudge, nudge], [nudge, -nudge], [-nudge, nudge], [-nudge, -nudge]];
+  return labels.flatMap(({ id, text, lat, lng }) => {
+    const lngScale = 1 / Math.max(0.2, Math.cos((lat * Math.PI) / 180));
+    return offsets.map(([dLat, dLng]) => ({ id, text, lat: lat + dLat, lng: lng + dLng * lngScale }));
+  });
 }
 
-type Marker = { kind: "city" | "hub"; id?: string; name: string; lat: number; lng: number };
-const asMarker = (d: object) => d as Marker;
-const asHub = (d: object) => d as GlobeHub;
+const asHub = (d: object) => d as DisplayHub;
 const asLabel = (d: object) => d as Label;
+const cityColor = () => "rgba(229,57,53,0.9)";
+const noLabel = () => "";
 
 function supportsWebGL() {
   try {
@@ -261,10 +290,13 @@ export default function LogisticsGlobe({
   const containerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const [Globe, setGlobe] = useState<GlobeComponent | null>(null);
+  const [decorationsMod, setDecorationsMod] = useState<DecorationsModule | null>(null);
+  const decorationsRef = useRef<GlobeDecorations | null>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [ready, setReady] = useState(false);
   const [useFallback, setUseFallback] = useState(false);
   const [hoveringHub, setHoveringHub] = useState(false);
+  const [labelFont, setLabelFont] = useState<object | null>(null);
   const coarseRef = useRef(false);
 
   // Latest values for effects that must not re-run on every render
@@ -276,36 +308,45 @@ export default function LogisticsGlobe({
 
   const zoomed = !!selectedId && hubs.some((h) => h.id === selectedId);
 
-  // Tighter spread and smaller text once zoomed in on a site
-  const displayHubs = useMemo(() => spreadHubs(hubs, zoomed ? 0.9 : 2.0), [hubs, zoomed]);
+  // Tighter spread and smaller text once zoomed in on a site; the spread
+  // leaves room for the pins to stack without overlapping
+  const displayHubs = useMemo(() => spreadHubs(hubs, zoomed ? 1.5 : 3.6), [hubs, zoomed]);
   const arcs = useMemo(() => buildArcs(displayHubs), [displayHubs]);
   const labelSize = zoomed ? 0.6 : 1.3;
+  const pinLift = ((zoomed ? PIN_HEIGHT_ZOOMED : PIN_HEIGHT) * PIN_HEAD) / UNITS_PER_DEG;
   const labels = useMemo(
-    () => buildLabels(displayHubs, zoomed ? 0.4 : 1, labelSize),
-    [displayHubs, zoomed, labelSize]
+    () => buildLabels(displayHubs, zoomed ? 0.4 : 1, labelSize, pinLift),
+    [displayHubs, zoomed, labelSize, pinLift]
   );
-  const markers = useMemo<Marker[]>(
-    () => [
-      ...cities.map((c) => ({ kind: "city" as const, name: c.name, lat: c.lat, lng: c.lng })),
-      ...displayHubs.map((h) => ({ kind: "hub" as const, id: h.id, name: h.label, lat: h.dLat, lng: h.dLng })),
-    ],
-    [displayHubs]
+  const pins = useMemo<PinFactory | null>(
+    () => decorationsMod?.createPinFactory(MARKER_RED) ?? null,
+    [decorationsMod]
   );
+  useEffect(() => () => pins?.dispose(), [pins]);
 
-  // Load the WebGL library on the client only
+  // Load the WebGL library (and the three.js extras built on it) on the client only
   useEffect(() => {
     let cancelled = false;
     if (!supportsWebGL()) {
       setUseFallback(true);
       return;
     }
-    import("react-globe.gl")
-      .then((mod) => {
-        if (!cancelled) setGlobe(() => mod.default as unknown as GlobeComponent);
+    Promise.all([import("react-globe.gl"), import("@/components/globe-decorations")])
+      .then(([mod, decorations]) => {
+        if (cancelled) return;
+        setDecorationsMod(decorations);
+        setGlobe(() => mod.default as unknown as GlobeComponent);
       })
       .catch(() => {
         if (!cancelled) setUseFallback(true);
       });
+    // Bold label font; the library's built-in regular one is used until it loads
+    fetch("/fonts/helvetiker_bold.typeface.json")
+      .then((res) => res.json())
+      .then((font) => {
+        if (!cancelled) setLabelFont(font);
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
     };
@@ -335,12 +376,35 @@ export default function LogisticsGlobe({
         if (!g) return;
         if (entry.isIntersecting) g.resumeAnimation();
         else g.pauseAnimation();
+        decorationsRef.current?.setPaused(!entry.isIntersecting);
       },
       { threshold: 0.05 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, [ready]);
+
+  // Clouds, planes and boats
+  useEffect(() => {
+    const g = globeRef.current;
+    if (!g || !ready || !decorationsMod) return;
+    const decorations = decorationsMod.createGlobeDecorations(g.scene(), {
+      arcAltitudeAutoScale: ARC_ALTITUDE_SCALE,
+    });
+    decorationsRef.current = decorations;
+    return () => {
+      decorations.dispose();
+      decorationsRef.current = null;
+    };
+  }, [ready, decorationsMod]);
+
+  useEffect(() => {
+    decorationsRef.current?.setFlights(arcs.filter((a) => a.flight));
+  }, [arcs, ready, decorationsMod]);
+
+  useEffect(() => {
+    decorationsRef.current?.setScale(zoomed ? 0.4 : 1);
+  }, [zoomed, ready, decorationsMod]);
 
   // Fly to the selected hub, or back home when deselected
   const hadSelectionRef = useRef(false);
@@ -399,35 +463,27 @@ export default function LogisticsGlobe({
   };
 
   // Layer accessors (memoised so react-globe.gl doesn't re-digest each render)
-  const pointColor = useCallback(
-    (d: object) => (asMarker(d).kind === "hub" ? "#3C91FC" : "rgba(60,145,252,0.9)"),
-    []
-  );
-  const pointRadius = useCallback(
+  const pinObject = useCallback(
     (d: object) => {
-      const m = asMarker(d);
-      if (m.kind !== "hub") return 0.4;
-      if (zoomed) return m.id === selectedId ? 0.7 : 0.45;
-      return m.id === selectedId ? 0.95 : 0.6;
+      const id = asHub(d).id;
+      const height = !zoomed
+        ? PIN_HEIGHT
+        : id === selectedId
+          ? PIN_HEIGHT_SELECTED
+          : PIN_HEIGHT_ZOOMED;
+      return pins!.make(height);
     },
-    [selectedId, zoomed]
+    [pins, selectedId, zoomed]
   );
-  const pointAltitude = useCallback(
-    (d: object) => (asMarker(d).kind === "hub" ? 0.012 : 0.004),
-    []
-  );
-  const pointLabel = useCallback(
-    (d: object) => {
-      const m = asMarker(d);
-      return interactive && m.kind === "hub" ? m.name : "";
-    },
+  const pinLabel = useCallback(
+    (d: object) => (interactive ? asHub(d).label : ""),
     [interactive]
   );
   const ringColor = useCallback(
     (d: object) =>
       asHub(d).id === selectedId
         ? (t: number) => `rgba(255,255,255,${1 - t})`
-        : (t: number) => `rgba(235,153,60,${1 - t})`,
+        : (t: number) => `rgba(229,57,53,${1 - t})`,
     [selectedId]
   );
   const ringMaxRadius = useCallback(
@@ -443,18 +499,13 @@ export default function LogisticsGlobe({
     (d: object) => (interactive ? asLabel(d).text : ""),
     [interactive]
   );
-  const onPointClick = useCallback((d: object) => {
-    const m = asMarker(d);
-    if (m.kind === "hub" && m.id) onHubSelectRef.current?.(m.id);
+  const onPinClick = useCallback((d: object) => {
+    onHubSelectRef.current?.(asHub(d).id);
   }, []);
   const onLabelClick = useCallback((d: object) => {
     onHubSelectRef.current?.(asLabel(d).id);
   }, []);
-  const onPointHover = useCallback(
-    (d: object | null) => setHoveringHub(!!d && asMarker(d).kind === "hub"),
-    []
-  );
-  const onLabelHover = useCallback((d: object | null) => setHoveringHub(!!d), []);
+  const onHubHover = useCallback((d: object | null) => setHoveringHub(!!d), []);
 
   const cursor = hoveringHub && interactive ? "pointer" : "grab";
 
@@ -475,7 +526,7 @@ export default function LogisticsGlobe({
         </div>
       )}
 
-      {Globe && size.w > 0 && (
+      {Globe && pins && size.w > 0 && (
         <div
           className={`absolute inset-0 transition-opacity duration-700 ${
             ready ? "opacity-100" : "opacity-0"
@@ -495,7 +546,7 @@ export default function LogisticsGlobe({
             arcsData={arcs}
             arcColor="color"
             arcStroke={arcStroke}
-            arcAltitudeAutoScale={0.4}
+            arcAltitudeAutoScale={ARC_ALTITUDE_SCALE}
             arcDashLength="dashLength"
             arcDashGap="dashGap"
             arcDashAnimateTime="dashTime"
@@ -509,18 +560,26 @@ export default function LogisticsGlobe({
             ringMaxRadius={ringMaxRadius}
             ringPropagationSpeed={1.6}
             ringRepeatPeriod={1100}
-            // Destination dots + clickable hub pins
-            pointsData={markers}
-            pointColor={pointColor}
-            pointAltitude={pointAltitude}
-            pointRadius={pointRadius}
-            pointLabel={pointLabel}
-            pointsTransitionDuration={300}
-            onPointClick={interactive ? onPointClick : undefined}
-            onPointHover={interactive ? onPointHover : undefined}
+            // Destination dots
+            pointsData={cities}
+            pointColor={cityColor}
+            pointAltitude={0.004}
+            pointRadius={0.4}
+            pointLabel={noLabel}
+            pointsTransitionDuration={0}
+            // Clickable facility pins
+            objectsData={displayHubs}
+            objectLat="dLat"
+            objectLng="dLng"
+            objectAltitude={0.004}
+            objectThreeObject={pinObject}
+            objectLabel={pinLabel}
+            onObjectClick={interactive ? onPinClick : undefined}
+            onObjectHover={interactive ? onHubHover : undefined}
             // Facility labels
             labelsData={labels}
             labelText="text"
+            {...(labelFont ? { labelTypeFace: labelFont } : {})}
             labelColor={labelColor}
             labelSize={labelSize}
             labelAltitude={0.02}
@@ -529,7 +588,7 @@ export default function LogisticsGlobe({
             labelsTransitionDuration={0}
             labelLabel={labelLabel}
             onLabelClick={interactive ? onLabelClick : undefined}
-            onLabelHover={interactive ? onLabelHover : undefined}
+            onLabelHover={interactive ? onHubHover : undefined}
           />
         </div>
       )}
