@@ -63,7 +63,6 @@ const cities = [
   { name: "Chicago", lat: 41.88, lng: -87.63 },
   { name: "Miami", lat: 25.76, lng: -80.19 },
   { name: "Toronto", lat: 43.65, lng: -79.38 },
-  { name: "Boston", lat: 42.36, lng: -71.06 },
   { name: "Mexico City", lat: 19.43, lng: -99.13 },
   { name: "São Paulo", lat: -23.55, lng: -46.63 },
   { name: "Buenos Aires", lat: -34.6, lng: -58.38 },
@@ -72,31 +71,24 @@ const cities = [
   { name: "Reykjavik", lat: 64.15, lng: -21.94 },
   { name: "Lisbon", lat: 38.72, lng: -9.14 },
   { name: "Paris", lat: 48.86, lng: 2.35 },
-  { name: "Amsterdam", lat: 52.37, lng: 4.9 },
   { name: "Frankfurt", lat: 50.11, lng: 8.68 },
-  { name: "Madrid", lat: 40.42, lng: -3.7 },
-  { name: "Milan", lat: 45.46, lng: 9.19 },
-  { name: "Warsaw", lat: 52.23, lng: 21.01 },
   { name: "Stockholm", lat: 59.33, lng: 18.07 },
   { name: "Istanbul", lat: 41.01, lng: 28.98 },
   { name: "Dubai", lat: 25.2, lng: 55.27 },
   { name: "Mumbai", lat: 19.08, lng: 72.88 },
   { name: "Singapore", lat: 1.35, lng: 103.82 },
-  { name: "Hong Kong", lat: 22.32, lng: 114.17 },
   { name: "Johannesburg", lat: -26.2, lng: 28.05 },
   { name: "Lagos", lat: 6.52, lng: 3.38 },
   { name: "Honolulu", lat: 21.31, lng: -157.86, from: "quanzhou" },
 ];
 
 // Lanes (besides the trunk lanes) that get a plane flying along them
-const FLIGHT_CITIES = new Set(["Los Angeles", "São Paulo", "Dubai", "Tokyo", "Sydney", "Honolulu"]);
+const FLIGHT_CITIES = new Set(["Los Angeles", "São Paulo", "Dubai", "Sydney", "Honolulu"]);
 
 // Extra air lanes across the Pacific, through Honolulu, each with a plane.
 // Ends are facility ids or city names.
 const PACIFIC_LANES: [string, string][] = [
   ["quanzhou", "Los Angeles"],
-  ["Los Angeles", "Honolulu"],
-  ["Honolulu", "Tokyo"],
   ["Honolulu", "Sydney"],
 ];
 

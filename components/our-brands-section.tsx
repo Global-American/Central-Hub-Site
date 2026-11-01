@@ -74,7 +74,10 @@ export default function OurBrandsSection() {
       // Card geometry lives in CSS variables so the section height can be derived
       // from it. The section used to be a full viewport tall, which left all
       // the space below the card empty; it now keeps only half of that gap.
-      className="relative overflow-hidden [--brand-card-top:clamp(15.5rem,31vh,19.5rem)] [--brand-card-h:320px] sm:[--brand-card-h:380px] md:[--brand-card-h:420px] lg:[--brand-card-h:490px] xl:[--brand-card-h:530px] h-[calc((100vh_+_var(--brand-card-top)_+_var(--brand-card-h))_/_2)]"
+      // The card top sits ~2.5rem below the header's subtitle, which ends
+      // lower on phones where the heading wraps. From md up the card shrinks
+      // on short windows so it still fits on screen below that.
+      className="relative overflow-hidden [--brand-card-top:20.5rem] md:[--brand-card-top:18.5rem] [--brand-card-h:320px] sm:[--brand-card-h:380px] md:[--brand-card-h:min(420px,calc(100vh_-_var(--brand-card-top)_-_1.5rem))] lg:[--brand-card-h:min(490px,calc(100vh_-_var(--brand-card-top)_-_1.5rem))] xl:[--brand-card-h:min(530px,calc(100vh_-_var(--brand-card-top)_-_1.5rem))] h-[calc((100vh_+_var(--brand-card-top)_+_var(--brand-card-h))_/_2)]"
     >
       {/* Section Header */}
       <div className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 pt-20 md:pt-24 pb-4">
@@ -110,8 +113,9 @@ export default function OurBrandsSection() {
               className={`relative w-full max-w-[83rem] rounded-3xl overflow-hidden shadow-2xl ${brand.color} border-2 border-white/20 h-[var(--brand-card-h)]`}
             >
               <div className="flex h-full lg:grid lg:grid-cols-2">
-                {/* Text half */}
-                <div className="flex h-full w-full flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14">
+                {/* Text half. Less vertical padding on short windows, where
+                    the card is shrunk to fit the screen. */}
+                <div className="flex h-full w-full flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 lg:[@media(max-height:850px)]:py-6">
                   <div className={brand.textColor}>
                     <div className="mb-4 sm:mb-5 md:mb-6">
                       <h3 className="sr-only">{brand.name}</h3>

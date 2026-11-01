@@ -20,6 +20,16 @@ export const brands = [
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
     image: "/card-thumbnails/ship-itsmart.png",
+    // Detail copy for the /services page
+    label: "Shipping",
+    headline: "Parcel shipping, compared and booked in one place",
+    features: [
+      "Discounted express and economy rates with FedEx, DHL and UPS",
+      "Domestic and international parcels",
+      "Compare rates, book and track in one place",
+      "Optimized routes with real-time tracking",
+    ],
+    bestFor: "Parcels, cartons and express shipments",
     url: SHIP_IT_SMART_URL,
   },
   {
@@ -35,6 +45,15 @@ export const brands = [
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
     image: "/card-thumbnails/freight-itsmart.png",
+    label: "Freight",
+    headline: "Air, ocean and road freight through one integration",
+    features: [
+      "LTL, FTL, air and ocean freight",
+      "Full (FCL) and shared (LCL) container loads",
+      "Export and import customs clearance",
+      "Instant quotes and end-to-end visibility",
+    ],
+    bestFor: "Larger commercial shipments, pallets and containers",
     url: SHIP_IT_SMART_URL,
   },
   {
@@ -50,6 +69,15 @@ export const brands = [
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
     image: "/card-thumbnails/return-itsmart.png",
+    label: "Returns",
+    headline: "Returns that keep customers coming back",
+    features: [
+      "Prepaid return labels",
+      "Simple return authorization",
+      "Smart routing for every return",
+      "Status updates that keep customers informed",
+    ],
+    bestFor: "Online retailers handling customer returns",
     url: SHIP_IT_SMART_URL,
   },
   {
@@ -65,6 +93,15 @@ export const brands = [
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
     image: "/card-thumbnails/fulfill-itsmart.png",
+    label: "Fulfillment",
+    headline: "Orders stored, packed and shipped for you",
+    features: [
+      "Pick, pack and ship from one platform",
+      "Inventory sync across your sales channels",
+      "Automation rules and real-time rates",
+      "Integrations with the channels you sell on",
+    ],
+    bestFor: "Growing brands selling across multiple channels",
     url: SHIP_IT_SMART_URL,
   },
 ];

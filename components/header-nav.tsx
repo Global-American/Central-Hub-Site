@@ -18,6 +18,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+// Scroll progress bar along the top of the home page; hidden for now
+const SHOW_SCROLL_PROGRESS = false;
+
 const solutions = [
   {
     name: "Connexx",
@@ -150,7 +153,7 @@ export default function HeaderNav() {
     // Floating pill bar; the strip around it lets clicks through to the page
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-4 sm:px-4">
       {/* Home page only; the strip above the bar stays everywhere so the nav doesn't shift */}
-      {pathname === "/" && <ScrollProgress />}
+      {SHOW_SCROLL_PROGRESS && pathname === "/" && <ScrollProgress />}
       <div
         className={`pointer-events-auto mx-auto flex h-16 max-w-6xl items-center rounded-2xl border border-[#1F447B]/10 bg-white/95 px-4 backdrop-blur-md transition-shadow duration-300 sm:px-5 ${
           isScrolled

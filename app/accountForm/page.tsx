@@ -2,6 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 import HeaderNav from "@/components/header-nav";
+import { ArrowRight, Plus, X } from "lucide-react";
+import {
+  FormSection,
+  JoinedSelect,
+  Required,
+  SelectField,
+  addButtonClass,
+  checkboxClass,
+  fieldClass,
+  hintClass,
+  joinedFieldClass,
+  joinedInputClass,
+  labelClass,
+  removeButtonClass,
+  submitButtonClass,
+  switchTrackClass,
+  unitCardClass,
+} from "@/components/form-fields";
 
 interface Contact {
   id: string;
@@ -336,7 +354,6 @@ export default function AccountFormPage() {
   ]);
 
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
-  const containerColor = "#dbeafe";
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -520,676 +537,711 @@ export default function AccountFormPage() {
     });
   };
 
+  const isUS = formData.country === "United States";
+  const isUK = formData.country === "United Kingdom";
+  const needsEori = EORI_COUNTRIES.has(formData.country);
+
   return (
     <div className="flex flex-col min-h-screen text-foreground">
       <HeaderNav />
       <main className="relative flex-1">
-        <section
-          className="pt-24 pb-12 md:pb-16"
-        >
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="pt-28 pb-16 md:pt-32 md:pb-20">
+          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div
               ref={headerRef}
-              className={`text-center mb-6 transition-all duration-700 ${
+              className={`mb-10 max-w-2xl transition-all duration-700 md:mb-14 ${
                 isHeaderVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4"
               }`}
             >
-              <h1 className="text-3xl md:text-4xl font-bold text-[#1F447B]">
-                Setup Your <span className="text-[#EB993C]">Account</span>
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                <span className="text-[#1F447B]">Setup Your</span>{" "}
+                <span className="text-[#EB993C]">Account</span>
               </h1>
+              <p className="mt-4 text-lg leading-relaxed text-[#324A6D]/70">
+                Tell us about your business and we&apos;ll get your Global
+                American credit account set up.
+              </p>
             </div>
 
-            <div
-              className="max-w-5xl lg:max-w-6xl mx-auto transition-all duration-700 opacity-100 translate-y-0"
-              style={{ transitionDelay: "200ms" }}
-            >
-              <div
-                className="rounded-2xl shadow-lg p-6 sm:p-8 lg:p-12 xl:p-16 border-2 border-[#1F447B]"
-                style={{ backgroundColor: containerColor }}
+            {/* No panel behind the form: the steps sit on the page
+                background, split by navy rules like the contact page. */}
+            <form onSubmit={handleSubmit} className="space-y-10 md:space-y-12">
+              <FormSection
+                step={1}
+                title="Company Information"
+                description="The basics about your business."
               >
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-8 lg:space-y-10"
-                >
-                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
-                    <h4 className="text-xl font-semibold text-[#1F447B] mb-6">
-                      Company Information
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label
-                          htmlFor="companyName"
-                          className="block text-sm font-medium text-[#324A6D] mb-2"
-                        >
-                          Company Name <span className="text-red-600">*</span>
-                        </label>
-                        <input
-                          id="companyName"
-                          name="companyName"
-                          type="text"
-                          required
-                          value={formData.companyName}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="otherLegalName"
-                          className="block text-sm font-medium text-[#324A6D] mb-2"
-                        >
-                          Other Legal Name
-                        </label>
-                        <input
-                          id="otherLegalName"
-                          name="otherLegalName"
-                          type="text"
-                          value={formData.otherLegalName}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                          Nature of business
-                        </label>
-                        <input
-                          name="natureOfBusiness"
-                          type="text"
-                          value={formData.natureOfBusiness}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                          Expected monthly spend
-                        </label>
-                        <div className="flex w-full">
-                          <select
-                            name="expectedMonthlySpendCurrency"
-                            value={formData.expectedMonthlySpendCurrency}
-                            onChange={handleInputChange}
-                            className="h-12 w-28 sm:w-32 px-3 pr-8 bg-white border-2 border-[#1F447B] rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] text-[#324A6D]"
-                          >
-                            <option value="USD">USD</option>
-                            <option value="GBP">GBP</option>
-                            <option value="EUR">EUR</option>
-                            <option value="CAD">CAD</option>
-                            <option value="AUD">AUD</option>
-                            <option value="AED">AED</option>
-                          </select>
-                          <input
-                            name="expectedMonthlySpend"
-                            type="text"
-                            placeholder="e.g. 1234 5678"
-                            value={formData.expectedMonthlySpend}
-                            onChange={handleInputChange}
-                            className="h-12 flex-1 px-4 bg-white border-2 border-l-0 border-[#1F447B] rounded-r-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="industrySector"
-                          className="block text-sm font-medium text-[#324A6D] mb-2"
-                        >
-                          Industry Sector
-                        </label>
-                        <select
-                          id="industrySector"
-                          name="industrySector"
-                          value={formData.industrySector}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 pr-12 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        >
-                          <option value="">Select an industry</option>
-                          {INDUSTRY_SECTORS.map((sector) => (
-                            <option key={sector} value={sector}>
-                              {sector}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="website"
-                          className="block text-sm font-medium text-[#324A6D] mb-2"
-                        >
-                          Website
-                        </label>
-                        <input
-                          id="website"
-                          name="website"
-                          type="url"
-                          value={formData.website}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
-                    <h4 className="text-xl font-semibold text-[#1F447B] mb-6">
-                      Company Address
-                    </h4>
-                    <div className="space-y-6">
-                      <div>
-                        <label
-                          htmlFor="companyAddress"
-                          className="block text-sm font-medium text-[#324A6D] mb-2"
-                        >
-                          Company Address{" "}
-                          <span className="text-red-600">*</span>
-                        </label>
-                        <input
-                          id="companyAddress"
-                          name="companyAddress"
-                          type="text"
-                          required
-                          value={formData.companyAddress}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="addressLine2"
-                          className="block text-sm font-medium text-[#324A6D] mb-2"
-                        >
-                          Address Line 2
-                        </label>
-                        <input
-                          id="addressLine2"
-                          name="addressLine2"
-                          type="text"
-                          value={formData.addressLine2}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Postal / Zip Code
-                          </label>
-                          <input
-                            name="postalZipCode"
-                            type="text"
-                            value={formData.postalZipCode}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Country
-                          </label>
-                          <select
-                            name="country"
-                            value={formData.country}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 pr-12 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          >
-                            {ALL_COUNTRIES.map((country) => (
-                              <option key={country} value={country}>
-                                {country}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            City
-                          </label>
-                          <input
-                            name="city"
-                            type="text"
-                            value={formData.city}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            State/Region/Province
-                          </label>
-                          <input
-                            name="stateRegion"
-                            type="text"
-                            value={formData.stateRegion}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      </div>
-
-                      <label className="inline-flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="billingAddressSameAsCompany"
-                          checked={formData.billingAddressSameAsCompany}
-                          onChange={handleInputChange}
-                          className="w-5 h-5 accent-[#EB993C]"
-                        />
-                        <span className="text-sm font-medium text-[#324A6D]">
-                          Billing address is same as company address
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
-                    <h4 className="text-xl font-semibold text-[#1F447B] mb-6">
-                      Business and Billing
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                          Company/Charter Number
-                        </label>
-                        <input
-                          name="companyNumber"
-                          type="text"
-                          value={formData.companyNumber}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                          What currency would you like to be billed in
-                        </label>
-                        <select
-                          name="billingCurrency"
-                          value={formData.billingCurrency}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 pr-12 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        >
-                          <option value="USD">USD</option>
-                          <option value="GBP">GBP</option>
-                          <option value="EUR">EUR</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                          VAT Number / Tax ID
-                        </label>
-                        <input
-                          name="vatNumber"
-                          type="text"
-                          value={formData.vatNumber}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                        />
-                      </div>
-                      {EORI_COUNTRIES.has(formData.country) && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            EORI Number
-                          </label>
-                          <input
-                            name="eori"
-                            type="text"
-                            value={formData.eori}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      )}
-                      {formData.country === "United States" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Federal tax classification
-                          </label>
-                          <select
-                            name="usFederalTaxClassification"
-                            value={formData.usFederalTaxClassification}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 pr-12 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          >
-                            <option value="">Select a classification</option>
-                            <option value="Sole proprietor or Single-member LLC">
-                              Sole proprietor or Single-member LLC
-                            </option>
-                            <option value="Partnership or LLC taxed as a Partnership">
-                              Partnership or LLC taxed as a Partnership
-                            </option>
-                            <option value="Trust/Estate">Trust/Estate</option>
-                            <option value="Non-profit organization">
-                              Non-profit organization
-                            </option>
-                            <option value="C-Corporation or LLC taxed as a C-Corp">
-                              C-Corporation or LLC taxed as a C-Corp
-                            </option>
-                            <option value="S-Corporation or LLC taxed as an S-Corp">
-                              S-Corporation or LLC taxed as an S-Corp
-                            </option>
-                            <option value="Other/Not specified">
-                              Other/Not specified
-                            </option>
-                          </select>
-                        </div>
-                      )}
-                      {EORI_COUNTRIES.has(formData.country) && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            IOSS Number
-                          </label>
-                          <input
-                            name="ioss"
-                            type="text"
-                            value={formData.ioss}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      )}
-                      {formData.country === "United Kingdom" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            PVA Number
-                          </label>
-                          <input
-                            name="pva"
-                            type="text"
-                            value={formData.pva}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      )}
-                      {formData.country === "United Kingdom" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            DAN/DDA
-                          </label>
-                          <input
-                            name="danDda"
-                            type="text"
-                            value={formData.danDda}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      )}
-                      {EU_COUNTRIES.has(formData.country) && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Deferred Payment Scheme Number
-                          </label>
-                          <input
-                            name="deferredPaymentSchemeNumber"
-                            type="text"
-                            value={formData.deferredPaymentSchemeNumber}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                        </div>
-                      )}
-                      {formData.country === "United States" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Name on the income tax return
-                          </label>
-                          <input
-                            name="usIncomeTaxReturnName"
-                            type="text"
-                            value={formData.usIncomeTaxReturnName}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                          <p className="text-xs text-[#324A6D] mt-2">
-                            The legal name your contact has registered with the
-                            IRS
-                          </p>
-                        </div>
-                      )}
-                      {formData.country === "United States" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Business or disregarded entity name
-                          </label>
-                          <input
-                            name="usBusinessDisregardedEntityName"
-                            type="text"
-                            value={formData.usBusinessDisregardedEntityName}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
-                          />
-                          <p className="text-xs text-[#324A6D] mt-2">
-                            Enter if the legal name is different from the
-                            business or disregarded entity name
-                          </p>
-                        </div>
-                      )}
-                      {formData.country === "United States" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Customs Bonded Import Account
-                          </label>
-                          <div className="flex w-full">
-                            <select
-                              name="customsBondedTaxType"
-                              value={formData.customsBondedTaxType}
-                              onChange={handleInputChange}
-                              className="h-12 w-28 sm:w-32 px-3 pr-8 bg-white border-2 border-[#1F447B] rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] text-[#324A6D]"
-                            >
-                              <option value="None">None</option>
-                              <option value="SSN">SSN</option>
-                              <option value="EIN">EIN</option>
-                              <option value="ITIN">ITIN</option>
-                              <option value="ATIN">ATIN</option>
-                            </select>
-                            <input
-                              name="customsBondedImportAccount"
-                              type="text"
-                              value={formData.customsBondedImportAccount}
-                              onChange={handleInputChange}
-                              placeholder="Tax number"
-                              disabled={
-                                formData.customsBondedTaxType === "None"
-                              }
-                              className="h-12 flex-1 px-4 bg-white border-2 border-l-0 border-[#1F447B] rounded-r-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D] disabled:text-[#9aa5b1] disabled:cursor-not-allowed disabled:bg-[#f3f4f6]"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      {formData.country === "United States" && (
-                        <div>
-                          <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                            Are you a registered "Known Shipper" with TSA?
-                          </label>
-                          <div className="flex w-full">
-                            <div className="h-12 px-4 bg-white border-2 border-[#1F447B] rounded-l-lg flex items-center">
-                              <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  className="sr-only peer"
-                                  checked={formData.knownShipper === "Yes"}
-                                  onChange={handleKnownShipperToggle}
-                                />
-                                <div className="w-11 h-6 bg-[#1F447B] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#EB993C]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#EB993C]"></div>
-                              </label>
-                            </div>
-                            <input
-                              name="tsaKtn"
-                              type="text"
-                              value={formData.tsaKtn}
-                              onChange={handleTsaKtnChange}
-                              maxLength={9}
-                              pattern="[A-Za-z0-9]{9}"
-                              title="TSA Number (KTN) must be exactly 9 alphanumeric characters."
-                              placeholder="TSA Number (KTN)"
-                              disabled={formData.knownShipper !== "Yes"}
-                              className="h-12 flex-1 px-4 bg-white border-2 border-l-0 border-[#1F447B] rounded-r-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D] disabled:text-[#9aa5b1] disabled:cursor-not-allowed disabled:bg-[#f3f4f6]"
-                            />
-                          </div>
-                          <p className="text-xs text-[#324A6D] mt-2">
-                            TSA Number (KTN) must be 9-digit alpha-numeric.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20">
-                    <h4 className="text-xl font-semibold text-[#1F447B] mb-6">
-                      Contacts
-                    </h4>
-                    <div className="space-y-6">
-                      {contacts.map((contact, index) => (
-                        <div
-                          key={contact.id}
-                          className="rounded-lg border-2 border-[#1F447B] p-5 bg-white"
-                        >
-                          <div className="flex items-center justify-between mb-4">
-                            <p className="text-sm font-semibold text-[#1F447B]">
-                              Contact {index + 1}
-                            </p>
-                            <button
-                              type="button"
-                              onClick={() => removeContact(contact.id)}
-                              className="text-sm text-[#1F447B] underline"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input
-                              type="text"
-                              placeholder="Name"
-                              value={contact.name}
-                              onChange={(e) =>
-                                updateContact(
-                                  contact.id,
-                                  "name",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] text-[#324A6D]"
-                            />
-                            <select
-                              value={contact.contactType}
-                              onChange={(e) =>
-                                updateContact(
-                                  contact.id,
-                                  "contactType",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full px-4 py-3 pr-12 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] text-[#324A6D]"
-                            >
-                              <option value="">Select a contact type</option>
-                              <option value="ACCOUNTS">ACCOUNTS</option>
-                              <option value="SHIPPING">SHIPPING</option>
-                              <option value="SHIPPING/ACCOUNTS">
-                                SHIPPING/ACCOUNTS
-                              </option>
-                              <option value="WAREHOUSE">WAREHOUSE</option>
-                              <option value="OPERATIONS">OPERATIONS</option>
-                              <option value="OTHER">OTHER</option>
-                            </select>
-                            <input
-                              type="email"
-                              placeholder="Email"
-                              value={contact.email}
-                              onChange={(e) =>
-                                updateContact(
-                                  contact.id,
-                                  "email",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] text-[#324A6D]"
-                            />
-                            <input
-                              type="tel"
-                              placeholder="Phone"
-                              value={contact.phone}
-                              onChange={(e) =>
-                                updateContact(
-                                  contact.id,
-                                  "phone",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] text-[#324A6D]"
-                            />
-                          </div>
-                        </div>
-                      ))}
-
-                      <button
-                        type="button"
-                        onClick={addContact}
-                        className="bg-[#EB993C] hover:bg-[#d97706] text-white font-semibold rounded-md transition-all duration-300 px-6 py-3 border-2 border-[#1F447B]"
-                      >
-                        Add Contact
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-white/50 rounded-xl p-6 border border-[#1F447B]/20 space-y-6">
-                    <h4 className="text-xl font-semibold text-[#1F447B]">
-                      Terms and Conditions
-                    </h4>
-                    <p className="text-sm text-[#324A6D] leading-6">
-                      I wish to open a credit account with GlobalAmerican LLC. I
-                      confirm that I have read and understand your terms and
-                      conditions and accept the terms and conditions.
-                    </p>
-                    <label className="inline-flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        name="termsAccepted"
-                        checked={formData.termsAccepted}
-                        onChange={handleInputChange}
-                        required
-                        className="w-5 h-5 accent-[#EB993C]"
-                      />
-                      <span className="text-sm font-medium text-[#324A6D]">
-                        I accept the Terms and Conditions
-                      </span>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="companyName" className={labelClass}>
+                      Company Name <Required />
                     </label>
+                    <input
+                      id="companyName"
+                      name="companyName"
+                      type="text"
+                      required
+                      value={formData.companyName}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-[#324A6D] mb-2">
-                        Signature <span className="text-red-600">*</span>
-                      </label>
-                      <input
-                        name="signature"
-                        type="text"
-                        placeholder="Type full legal name"
-                        required
-                        value={formData.signature}
+                  <div>
+                    <label htmlFor="otherLegalName" className={labelClass}>
+                      Other Legal Name
+                    </label>
+                    <input
+                      id="otherLegalName"
+                      name="otherLegalName"
+                      type="text"
+                      value={formData.otherLegalName}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="natureOfBusiness" className={labelClass}>
+                      Nature of business
+                    </label>
+                    <input
+                      id="natureOfBusiness"
+                      name="natureOfBusiness"
+                      type="text"
+                      value={formData.natureOfBusiness}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="expectedMonthlySpend" className={labelClass}>
+                      Expected monthly spend
+                    </label>
+                    <div className={joinedFieldClass}>
+                      <JoinedSelect
+                        name="expectedMonthlySpendCurrency"
+                        aria-label="Expected monthly spend currency"
+                        value={formData.expectedMonthlySpendCurrency}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white border-2 border-[#1F447B] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EB993C] focus:bg-white transition-all text-[#324A6D]"
+                      >
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                        <option value="EUR">EUR</option>
+                        <option value="CAD">CAD</option>
+                        <option value="AUD">AUD</option>
+                        <option value="AED">AED</option>
+                      </JoinedSelect>
+                      <input
+                        id="expectedMonthlySpend"
+                        name="expectedMonthlySpend"
+                        type="text"
+                        placeholder="e.g. 1234 5678"
+                        value={formData.expectedMonthlySpend}
+                        onChange={handleInputChange}
+                        className={joinedInputClass}
                       />
                     </div>
                   </div>
 
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      className="bg-[#EB993C] hover:bg-[#d97706] text-white font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 py-4 border-2 border-[#1F447B]"
+                  <div>
+                    <label htmlFor="industrySector" className={labelClass}>
+                      Industry Sector
+                    </label>
+                    <SelectField
+                      id="industrySector"
+                      name="industrySector"
+                      value={formData.industrySector}
+                      onChange={handleInputChange}
                     >
-                      Submit Account Request
-                    </button>
+                      <option value="">Select an industry</option>
+                      {INDUSTRY_SECTORS.map((sector) => (
+                        <option key={sector} value={sector}>
+                          {sector}
+                        </option>
+                      ))}
+                    </SelectField>
                   </div>
-                </form>
+
+                  <div>
+                    <label htmlFor="website" className={labelClass}>
+                      Website
+                    </label>
+                    <input
+                      id="website"
+                      name="website"
+                      type="url"
+                      value={formData.website}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+                </div>
+              </FormSection>
+
+              <FormSection
+                step={2}
+                title="Company Address"
+                description="Where your business is registered."
+              >
+                <div className="space-y-5">
+                  <div>
+                    <label htmlFor="companyAddress" className={labelClass}>
+                      Company Address <Required />
+                    </label>
+                    <input
+                      id="companyAddress"
+                      name="companyAddress"
+                      type="text"
+                      required
+                      value={formData.companyAddress}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="addressLine2" className={labelClass}>
+                      Address Line 2
+                    </label>
+                    <input
+                      id="addressLine2"
+                      name="addressLine2"
+                      type="text"
+                      value={formData.addressLine2}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="postalZipCode" className={labelClass}>
+                        Postal / Zip Code
+                      </label>
+                      <input
+                        id="postalZipCode"
+                        name="postalZipCode"
+                        type="text"
+                        value={formData.postalZipCode}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="country" className={labelClass}>
+                        Country
+                      </label>
+                      <SelectField
+                        id="country"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleInputChange}
+                      >
+                        {ALL_COUNTRIES.map((country) => (
+                          <option key={country} value={country}>
+                            {country}
+                          </option>
+                        ))}
+                      </SelectField>
+                    </div>
+                    <div>
+                      <label htmlFor="city" className={labelClass}>
+                        City
+                      </label>
+                      <input
+                        id="city"
+                        name="city"
+                        type="text"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="stateRegion" className={labelClass}>
+                        State/Region/Province
+                      </label>
+                      <input
+                        id="stateRegion"
+                        name="stateRegion"
+                        type="text"
+                        value={formData.stateRegion}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <label className="flex cursor-pointer items-center gap-3">
+                  <input
+                    type="checkbox"
+                    name="billingAddressSameAsCompany"
+                    checked={formData.billingAddressSameAsCompany}
+                    onChange={handleInputChange}
+                    className={checkboxClass}
+                  />
+                  <span className="text-sm font-medium text-[#324A6D]">
+                    Billing address is same as company address
+                  </span>
+                </label>
+              </FormSection>
+
+              <FormSection
+                step={3}
+                title="Business and Billing"
+                description="Billing, tax and customs details. The fields shown depend on your country."
+              >
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="companyNumber" className={labelClass}>
+                      Company/Charter Number
+                    </label>
+                    <input
+                      id="companyNumber"
+                      name="companyNumber"
+                      type="text"
+                      value={formData.companyNumber}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="billingCurrency" className={labelClass}>
+                      What currency would you like to be billed in
+                    </label>
+                    <SelectField
+                      id="billingCurrency"
+                      name="billingCurrency"
+                      value={formData.billingCurrency}
+                      onChange={handleInputChange}
+                    >
+                      <option value="USD">USD</option>
+                      <option value="GBP">GBP</option>
+                      <option value="EUR">EUR</option>
+                    </SelectField>
+                  </div>
+                  <div>
+                    <label htmlFor="vatNumber" className={labelClass}>
+                      VAT Number / Tax ID
+                    </label>
+                    <input
+                      id="vatNumber"
+                      name="vatNumber"
+                      type="text"
+                      value={formData.vatNumber}
+                      onChange={handleInputChange}
+                      className={fieldClass}
+                    />
+                  </div>
+                  {needsEori && (
+                    <div>
+                      <label htmlFor="eori" className={labelClass}>
+                        EORI Number
+                      </label>
+                      <input
+                        id="eori"
+                        name="eori"
+                        type="text"
+                        value={formData.eori}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                  )}
+                  {isUS && (
+                    <div>
+                      <label
+                        htmlFor="usFederalTaxClassification"
+                        className={labelClass}
+                      >
+                        Federal tax classification
+                      </label>
+                      <SelectField
+                        id="usFederalTaxClassification"
+                        name="usFederalTaxClassification"
+                        value={formData.usFederalTaxClassification}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Select a classification</option>
+                        <option value="Sole proprietor or Single-member LLC">
+                          Sole proprietor or Single-member LLC
+                        </option>
+                        <option value="Partnership or LLC taxed as a Partnership">
+                          Partnership or LLC taxed as a Partnership
+                        </option>
+                        <option value="Trust/Estate">Trust/Estate</option>
+                        <option value="Non-profit organization">
+                          Non-profit organization
+                        </option>
+                        <option value="C-Corporation or LLC taxed as a C-Corp">
+                          C-Corporation or LLC taxed as a C-Corp
+                        </option>
+                        <option value="S-Corporation or LLC taxed as an S-Corp">
+                          S-Corporation or LLC taxed as an S-Corp
+                        </option>
+                        <option value="Other/Not specified">
+                          Other/Not specified
+                        </option>
+                      </SelectField>
+                    </div>
+                  )}
+                  {needsEori && (
+                    <div>
+                      <label htmlFor="ioss" className={labelClass}>
+                        IOSS Number
+                      </label>
+                      <input
+                        id="ioss"
+                        name="ioss"
+                        type="text"
+                        value={formData.ioss}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                  )}
+                  {isUK && (
+                    <div>
+                      <label htmlFor="pva" className={labelClass}>
+                        PVA Number
+                      </label>
+                      <input
+                        id="pva"
+                        name="pva"
+                        type="text"
+                        value={formData.pva}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                  )}
+                  {isUK && (
+                    <div>
+                      <label htmlFor="danDda" className={labelClass}>
+                        DAN/DDA
+                      </label>
+                      <input
+                        id="danDda"
+                        name="danDda"
+                        type="text"
+                        value={formData.danDda}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                  )}
+                  {EU_COUNTRIES.has(formData.country) && (
+                    <div>
+                      <label
+                        htmlFor="deferredPaymentSchemeNumber"
+                        className={labelClass}
+                      >
+                        Deferred Payment Scheme Number
+                      </label>
+                      <input
+                        id="deferredPaymentSchemeNumber"
+                        name="deferredPaymentSchemeNumber"
+                        type="text"
+                        value={formData.deferredPaymentSchemeNumber}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                    </div>
+                  )}
+                  {isUS && (
+                    <div>
+                      <label
+                        htmlFor="usIncomeTaxReturnName"
+                        className={labelClass}
+                      >
+                        Name on the income tax return
+                      </label>
+                      <input
+                        id="usIncomeTaxReturnName"
+                        name="usIncomeTaxReturnName"
+                        type="text"
+                        value={formData.usIncomeTaxReturnName}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                      <p className={hintClass}>
+                        The legal name your contact has registered with the IRS
+                      </p>
+                    </div>
+                  )}
+                  {isUS && (
+                    <div>
+                      <label
+                        htmlFor="usBusinessDisregardedEntityName"
+                        className={labelClass}
+                      >
+                        Business or disregarded entity name
+                      </label>
+                      <input
+                        id="usBusinessDisregardedEntityName"
+                        name="usBusinessDisregardedEntityName"
+                        type="text"
+                        value={formData.usBusinessDisregardedEntityName}
+                        onChange={handleInputChange}
+                        className={fieldClass}
+                      />
+                      <p className={hintClass}>
+                        Enter if the legal name is different from the business
+                        or disregarded entity name
+                      </p>
+                    </div>
+                  )}
+                  {isUS && (
+                    <div>
+                      <label
+                        htmlFor="customsBondedImportAccount"
+                        className={labelClass}
+                      >
+                        Customs Bonded Import Account
+                      </label>
+                      <div className={joinedFieldClass}>
+                        <JoinedSelect
+                          name="customsBondedTaxType"
+                          aria-label="Customs bonded tax number type"
+                          value={formData.customsBondedTaxType}
+                          onChange={handleInputChange}
+                        >
+                          <option value="None">None</option>
+                          <option value="SSN">SSN</option>
+                          <option value="EIN">EIN</option>
+                          <option value="ITIN">ITIN</option>
+                          <option value="ATIN">ATIN</option>
+                        </JoinedSelect>
+                        <input
+                          id="customsBondedImportAccount"
+                          name="customsBondedImportAccount"
+                          type="text"
+                          value={formData.customsBondedImportAccount}
+                          onChange={handleInputChange}
+                          placeholder="Tax number"
+                          disabled={formData.customsBondedTaxType === "None"}
+                          className={joinedInputClass}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {isUS && (
+                    <div>
+                      <label htmlFor="knownShipper" className={labelClass}>
+                        Are you a registered &quot;Known Shipper&quot; with
+                        TSA?
+                      </label>
+                      <div className={joinedFieldClass}>
+                        <span className="relative flex shrink-0 items-center border-r-2 border-[#1F447B] px-4">
+                          <input
+                            id="knownShipper"
+                            type="checkbox"
+                            className="peer sr-only"
+                            checked={formData.knownShipper === "Yes"}
+                            onChange={handleKnownShipperToggle}
+                          />
+                          <label
+                            htmlFor="knownShipper"
+                            aria-hidden
+                            className={`cursor-pointer ${switchTrackClass}`}
+                          />
+                        </span>
+                        <input
+                          name="tsaKtn"
+                          type="text"
+                          aria-label="TSA Number (KTN)"
+                          value={formData.tsaKtn}
+                          onChange={handleTsaKtnChange}
+                          maxLength={9}
+                          pattern="[A-Za-z0-9]{9}"
+                          title="TSA Number (KTN) must be exactly 9 alphanumeric characters."
+                          placeholder="TSA Number (KTN)"
+                          disabled={formData.knownShipper !== "Yes"}
+                          className={joinedInputClass}
+                        />
+                      </div>
+                      <p className={hintClass}>
+                        TSA Number (KTN) must be 9-digit alpha-numeric.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </FormSection>
+
+              <FormSection
+                step={4}
+                title="Contacts"
+                description="Who we should speak to about shipping, billing and operations."
+              >
+                <div className="space-y-4">
+                  {contacts.map((contact, index) => (
+                    <div key={contact.id} className={unitCardClass}>
+                      <div className="mb-4 flex items-center justify-between gap-4">
+                        <h3 className="text-base font-semibold text-[#1F447B]">
+                          Contact {index + 1}
+                        </h3>
+                        {contacts.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeContact(contact.id)}
+                            className={removeButtonClass}
+                          >
+                            <X className="h-4 w-4" aria-hidden />
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <label
+                            htmlFor={`contact-${contact.id}-name`}
+                            className={labelClass}
+                          >
+                            Name
+                          </label>
+                          <input
+                            id={`contact-${contact.id}-name`}
+                            type="text"
+                            value={contact.name}
+                            onChange={(e) =>
+                              updateContact(contact.id, "name", e.target.value)
+                            }
+                            className={fieldClass}
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor={`contact-${contact.id}-type`}
+                            className={labelClass}
+                          >
+                            Contact Type
+                          </label>
+                          <SelectField
+                            id={`contact-${contact.id}-type`}
+                            value={contact.contactType}
+                            onChange={(e) =>
+                              updateContact(
+                                contact.id,
+                                "contactType",
+                                e.target.value,
+                              )
+                            }
+                          >
+                            <option value="">Select a contact type</option>
+                            <option value="ACCOUNTS">ACCOUNTS</option>
+                            <option value="SHIPPING">SHIPPING</option>
+                            <option value="SHIPPING/ACCOUNTS">
+                              SHIPPING/ACCOUNTS
+                            </option>
+                            <option value="WAREHOUSE">WAREHOUSE</option>
+                            <option value="OPERATIONS">OPERATIONS</option>
+                            <option value="OTHER">OTHER</option>
+                          </SelectField>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor={`contact-${contact.id}-email`}
+                            className={labelClass}
+                          >
+                            Email
+                          </label>
+                          <input
+                            id={`contact-${contact.id}-email`}
+                            type="email"
+                            value={contact.email}
+                            onChange={(e) =>
+                              updateContact(contact.id, "email", e.target.value)
+                            }
+                            className={fieldClass}
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor={`contact-${contact.id}-phone`}
+                            className={labelClass}
+                          >
+                            Phone
+                          </label>
+                          <input
+                            id={`contact-${contact.id}-phone`}
+                            type="tel"
+                            value={contact.phone}
+                            onChange={(e) =>
+                              updateContact(contact.id, "phone", e.target.value)
+                            }
+                            className={fieldClass}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={addContact}
+                    className={addButtonClass}
+                  >
+                    <Plus className="h-4 w-4" aria-hidden />
+                    Add Contact
+                  </button>
+                </div>
+              </FormSection>
+
+              <FormSection
+                step={5}
+                title="Terms and Conditions"
+                description="Review and sign to send your account request."
+              >
+                <div className="space-y-4">
+                  <p className="border-l-4 border-[#EB993C] pl-4 text-sm leading-relaxed text-[#324A6D]">
+                    I wish to open a credit account with GlobalAmerican LLC. I
+                    confirm that I have read and understand your terms and
+                    conditions and accept the terms and conditions.
+                  </p>
+                  <label className="flex cursor-pointer items-center gap-3">
+                    <input
+                      type="checkbox"
+                      name="termsAccepted"
+                      checked={formData.termsAccepted}
+                      onChange={handleInputChange}
+                      required
+                      className={checkboxClass}
+                    />
+                    <span className="text-sm font-medium text-[#324A6D]">
+                      I accept the Terms and Conditions <Required />
+                    </span>
+                  </label>
+                </div>
+
+                <div className="sm:max-w-[calc(50%-0.625rem)]">
+                  <label htmlFor="signature" className={labelClass}>
+                    Signature <Required />
+                  </label>
+                  <input
+                    id="signature"
+                    name="signature"
+                    type="text"
+                    placeholder="Type full legal name"
+                    required
+                    value={formData.signature}
+                    onChange={handleInputChange}
+                    className={fieldClass}
+                  />
+                </div>
+              </FormSection>
+
+              <div className="flex border-t border-[#1F447B] pt-8 sm:justify-end">
+                <button type="submit" className={submitButtonClass}>
+                  Submit Account Request
+                  <ArrowRight className="h-5 w-5" aria-hidden />
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </section>
       </main>
