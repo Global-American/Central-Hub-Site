@@ -338,6 +338,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import SocialLinks from "@/components/social-links";
+import CaptchaGate, { CaptchaLocked } from "@/components/captcha-gate";
 import { COUNTRIES, findCountry } from "@/lib/countries";
 import { warehouseLocations } from "@/lib/warehouse-locations";
 // import ColorPicker from "../components/ColorPicker";
@@ -506,6 +507,8 @@ const shipItSmartServices = [
 
 export default function ContactPage() {
   const [isVisible, setIsVisible] = useState(false);
+  // The form stays locked until the visitor passes the captcha
+  const [isHuman, setIsHuman] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -691,292 +694,303 @@ export default function ContactPage() {
             className={`lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:pt-[4.875rem] transition-all duration-700 ${fade}`}
             style={{ transitionDelay: "100ms" }}
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Your details: name, company, email, country, phone */}
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <SimpleLabel
-                    htmlFor="name"
-                    className="text-sm font-semibold text-[#1F447B]"
-                  >
-                    Full Name <span className="text-[#E53935]">*</span>
-                  </SimpleLabel>
-                  <SimpleInput
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Enter your full name"
-                    className="h-12"
-                  />
-                </div>
+            {!isHuman && (
+              <CaptchaGate
+                layout="inline"
+                description="Complete this quick check to unlock the contact form."
+                onVerified={() => setIsHuman(true)}
+                className="mb-6"
+              />
+            )}
 
-                <div className="space-y-1">
-                  <SimpleLabel
-                    htmlFor="company"
-                    className="text-sm font-semibold text-[#1F447B]"
-                  >
-                    Company Name
-                  </SimpleLabel>
-                  <SimpleInput
-                    id="company"
-                    name="company"
-                    type="text"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    placeholder="Enter your company name"
-                    className="h-12"
-                  />
-                </div>
-
-                <div className="space-y-1 sm:col-span-2">
-                  <SimpleLabel
-                    htmlFor="email"
-                    className="text-sm font-semibold text-[#1F447B]"
-                  >
-                    Email Address <span className="text-[#E53935]">*</span>
-                  </SimpleLabel>
-                  <SimpleInput
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Enter your email address"
-                    className="h-12"
-                  />
-                </div>
-
-                {/* Phone gets the wider share: its prefix picker takes room */}
-                <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-[minmax(0,9fr)_minmax(0,11fr)]">
+            <CaptchaLocked unlocked={isHuman}>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Your details: name, company, email, country, phone */}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="space-y-1">
                     <SimpleLabel
-                      htmlFor="country"
+                      htmlFor="name"
                       className="text-sm font-semibold text-[#1F447B]"
                     >
-                      Country
+                      Full Name <span className="text-[#E53935]">*</span>
                     </SimpleLabel>
-                    <div className="relative">
-                      {formData.country && (
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
-                        >
-                          <span
-                            className={`fi fi-${formData.country.toLowerCase()} rounded-sm`}
-                          />
-                        </span>
-                      )}
-                      <select
-                        id="country"
-                        name="country"
-                        value={formData.country}
-                        onChange={handleCountryChange}
-                        className={`h-12 w-full appearance-none rounded-md border-2 border-[#1F447B] bg-white pr-10 text-base text-[#324A6D] focus:border-[#EB993C] focus:outline-none ${
-                          formData.country ? "pl-11" : "pl-4"
-                        }`}
-                      >
-                        <option value="">Select your country</option>
-                        {COUNTRIES.map((c) => (
-                          <option key={c.code} value={c.code}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
-                    </div>
+                    <SimpleInput
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Enter your full name"
+                      className="h-12"
+                    />
                   </div>
 
                   <div className="space-y-1">
                     <SimpleLabel
-                      htmlFor="phone"
+                      htmlFor="company"
                       className="text-sm font-semibold text-[#1F447B]"
                     >
-                      Phone Number
+                      Company Name
                     </SimpleLabel>
-                    <div className="flex h-12 overflow-hidden rounded-md border-2 border-[#1F447B] bg-white focus-within:border-[#EB993C]">
-                      <div className="relative shrink-0 border-r-2 border-[#1F447B]">
-                        {formData.phoneCountry && (
+                    <SimpleInput
+                      id="company"
+                      name="company"
+                      type="text"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      placeholder="Enter your company name"
+                      className="h-12"
+                    />
+                  </div>
+
+                  <div className="space-y-1 sm:col-span-2">
+                    <SimpleLabel
+                      htmlFor="email"
+                      className="text-sm font-semibold text-[#1F447B]"
+                    >
+                      Email Address <span className="text-[#E53935]">*</span>
+                    </SimpleLabel>
+                    <SimpleInput
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Enter your email address"
+                      className="h-12"
+                    />
+                  </div>
+
+                  {/* Phone gets the wider share: its prefix picker takes room */}
+                  <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-[minmax(0,9fr)_minmax(0,11fr)]">
+                    <div className="space-y-1">
+                      <SimpleLabel
+                        htmlFor="country"
+                        className="text-sm font-semibold text-[#1F447B]"
+                      >
+                        Country
+                      </SimpleLabel>
+                      <div className="relative">
+                        {formData.country && (
                           <span
                             aria-hidden
                             className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
                           >
                             <span
-                              className={`fi fi-${formData.phoneCountry.toLowerCase()} rounded-sm`}
+                              className={`fi fi-${formData.country.toLowerCase()} rounded-sm`}
                             />
                           </span>
                         )}
                         <select
-                          id="phoneCountry"
-                          name="phoneCountry"
-                          aria-label="Phone country code"
-                          value={formData.phoneCountry}
-                          onChange={handleInputChange}
-                          className={`h-full appearance-none bg-transparent pr-8 text-base text-[#324A6D] focus:outline-none ${
-                            formData.phoneCountry ? "pl-11" : "pl-4"
+                          id="country"
+                          name="country"
+                          value={formData.country}
+                          onChange={handleCountryChange}
+                          className={`h-12 w-full appearance-none rounded-md border-2 border-[#1F447B] bg-white pr-10 text-base text-[#324A6D] focus:border-[#EB993C] focus:outline-none ${
+                            formData.country ? "pl-11" : "pl-4"
                           }`}
                         >
-                          <option value=""></option>
+                          <option value="">Select your country</option>
                           {COUNTRIES.map((c) => (
                             <option key={c.code} value={c.code}>
-                              {c.code} {c.dial}
+                              {c.name}
                             </option>
                           ))}
                         </select>
-                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
                       </div>
-                      <input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="555 123 4567"
-                        className="min-w-0 flex-1 bg-white px-4 text-base text-[#324A6D] focus:outline-none"
-                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <SimpleLabel
+                        htmlFor="phone"
+                        className="text-sm font-semibold text-[#1F447B]"
+                      >
+                        Phone Number
+                      </SimpleLabel>
+                      <div className="flex h-12 overflow-hidden rounded-md border-2 border-[#1F447B] bg-white focus-within:border-[#EB993C]">
+                        <div className="relative shrink-0 border-r-2 border-[#1F447B]">
+                          {formData.phoneCountry && (
+                            <span
+                              aria-hidden
+                              className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-lg"
+                            >
+                              <span
+                                className={`fi fi-${formData.phoneCountry.toLowerCase()} rounded-sm`}
+                              />
+                            </span>
+                          )}
+                          <select
+                            id="phoneCountry"
+                            name="phoneCountry"
+                            aria-label="Phone country code"
+                            value={formData.phoneCountry}
+                            onChange={handleInputChange}
+                            className={`h-full appearance-none bg-transparent pr-8 text-base text-[#324A6D] focus:outline-none ${
+                              formData.phoneCountry ? "pl-11" : "pl-4"
+                            }`}
+                          >
+                            <option value=""></option>
+                            {COUNTRIES.map((c) => (
+                              <option key={c.code} value={c.code}>
+                                {c.code} {c.dial}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1F447B]" />
+                        </div>
+                        <input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          placeholder="555 123 4567"
+                          className="min-w-0 flex-1 bg-white px-4 text-base text-[#324A6D] focus:outline-none"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Services of Interest */}
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm font-semibold text-[#1F447B]">
-                    Services of Interest{" "}
-                    <span className="font-normal text-[#324A6D]/70">
-                      (optional)
-                    </span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Select the services you&apos;d like to learn more about
-                  </p>
-                </div>
+                {/* Services of Interest */}
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm font-semibold text-[#1F447B]">
+                      Services of Interest{" "}
+                      <span className="font-normal text-[#324A6D]/70">
+                        (optional)
+                      </span>
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Select the services you&apos;d like to learn more about
+                    </p>
+                  </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {brands.map((brand) => (
-                    <div
-                      key={brand.id}
-                      className="group relative bg-white rounded-xl border-2 border-[#1F447B] p-3 hover:border-[#EB993C]/30 hover:shadow-sm transition-all duration-200"
-                    >
-                      <div className="flex items-start space-x-3">
-                        <SimpleCheckbox
-                          id={brand.id}
-                          checked={formData.selectedBrands.includes(brand.id)}
-                          onChange={(checked) =>
-                            handleBrandSelection(brand.id, checked)
-                          }
-                        />
-                        <div className="flex-1 min-w-0">
-                          <label
-                            htmlFor={brand.id}
-                            className="cursor-pointer block"
-                          >
-                            <div className="flex items-center gap-2 mb-0.5">
-                              <div className="text-[#EB993C]">{brand.icon}</div>
-                              <span className="font-medium text-sm group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
-                                {brand.name}
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted-foreground leading-snug">
-                              {brand.description}
-                            </p>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {formData.selectedBrands.includes("shipitsmart") && (
-                  <div className="relative rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-3">
-                    <div className="mb-2 border-l-4 border-[#EB993C] pl-4">
-                      <p className="text-sm font-semibold text-[#1F447B]">
-                        Which ShipItSmart services are they interested in?
-                      </p>
-                      <p className="text-xs text-[#324A6D]">
-                        These options only apply to the selected ShipItSmart
-                        service above.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {shipItSmartServices.map((service) => (
-                        <div
-                          key={service.id}
-                          className="group relative bg-white rounded-lg border-2 border-[#1F447B] p-2 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
-                        >
-                          <div className="flex items-start space-x-3">
-                            <SimpleCheckbox
-                              id={`shipitsmart-${service.id}`}
-                              checked={formData.selectedShipItSmartServices.includes(
-                                service.id
-                              )}
-                              onChange={(checked) =>
-                                handleShipItSmartServiceSelection(
-                                  service.id,
-                                  checked
-                                )
-                              }
-                            />
-                            <div className="flex-1 min-w-0">
-                              <label
-                                htmlFor={`shipitsmart-${service.id}`}
-                                className="cursor-pointer block"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div className="text-[#EB993C]">
-                                    {service.icon}
-                                  </div>
-                                  <span className="font-medium text-sm group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
-                                    {service.name}
-                                  </span>
-                                </div>
-                              </label>
-                            </div>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {brands.map((brand) => (
+                      <div
+                        key={brand.id}
+                        className="group relative bg-white rounded-xl border-2 border-[#1F447B] p-3 hover:border-[#EB993C]/30 hover:shadow-sm transition-all duration-200"
+                      >
+                        <div className="flex items-start space-x-3">
+                          <SimpleCheckbox
+                            id={brand.id}
+                            checked={formData.selectedBrands.includes(brand.id)}
+                            onChange={(checked) =>
+                              handleBrandSelection(brand.id, checked)
+                            }
+                          />
+                          <div className="flex-1 min-w-0">
+                            <label
+                              htmlFor={brand.id}
+                              className="cursor-pointer block"
+                            >
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <div className="text-[#EB993C]">{brand.icon}</div>
+                                <span className="font-medium text-sm group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
+                                  {brand.name}
+                                </span>
+                              </div>
+                              <p className="text-xs text-muted-foreground leading-snug">
+                                {brand.description}
+                              </p>
+                            </label>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
 
-              {/* Message */}
-              <div className="space-y-1">
-                <SimpleLabel
-                  htmlFor="message"
-                  className="text-sm font-semibold text-[#1F447B]"
-                >
-                  Message <span className="text-[#E53935]">*</span>
-                </SimpleLabel>
-                <SimpleTextarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  placeholder="Tell us about your logistics needs, shipping volume, or any specific requirements..."
-                />
-              </div>
+                  {formData.selectedBrands.includes("shipitsmart") && (
+                    <div className="relative rounded-xl border-2 border-dashed border-[#EB993C] bg-white/60 p-3">
+                      <div className="mb-2 border-l-4 border-[#EB993C] pl-4">
+                        <p className="text-sm font-semibold text-[#1F447B]">
+                          Which ShipItSmart services are they interested in?
+                        </p>
+                        <p className="text-xs text-[#324A6D]">
+                          These options only apply to the selected ShipItSmart
+                          service above.
+                        </p>
+                      </div>
 
-              <div className="flex sm:justify-end">
-                <SimpleButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-                  {isSubmitting ? (
-                    <>
-                      <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></span>
-                      Sending...
-                    </>
-                  ) : (
-                    <>Send Message</>
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        {shipItSmartServices.map((service) => (
+                          <div
+                            key={service.id}
+                            className="group relative bg-white rounded-lg border-2 border-[#1F447B] p-2 hover:border-[#EB993C] hover:shadow-sm transition-all duration-200"
+                          >
+                            <div className="flex items-start space-x-3">
+                              <SimpleCheckbox
+                                id={`shipitsmart-${service.id}`}
+                                checked={formData.selectedShipItSmartServices.includes(
+                                  service.id
+                                )}
+                                onChange={(checked) =>
+                                  handleShipItSmartServiceSelection(
+                                    service.id,
+                                    checked
+                                  )
+                                }
+                              />
+                              <div className="flex-1 min-w-0">
+                                <label
+                                  htmlFor={`shipitsmart-${service.id}`}
+                                  className="cursor-pointer block"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <div className="text-[#EB993C]">
+                                      {service.icon}
+                                    </div>
+                                    <span className="font-medium text-sm group-hover:text-[#EB993C] text-[#1F447B] transition-colors">
+                                      {service.name}
+                                    </span>
+                                  </div>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </SimpleButton>
-              </div>
-            </form>
+                </div>
+
+                {/* Message */}
+                <div className="space-y-1">
+                  <SimpleLabel
+                    htmlFor="message"
+                    className="text-sm font-semibold text-[#1F447B]"
+                  >
+                    Message <span className="text-[#E53935]">*</span>
+                  </SimpleLabel>
+                  <SimpleTextarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Tell us about your logistics needs, shipping volume, or any specific requirements..."
+                  />
+                </div>
+
+                <div className="flex sm:justify-end">
+                  <SimpleButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+                    {isSubmitting ? (
+                      <>
+                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></span>
+                        Sending...
+                      </>
+                    ) : (
+                      <>Send Message</>
+                    )}
+                  </SimpleButton>
+                </div>
+              </form>
+            </CaptchaLocked>
           </div>
 
           {/* Contact details, split by navy rules */}

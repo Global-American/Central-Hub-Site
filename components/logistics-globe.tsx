@@ -299,7 +299,7 @@ const asLabel = (d: object) => d as Label;
 const cityColor = () => "rgba(229,57,53,0.9)";
 const noLabel = () => "";
 
-function supportsWebGL() {
+export function supportsWebGL() {
   try {
     const canvas = document.createElement("canvas");
     return !!(

@@ -529,9 +529,65 @@
     transform: scale(1.35);
   }
 }
+/* Brand card light bulb (components/hanging-light-bulb.tsx). It swings from
+   the top of its cord, and its glow and rays flicker like a live filament,
+   with the rays pulsing out from the glass. Ray origins are in the SVG's
+   viewBox units: (120, 190) is the centre of the glass. */
+.hanging-bulb {
+  transform-origin: 50% 0;
+  animation: bulb-sway 2.8s ease-in-out infinite alternate;
+}
+.hanging-bulb-glow {
+  animation: bulb-flicker 4.2s linear infinite;
+}
+.hanging-bulb-rays {
+  transform-origin: 120px 190px;
+  animation:
+    bulb-flicker 4.2s linear infinite,
+    bulb-rays-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes bulb-sway {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+@keyframes bulb-flicker {
+  0%, 18%, 23%, 27%, 61%, 66%, 100% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  25% {
+    opacity: 0.55;
+  }
+  63% {
+    opacity: 0.2;
+  }
+  64% {
+    opacity: 0.8;
+  }
+  65% {
+    opacity: 0.35;
+  }
+}
+@keyframes bulb-rays-pulse {
+  from {
+    transform: scale(0.94);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .it-badge,
-  .it-badge * {
+  .it-badge *,
+  .hanging-bulb,
+  .hanging-bulb * {
     animation: none !important;
   }
   .it-badge {

@@ -5,6 +5,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Truck } from "lucide-react";
+import HeroGlobe from "@/components/hero-globe";
 
 // How long each slide shows before the banner moves on
 const SLIDE_MS = 15000;
@@ -12,9 +13,15 @@ const SLIDE_MS = 15000;
 const FADE_MS = 300;
 
 // Slideshow data with synchronized content.
+// width/height: the PNG's pixel size. The picture is sized from its column and
+// this aspect ratio, never from the file the browser picked out of the srcset:
+// Next never upscales, so on 2x screens the browser would think a 1440px file
+// was 3840px wide and lay the picture out at a fraction of its column.
 // artInsetRight: transparent padding on the right edge of each PNG, as a % of
 // its width. On desktop the picture is shifted right by this amount so the
 // visible artwork (not the transparent strip) sits on the section padding edge.
+// globe: where the artwork's globe was cut out, for a 3D one to show through
+// (centre as a % of the picture's width/height, diameter as a % of its width).
 const slides = [
   {
     title: "Smart",
@@ -25,6 +32,8 @@ const slides = [
     textColor: "text-white",
     label: "Shipping",
     graphic: "/hero-variation-smart/ship-it-smart.png",
+    width: 1448,
+    height: 1086,
     artInsetRight: 4.42,
   },
   {
@@ -36,6 +45,8 @@ const slides = [
     textColor: "text-white",
     label: "Freight",
     graphic: "/hero-variation-smart/freight-it-smart.png",
+    width: 1440,
+    height: 1024,
     artInsetRight: 5.21,
   },
   {
@@ -46,8 +57,16 @@ const slides = [
     description: "Hassle-free returns.",
     textColor: "text-white",
     label: "Returns",
-    graphic: "/hero-variation-smart/return-it-smart.png",
+    graphic: "/hero-variation-smart/return-it-smart-no-globe.png",
+    width: 1440,
+    height: 1024,
     artInsetRight: 7.22,
+    globe: {
+      x: 51.77,
+      y: 27.96,
+      size: 17.65,
+      fallback: "/hero-variation-smart/return-it-smart-globe.png",
+    },
   },
   {
     title: "Smart",
@@ -56,8 +75,16 @@ const slides = [
     description: "Complete fulfillment solutions.",
     textColor: "text-white",
     label: "Fulfillment",
-    graphic: "/hero-variation-smart/fulfil-it-smart.png",
+    graphic: "/hero-variation-smart/fulfil-it-smart-no-globe.png",
+    width: 1440,
+    height: 1024,
     artInsetRight: 8.06,
+    globe: {
+      x: 50.87,
+      y: 28.06,
+      size: 17.65,
+      fallback: "/hero-variation-smart/fulfil-it-smart-globe.png",
+    },
   },
 ];
 
@@ -248,32 +275,46 @@ export default function HeroSection() {
             >
               {/* All graphics stay mounted and preloaded in one grid cell;
                   only the active slide's image is visible, so the picture can
-                  never lag behind the headline while a file downloads. */}
+                  never lag behind the headline while a file downloads. Each
+                  picture fills its box: the column's full width, capped so
+                  the picture stays under 75vh (64vh on desktop) tall. A globe
+                  can then be placed behind it in % of the picture. */}
               <div className="grid grid-cols-1 w-full">
                 {slides.map((slide, index) =>
                   slide.graphic ? (
-                    <Image
+                    <div
                       key={slide.graphic}
-                      src={slide.graphic}
-                      alt={`${slide.label} illustration`}
-                      width={720}
-                      height={512}
-                      sizes="(min-width: 1024px) 54vw, 100vw"
-                      priority={index === 0}
-                      loading={index === 0 ? undefined : "eager"}
-                      aria-hidden={index !== currentSlideIndex}
-                      data-slide={slide.label}
                       style={
                         {
                           "--art-inset": `${slide.artInsetRight}%`,
+                          "--art-ratio": slide.width / slide.height,
                         } as React.CSSProperties
                       }
-                      className={`col-start-1 row-start-1 self-center justify-self-center lg:justify-self-end w-auto max-w-full h-auto max-h-[75vh] lg:max-h-[64vh] lg:translate-x-[var(--art-inset)] ${
+                      className={`relative col-start-1 row-start-1 self-center justify-self-center lg:justify-self-end w-full max-w-[calc(75vh*var(--art-ratio))] lg:max-w-[calc(64vh*var(--art-ratio))] lg:translate-x-[var(--art-inset)] ${
                         index === currentSlideIndex
                           ? "opacity-100"
                           : "opacity-0 pointer-events-none"
                       }`}
-                    />
+                    >
+                      {slide.globe && (
+                        <HeroGlobe
+                          {...slide.globe}
+                          active={index === currentSlideIndex}
+                        />
+                      )}
+                      <Image
+                        src={slide.graphic}
+                        alt={`${slide.label} illustration`}
+                        width={slide.width}
+                        height={slide.height}
+                        sizes="(min-width: 1024px) 54vw, 100vw"
+                        priority={index === 0}
+                        loading={index === 0 ? undefined : "eager"}
+                        aria-hidden={index !== currentSlideIndex}
+                        data-slide={slide.label}
+                        className="relative w-full h-auto"
+                      />
+                    </div>
                   ) : null
                 )}
               </div>

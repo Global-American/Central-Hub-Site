@@ -19,6 +19,10 @@ export const brands = [
       "The world's leading brands trust ShipItSmart to streamline their shipping operations with unparalleled speed and precision. Our platform connects you to global carriers, optimizes routes, and provides real-time tracking—making international shipping smarter and more efficient.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
+    // Tagline colours, taken from the card logo: navy with a white "it" on
+    // the orange cards, white with an orange "it" on the navy cards
+    taglineColor: "text-[#0F539A]",
+    taglineItColor: "text-white",
     image: "/card-thumbnails/ship-itsmart.png",
     // Detail copy for the /services page
     label: "Shipping",
@@ -44,6 +48,8 @@ export const brands = [
       "FreightItSmart is revolutionizing freight logistics, connecting businesses to top freight carriers and services with a single integration. Smart routing algorithms, advanced optimization, and comprehensive tracking make heavy cargo transportation faster, leaner, and more cost-effective.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
+    taglineColor: "text-white",
+    taglineItColor: "text-[#FBA42C]",
     image: "/card-thumbnails/freight-itsmart.png",
     label: "Freight",
     headline: "Air, ocean and road freight through one integration",
@@ -68,6 +74,8 @@ export const brands = [
       "ReturnItSmart transforms the returns process into a competitive advantage. Our intelligent reverse logistics platform streamlines return authorization, optimizes return routing, and maximizes recovery value—turning returns from a cost center into a customer satisfaction driver.",
     color: "bg-gradient-to-br from-[#EB993C] to-[#d88730]",
     textColor: "text-white",
+    taglineColor: "text-[#0F539A]",
+    taglineItColor: "text-white",
     image: "/card-thumbnails/return-itsmart.png",
     label: "Returns",
     headline: "Returns that keep customers coming back",
@@ -92,6 +100,8 @@ export const brands = [
       "FulfillItSmart is the ultimate fulfillment solution, seamlessly integrating order processing, inventory management, and distribution. From order to delivery, our platform ensures accurate, fast, and cost-effective fulfillment that scales with your business growth.",
     color: "bg-gradient-to-br from-[#14529f] to-[#0f3c75]",
     textColor: "text-white",
+    taglineColor: "text-white",
+    taglineItColor: "text-[#FBA42C]",
     image: "/card-thumbnails/fulfill-itsmart.png",
     label: "Fulfillment",
     headline: "Orders stored, packed and shipped for you",

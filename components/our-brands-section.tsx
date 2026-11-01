@@ -2,15 +2,63 @@
 
 import { useRef, useEffect } from "react";
 import Image from "next/image";
+import { Comfortaa } from "next/font/google";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { brands } from "@/lib/brands";
+import ItMark from "@/components/icons/it-mark";
+import HangingLightBulb from "@/components/hanging-light-bulb";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+}
+
+// The brand logos are custom lettering with no font file; Comfortaa is the
+// closest web font (round, geometric, rounded ends), and its bold strokes match
+// the weight of the logo "it" at the size the tagline draws it.
+const comfortaa = Comfortaa({ subsets: ["latin"], weight: "700", display: "swap" });
+
+// Card tagline set like the brand logo at the top of the card, in the logo's
+// colours: one colour for the text and another for the "it". Every tagline
+// ends in "itSmart", and its "it" is drawn as the logo mark; screen readers
+// still get the word "it".
+// A light bulb ends it like a glyph, sized in em so it scales with the text.
+// Its box is one line tall so it never changes the line height; the bulb hangs
+// out of it, placed so the glass is centred on the text. The last word stays
+// with it so the bulb never wraps onto a line of its own.
+function BrandTagline({
+  tagline,
+  color,
+  itColor,
+}: {
+  tagline: string;
+  color: string;
+  itColor: string;
+}) {
+  const lastSpace = tagline.lastIndexOf(" ");
+
+  return (
+    <p
+      className={`${comfortaa.className} ${color} mt-4 text-[1.05rem] leading-snug font-bold sm:mt-5 sm:text-[1.2rem] md:text-[1.35rem]`}
+    >
+      {tagline.slice(0, lastSpace + 1)}
+      <span className="whitespace-nowrap">
+        <span className="sr-only">it</span>
+        {/* Sized so the top of the "t" is at Comfortaa's cap height; the stem
+            sits on the baseline and the arrow dips just below it. */}
+        <ItMark
+          className={`${itColor} mr-[0.04em] inline-block h-[0.94em] w-[0.93em] align-[-0.02em]`}
+        />
+        {tagline.slice(lastSpace + 1).replace(/^it/, "")}
+        <span className="relative ml-[0.5em] inline-block h-[1em] w-[1.95em] align-[-0.13em]">
+          <HangingLightBulb className="absolute bottom-[-0.56em] left-0 h-[3.41em] w-[1.96em] overflow-visible" />
+        </span>
+      </span>
+    </p>
+  );
 }
 
 export default function OurBrandsSection() {
@@ -149,9 +197,11 @@ export default function OurBrandsSection() {
                         </a>
                       </Button>
                     </div>
-                    <p className="mt-4 text-[1.05rem] leading-snug font-semibold italic tracking-wide opacity-90 sm:mt-5 sm:text-[1.2rem] md:text-[1.35rem]">
-                      {brand.tagline}
-                    </p>
+                    <BrandTagline
+                      tagline={brand.tagline}
+                      color={brand.taglineColor}
+                      itColor={brand.taglineItColor}
+                    />
                   </div>
                 </div>
 

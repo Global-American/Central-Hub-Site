@@ -112,15 +112,16 @@ export default function AboutPageContent() {
               style={{ transitionDelay: "200ms" }}
             >
               <div
-                className="w-64 h-64 rounded-lg mb-6 mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-pointer bg-white border-2 border-[#1F447B]"
+                className="w-64 h-64 rounded-lg mb-6 mx-auto overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer bg-white border-2 border-[#1F447B]"
               >
-                <svg
-                  className="w-20 h-20 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L12 2L3 7V9H21ZM12 17.5C9.5 17.5 7.59 16.04 6.9 14H17.1C16.41 16.04 14.5 17.5 12 17.5ZM12 7.5C14 7.5 15.5 9 15.5 11H8.5C8.5 9 10 7.5 12 7.5Z" />
-                </svg>
+                <Image
+                  src="/images/team/avi-mechlowitz.jpg"
+                  alt="Avi Mechlowitz"
+                  width={296}
+                  height={296}
+                  sizes="256px"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <h3 className="text-xl font-bold text-[#1F447B] mb-2">
                 Avi Mechlowitz
