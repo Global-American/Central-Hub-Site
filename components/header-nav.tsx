@@ -22,8 +22,8 @@ import {
 // Scroll progress bar along the top of the home page; hidden for now
 const SHOW_SCROLL_PROGRESS = false;
 
-// The Log In menu. Freight, Return and Fulfill stay greyed out as "Coming
-// Soon" until their platforms open; set enabled to true to make them links.
+// The Log In menu. Each brand opens its own site in a new tab; set enabled
+// to false to grey an entry out as "Coming Soon".
 const solutions = [
   {
     name: "Connexx",
@@ -40,25 +40,25 @@ const solutions = [
     ctaLabel: "Visit",
   },
   {
-    name: "FreightItSmart",
-    title: "Coming Soon",
+    name: "Freight It Smart",
+    title: "Providing you simple freight solutions",
     href: BRAND_URLS.freight,
-    enabled: false,
-    ctaLabel: "Coming Soon",
+    enabled: true,
+    ctaLabel: "Visit",
   },
   {
-    name: "ReturnItSmart",
-    title: "Coming Soon",
+    name: "Return It Smart",
+    title: "Providing you simple returns solutions",
     href: BRAND_URLS.return,
-    enabled: false,
-    ctaLabel: "Coming Soon",
+    enabled: true,
+    ctaLabel: "Visit",
   },
   {
-    name: "FulfillItSmart",
-    title: "Coming Soon",
+    name: "Fulfill It Smart",
+    title: "Providing you simple fulfillment solutions",
     href: BRAND_URLS.fulfill,
-    enabled: false,
-    ctaLabel: "Coming Soon",
+    enabled: true,
+    ctaLabel: "Visit",
   },
 ];
 
