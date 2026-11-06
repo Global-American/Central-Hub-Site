@@ -132,7 +132,7 @@ export default function OurBrandsSection() {
         <div className="text-center">
           <Badge
             variant="outline"
-            className="text-xs border-accent text-accent bg-accent/10 mb-4"
+            className="title-flow text-xs mb-4"
           >
             Our Brands
           </Badge>

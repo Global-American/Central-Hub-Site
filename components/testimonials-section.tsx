@@ -212,7 +212,7 @@ export default function TestimonialsSection() {
         <div className={`text-center mb-12 lg:mb-16 xl:mb-20`}>
           <Badge
             variant="outline"
-            className="text-xs md:text-sm border-accent text-accent bg-accent/10 mb-4 lg:mb-5"
+            className="title-flow text-xs md:text-sm mb-4 lg:mb-5"
           >
             Customer Stories
           </Badge>
