@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { BRAND_URLS } from "@/lib/brands";
 import ScrollProgress from "@/components/scroll-progress";
 import {
   Menu,
@@ -21,6 +22,8 @@ import {
 // Scroll progress bar along the top of the home page; hidden for now
 const SHOW_SCROLL_PROGRESS = false;
 
+// The Log In menu. Freight, Return and Fulfill stay greyed out as "Coming
+// Soon" until their platforms open; set enabled to true to make them links.
 const solutions = [
   {
     name: "Connexx",
@@ -32,28 +35,28 @@ const solutions = [
   {
     name: "Ship It Smart",
     title: "Providing you simple shipping solutions",
-    href: "/#brands",
+    href: BRAND_URLS.ship,
     enabled: true,
     ctaLabel: "Visit",
   },
   {
     name: "FreightItSmart",
     title: "Coming Soon",
-    href: "",
+    href: BRAND_URLS.freight,
     enabled: false,
     ctaLabel: "Coming Soon",
   },
   {
     name: "ReturnItSmart",
     title: "Coming Soon",
-    href: "",
+    href: BRAND_URLS.return,
     enabled: false,
     ctaLabel: "Coming Soon",
   },
   {
     name: "FulfillItSmart",
     title: "Coming Soon",
-    href: "",
+    href: BRAND_URLS.fulfill,
     enabled: false,
     ctaLabel: "Coming Soon",
   },

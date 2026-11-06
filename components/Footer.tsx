@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Phone, MapPin } from "lucide-react";
 import AnimatedItBadge from "@/components/animated-it-badge";
 import SocialLinks from "@/components/social-links";
+import { BRAND_URLS } from "@/lib/brands";
 import { useState, useEffect } from "react";
 
 // Global locations with full addresses
@@ -229,23 +230,27 @@ export default function Footer() {
             </h3>
             <div className="space-y-2">
               <ul className="space-y-2">
+                {/* Each brand opens its own site in a new tab, like the
+                    brand cards on the homepage. */}
                 {[
-                  { label: "ShipItSmart", href: "/#brands" },
-                  { label: "FreightItSmart", href: "/#brands" },
-                  { label: "ReturnItSmart", href: "/#brands" },
-                  { label: "FulfillItSmart", href: "/#brands" },
+                  { label: "ShipItSmart", href: BRAND_URLS.ship },
+                  { label: "FreightItSmart", href: BRAND_URLS.freight },
+                  { label: "ReturnItSmart", href: BRAND_URLS.return },
+                  { label: "FulfillItSmart", href: BRAND_URLS.fulfill },
                 ].map((link) => (
                   <li
                     key={link.label}
                     className="flex items-start justify-start gap-2"
                   >
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#EB993C] flex-shrink-0 self-center"></span>
-                    <Link
+                    <a
                       href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-[#1F447B] hover:text-[#EB993C] transition-colors text-sm font-medium"
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>

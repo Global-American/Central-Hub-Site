@@ -1,8 +1,14 @@
 // Shared by the homepage brand carousel and the /services page.
 
-// Every brand currently points at the Ship itSmart site; swap in the real
-// URLs as the other brand sites go live.
-const SHIP_IT_SMART_URL = "https://ship-it-smart.vercel.app/";
+// Each brand's own site. Freight, Return and Fulfill itSmart currently show
+// an under-maintenance page that sends visitors to our contact form. Also
+// used by the footer and the Log In menu.
+export const BRAND_URLS = {
+  ship: "https://ship-it-smart.vercel.app/",
+  freight: "https://freight-it-smart.vercel.app/",
+  return: "https://return-it-smart.vercel.app/",
+  fulfill: "https://fulfill-it-smart.vercel.app/",
+} as const;
 
 export const brands = [
   {
@@ -34,7 +40,7 @@ export const brands = [
       "Optimized routes with real-time tracking",
     ],
     bestFor: "Parcels, cartons and express shipments",
-    url: SHIP_IT_SMART_URL,
+    url: BRAND_URLS.ship,
   },
   {
     id: 2,
@@ -60,7 +66,7 @@ export const brands = [
       "Instant quotes and end-to-end visibility",
     ],
     bestFor: "Larger commercial shipments, pallets and containers",
-    url: SHIP_IT_SMART_URL,
+    url: BRAND_URLS.freight,
   },
   {
     id: 3,
@@ -86,7 +92,7 @@ export const brands = [
       "Status updates that keep customers informed",
     ],
     bestFor: "Online retailers handling customer returns",
-    url: SHIP_IT_SMART_URL,
+    url: BRAND_URLS.return,
   },
   {
     id: 4,
@@ -112,6 +118,6 @@ export const brands = [
       "Integrations with the channels you sell on",
     ],
     bestFor: "Growing brands selling across multiple channels",
-    url: SHIP_IT_SMART_URL,
+    url: BRAND_URLS.fulfill,
   },
 ];
