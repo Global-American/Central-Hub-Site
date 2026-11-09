@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Truck } from "lucide-react";
 import HeroGlobe from "@/components/hero-globe";
+import HeroArtFx, { type ArtFx } from "@/components/hero-art-fx";
 
 // How long each slide shows before the banner moves on
 const SLIDE_MS = 15000;
@@ -22,6 +23,78 @@ const FADE_MS = 300;
 // visible artwork (not the transparent strip) sits on the section padding edge.
 // globe: where the artwork's globe was cut out, for a 3D one to show through
 // (centre as a % of the picture's width/height, diameter as a % of its width).
+// fx: the animation layer over the artwork (see components/hero-art-fx.tsx).
+// Where it has vehicles of its own, graphic is the artwork with them cut out.
+const FX = "/hero-variation-smart/fx";
+
+// All the vehicles face down-left along the isometric axis, so they arrive
+// from up-right: this many % of the artwork's width across, and ISO_RISE as
+// much up for each step across.
+const ISO_RISE = 0.58;
+const arriveFrom = (across: number, extraUp = 0): [number, number] => [
+  across,
+  -(across * ISO_RISE + extraUp),
+];
+
+const shippingFx: ArtFx = {
+  width: 1448,
+  height: 1086,
+  silhouette: `${FX}/ship-silhouette.webp`,
+  sprites: [
+    { src: `${FX}/ship-ship.png`, x: 116, y: 300, w: 396, h: 280, motion: "sail", from: arriveFrom(7) },
+  ],
+  // The order on the phone goes out across the whole network
+  lines: { mask: `${FX}/ship-lines.webp`, x: 890, y: 440, radius: 1000, tone: "light" },
+  sparkles: [
+    [1290, 140, 1],
+    [330, 150, 0.8],
+    [1400, 640, 0.7],
+    [690, 110, 0.9],
+    [110, 900, 0.8],
+    [1090, 1010, 0.7],
+  ],
+};
+
+const freightFx: ArtFx = {
+  width: 1440,
+  height: 1024,
+  silhouette: `${FX}/freight-silhouette.webp`,
+  sprites: [
+    { src: `${FX}/freight-ship.png`, x: 80, y: 476, w: 528, h: 400, motion: "sail", from: arriveFrom(7) },
+    { src: `${FX}/freight-truck.png`, x: 536, y: 608, w: 272, h: 260, motion: "drive", from: arriveFrom(7), delay: 0.15 },
+    { src: `${FX}/freight-plane.png`, x: 828, y: 504, w: 540, h: 388, motion: "fly", from: arriveFrom(8, 4), delay: 0.3 },
+  ],
+  // Radar sweeps out from the pin over the dots around it
+  lines: { mask: `${FX}/freight-lines.webp`, x: 905, y: 430, radius: 1150, tone: "light" },
+  rings: { shape: "ellipse", x: 893, y: 472, rx: 250, grow: 1.8, behind: [735, 40, 375, 520] },
+  sparkles: [
+    [280, 330, 0.9],
+    [560, 170, 0.8],
+    [1250, 230, 1],
+    [1390, 450, 0.7],
+    [130, 960, 0.7],
+    [660, 40, 0.6],
+  ],
+};
+
+// Returns and Fulfillment share a layout: four stations wired to a chip in
+// the middle, which sends signals out along the circuit traces
+const hubFx = (key: string, chipX: number): ArtFx => ({
+  width: 1440,
+  height: 1024,
+  silhouette: `${FX}/${key}-silhouette.webp`,
+  lines: { mask: `${FX}/${key}-lines.webp`, x: chipX, y: 570, radius: 520, tone: "electric" },
+  rings: { shape: "diamond", x: chipX, y: 570, rx: 188, grow: 2.2, behind: [chipX - 155, 150, 310, 465] },
+  sparkles: [
+    [700, 70, 0.9],
+    [1395, 560, 0.8],
+    [70, 520, 0.8],
+    [740, 930, 0.9],
+    [520, 190, 0.7],
+    [1000, 230, 0.7],
+  ],
+});
+
 const slides = [
   {
     title: "Smart",
@@ -31,10 +104,11 @@ const slides = [
     description: "Fast, reliable shipping worldwide.",
     textColor: "text-white",
     label: "Shipping",
-    graphic: "/hero-variation-smart/ship-it-smart.png",
+    graphic: `${FX}/ship-base.png`,
     width: 1448,
     height: 1086,
     artInsetRight: 4.42,
+    fx: shippingFx,
   },
   {
     title: "Smart",
@@ -44,10 +118,11 @@ const slides = [
     description: "Transparent global freight.",
     textColor: "text-white",
     label: "Freight",
-    graphic: "/hero-variation-smart/freight-it-smart.png",
+    graphic: `${FX}/freight-base.png`,
     width: 1440,
     height: 1024,
     artInsetRight: 5.21,
+    fx: freightFx,
   },
   {
     title: "Smart",
@@ -61,6 +136,7 @@ const slides = [
     width: 1440,
     height: 1024,
     artInsetRight: 7.22,
+    fx: hubFx("return", 740),
     globe: {
       x: 51.77,
       y: 27.96,
@@ -79,6 +155,7 @@ const slides = [
     width: 1440,
     height: 1024,
     artInsetRight: 8.06,
+    fx: hubFx("fulfil", 729),
     globe: {
       x: 50.87,
       y: 28.06,
@@ -95,6 +172,8 @@ export default function HeroSection() {
   const indicatorsRef = useRef<HTMLDivElement>(null);
   const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const truckRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const artTiltRef = useRef<HTMLDivElement>(null);
   // Centre x of each slide dot, relative to the indicator row
   const [dotCenters, setDotCenters] = useState<number[]>([]);
 
@@ -137,6 +216,64 @@ export default function HeroSection() {
 
     return () => clearInterval(interval);
   }, [currentSlideIndex]); // Dependency on currentSlideIndex to reset timer on manual navigation
+
+  // Pause the artwork's animations while the hero is scrolled out of view
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const io = new IntersectionObserver(([entry]) => {
+      section.toggleAttribute("data-offscreen", !entry.isIntersecting);
+    });
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
+
+  // Tilt the artwork towards the pointer, with the vehicles drifting a little
+  // further than the picture for depth. Eased every frame towards the
+  // pointer, and back to rest when it leaves the banner. Mouse and trackpad
+  // only, and never with reduced motion.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const art = artTiltRef.current;
+    if (!section || !art) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const target = { x: 0, y: 0 };
+    const now = { x: 0, y: 0 };
+    let frame = 0;
+    const step = () => {
+      now.x += (target.x - now.x) * 0.08;
+      now.y += (target.y - now.y) * 0.08;
+      art.style.transform = `perspective(1400px) rotateX(${(-now.y * 4).toFixed(3)}deg) rotateY(${(now.x * 6).toFixed(3)}deg)`;
+      art.style.setProperty("--tilt-x", now.x.toFixed(4));
+      art.style.setProperty("--tilt-y", now.y.toFixed(4));
+      const settled =
+        Math.abs(target.x - now.x) < 0.001 && Math.abs(target.y - now.y) < 0.001;
+      frame = settled ? 0 : requestAnimationFrame(step);
+    };
+    const kick = () => {
+      if (!frame) frame = requestAnimationFrame(step);
+    };
+    const onMove = (e: PointerEvent) => {
+      const r = section.getBoundingClientRect();
+      target.x = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
+      target.y = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
+      kick();
+    };
+    const onLeave = () => {
+      target.x = 0;
+      target.y = 0;
+      kick();
+    };
+    section.addEventListener("pointermove", onMove);
+    section.addEventListener("pointerleave", onLeave);
+    return () => {
+      section.removeEventListener("pointermove", onMove);
+      section.removeEventListener("pointerleave", onLeave);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   // Measure the slide dots so the truck's road runs between them
   useLayoutEffect(() => {
@@ -185,6 +322,7 @@ export default function HeroSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
       // From lg up the banner is 80vh tall, 10% less than the 89vh it used to
       // take of the first screen, but never under 36rem so short screens keep
@@ -264,8 +402,11 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Graphic Column */}
-          <div className="flex justify-center lg:justify-end items-center lg:order-2">
+          {/* Graphic Column. Tilted towards the pointer (see above). */}
+          <div
+            ref={artTiltRef}
+            className="flex justify-center lg:justify-end items-center lg:order-2"
+          >
             <div
               className={`w-full max-w-xl lg:max-w-none lg:w-[90%] transition-all duration-500 ease-in-out ${
                 titleAnimation === "animate-in"
@@ -279,7 +420,7 @@ export default function HeroSection() {
                   picture fills its box: the column's full width, capped so
                   the picture stays under 75vh (64vh on desktop) tall. A globe
                   can then be placed behind it in % of the picture. */}
-              <div className="grid grid-cols-1 w-full">
+              <div className="hero-art-float grid grid-cols-1 w-full">
                 {slides.map((slide, index) =>
                   slide.graphic ? (
                     <div
@@ -290,7 +431,8 @@ export default function HeroSection() {
                           "--art-ratio": slide.width / slide.height,
                         } as React.CSSProperties
                       }
-                      className={`relative col-start-1 row-start-1 self-center justify-self-center lg:justify-self-end w-full max-w-[calc(75vh*var(--art-ratio))] lg:max-w-[calc(64vh*var(--art-ratio))] lg:translate-x-[var(--art-inset)] ${
+                      data-active={index === currentSlideIndex}
+                      className={`hero-art relative col-start-1 row-start-1 self-center justify-self-center lg:justify-self-end w-full max-w-[calc(75vh*var(--art-ratio))] lg:max-w-[calc(64vh*var(--art-ratio))] lg:translate-x-[var(--art-inset)] ${
                         index === currentSlideIndex
                           ? "opacity-100"
                           : "opacity-0 pointer-events-none"
@@ -314,6 +456,9 @@ export default function HeroSection() {
                         data-slide={slide.label}
                         className="relative w-full h-auto"
                       />
+                      {slide.fx && (
+                        <HeroArtFx fx={slide.fx} priority={index === 0} />
+                      )}
                     </div>
                   ) : null
                 )}

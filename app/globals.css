@@ -697,3 +697,255 @@ select:not([multiple]):not([size]):not(.appearance-none) {
     animation: none;
   }
 }
+
+/* Hero artwork animations (components/hero-art-fx.tsx). Each slide's picture
+   is a size container, so cqw is 1% of the picture's width and every motion
+   scales with it. Animations only run on the slide that is showing, so they
+   restart (the vehicles arrive again) each time it comes back. */
+.hero-art {
+  container-type: inline-size;
+}
+
+/* The whole picture drifts gently up and down */
+.hero-art-float {
+  animation: hero-art-float 7s ease-in-out infinite;
+}
+@keyframes hero-art-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.4%);
+  }
+}
+
+/* Vehicles: glide in along their heading, then keep moving on their own.
+   `translate` follows the pointer tilt (set on the graphic column) so they
+   drift a little further than the picture behind them. */
+.hero-sprite {
+  translate: calc(var(--tilt-x, 0) * 1.2cqw) calc(var(--tilt-y, 0) * 0.8cqw);
+}
+.hero-art[data-active="true"] .hero-sprite {
+  animation: hero-sprite-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s) both;
+}
+@keyframes hero-sprite-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--from-x), var(--from-y));
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-sprite-sail {
+  transform-origin: 50% 85%;
+}
+.hero-art[data-active="true"] .hero-sprite-sail {
+  animation: hero-sail 5.5s ease-in-out infinite;
+}
+@keyframes hero-sail {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0.7deg);
+  }
+  50% {
+    transform: translateY(-0.6cqw) rotate(-0.9deg);
+  }
+}
+
+.hero-art[data-active="true"] .hero-sprite-drive {
+  animation: hero-drive 2.6s ease-in-out infinite;
+}
+@keyframes hero-drive {
+  0%,
+  22%,
+  55%,
+  78%,
+  100% {
+    transform: translateY(0);
+  }
+  10% {
+    transform: translateY(-0.3cqw);
+  }
+  66% {
+    transform: translateY(-0.18cqw);
+  }
+}
+
+.hero-sprite-fly {
+  transform-origin: 40% 60%;
+}
+.hero-art[data-active="true"] .hero-sprite-fly {
+  animation: hero-fly 6.5s ease-in-out -1.5s infinite;
+}
+@keyframes hero-fly {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-1.3cqw) rotate(-1.2deg);
+  }
+}
+
+/* Waves of light running out along the artwork's own lines. The layer is
+   masked to the lines, so a wave only lights them as it passes. */
+.hero-wave {
+  position: absolute;
+  aspect-ratio: 1 / 0.58;
+  translate: -50% -50%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.hero-waves-light {
+  mix-blend-mode: screen;
+}
+.hero-waves-light .hero-wave {
+  background: radial-gradient(
+    farthest-side,
+    transparent 58%,
+    rgb(120 225 255 / 0.55) 80%,
+    rgb(255 255 255) 93%,
+    transparent 100%
+  );
+}
+.hero-waves-electric .hero-wave {
+  background: radial-gradient(
+    farthest-side,
+    transparent 62%,
+    rgb(14 165 233 / 0.7) 80%,
+    rgb(56 225 255) 92%,
+    rgb(235 153 60) 97%,
+    transparent 100%
+  );
+}
+.hero-art[data-active="true"] .hero-wave {
+  animation: hero-wave 4.2s cubic-bezier(0.25, 0.1, 0.5, 1) infinite;
+}
+@keyframes hero-wave {
+  0% {
+    transform: scale(0.04);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Isometric rings sent out over the ground */
+.hero-rings {
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgb(95 216 255 / 0.9));
+}
+.hero-ring {
+  fill: none;
+  stroke: rgb(170 240 255);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  opacity: 0;
+}
+.hero-art[data-active="true"] .hero-ring {
+  animation: hero-ring 3.9s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+@keyframes hero-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(var(--grow));
+    opacity: 0;
+  }
+}
+
+/* Gloss sweeping across the picture now and then */
+.hero-sheen {
+  mix-blend-mode: screen;
+}
+.hero-sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0 -50%;
+  background: linear-gradient(
+    105deg,
+    transparent 44%,
+    rgb(255 255 255 / 0.32) 50%,
+    transparent 56%
+  );
+  transform: translateX(-75%);
+}
+.hero-art[data-active="true"] .hero-sheen::before {
+  animation: hero-sheen 8s ease-in-out 1.6s infinite;
+}
+@keyframes hero-sheen {
+  0% {
+    transform: translateX(-75%);
+  }
+  30%,
+  100% {
+    transform: translateX(75%);
+  }
+}
+
+/* Twinkles */
+.hero-sparkle {
+  translate: -50% -50%;
+  color: #fff;
+  filter: drop-shadow(0 0 0.5cqw rgb(95 216 255));
+  opacity: 0;
+}
+.hero-sparkle:nth-of-type(3n) {
+  color: #ffd9ad;
+  filter: drop-shadow(0 0 0.5cqw rgb(235 153 60));
+}
+.hero-art[data-active="true"] .hero-sparkle {
+  animation: hero-twinkle 3.2s ease-in-out infinite;
+}
+@keyframes hero-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(90deg);
+  }
+}
+
+/* Hold everything still while the banner is scrolled away */
+#hero[data-offscreen] .hero-art-float,
+#hero[data-offscreen] .hero-art *,
+#hero[data-offscreen] .hero-art *::before {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-art-float,
+  .hero-art *,
+  .hero-art *::before {
+    animation: none !important;
+  }
+  .hero-wave,
+  .hero-ring,
+  .hero-sparkle {
+    display: none;
+  }
+}
