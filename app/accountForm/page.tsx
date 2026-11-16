@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import HeaderNav from "@/components/header-nav";
 import CaptchaGate, { CaptchaLocked } from "@/components/captcha-gate";
+import { CAPTCHA_ENABLED } from "@/components/turnstile-widget";
 import { ArrowRight, Plus, X } from "lucide-react";
 import {
   FormSection,
@@ -311,7 +312,7 @@ const INDUSTRY_SECTORS = [
 
 export default function AccountFormPage() {
   // The form stays locked until the visitor passes the captcha
-  const [isHuman, setIsHuman] = useState(false);
+  const [isHuman, setIsHuman] = useState(!CAPTCHA_ENABLED);
   const [formData, setFormData] = useState({
     companyName: "",
     otherLegalName: "",

@@ -36,6 +36,11 @@ export const TURNSTILE_SITE_KEY =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
   (process.env.NODE_ENV === "development" ? DEV_TEST_SITE_KEY : "");
 
+// The captcha only switches on once a real site key is configured. Until then
+// the forms open straight away (set NEXT_PUBLIC_TURNSTILE_SITE_KEY and
+// TURNSTILE_SECRET_KEY in Vercel, then redeploy, to turn it on).
+export const CAPTCHA_ENABLED = Boolean(TURNSTILE_SITE_KEY);
+
 let scriptPromise: Promise<TurnstileApi> | null = null;
 
 function loadTurnstile() {

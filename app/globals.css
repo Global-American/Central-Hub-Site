@@ -257,10 +257,14 @@
 
 /* Mobile optimizations */
 @layer utilities {
-  /* Prevent horizontal scrolling */
+  /* Prevent horizontal scrolling. `clip` rather than `hidden`: hidden turns
+     html and body into scroll containers, which stops position: sticky
+     (the form step titles, the legal pages' contents list) from sticking.
+     The hidden line stays as the fallback for browsers without clip. */
   html,
   body {
     overflow-x: hidden;
+    overflow-x: clip;
   }
   @media (max-width: 768px) {
     ::selection {
@@ -620,6 +624,85 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   background-position: right 0.75rem center;
   background-size: 1rem 1rem;
   padding-right: 2.5rem;
+}
+
+/* Running text on the legal pages (components/legal-page.tsx). The base
+   reset strips every margin and padding, so paragraphs, lists and tables
+   get their spacing back here. Kept in the components layer so a utility
+   class on any one element still wins. */
+@layer components {
+  .legal-prose {
+    color: #324a6d;
+    line-height: 1.75;
+  }
+  .legal-prose > * + * {
+    margin-top: 1rem;
+  }
+  .legal-prose h3 {
+    margin-top: 1.75rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: #1f447b;
+  }
+  .legal-prose ul,
+  .legal-prose ol {
+    padding-left: 1.5rem;
+  }
+  .legal-prose ul {
+    list-style: disc;
+  }
+  .legal-prose ol {
+    list-style: decimal;
+  }
+  .legal-prose li + li {
+    margin-top: 0.5rem;
+  }
+  .legal-prose li::marker {
+    color: #eb993c;
+  }
+  .legal-prose strong {
+    font-weight: 600;
+    color: #1f447b;
+  }
+  .legal-prose a {
+    font-weight: 500;
+    color: #1f447b;
+    text-decoration: underline;
+    text-decoration-color: #eb993c;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+  .legal-prose a:hover {
+    color: #eb993c;
+  }
+  /* Wide tables scroll sideways inside this wrapper instead of the page */
+  .legal-prose .legal-table {
+    overflow-x: auto;
+    border: 2px solid rgb(31 68 123 / 0.15);
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  .legal-prose table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .legal-prose th,
+  .legal-prose td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .legal-prose th {
+    font-weight: 600;
+    color: #1f447b;
+    background: rgb(31 68 123 / 0.05);
+  }
+  .legal-prose tr + tr td {
+    border-top: 1px solid rgb(31 68 123 / 0.12);
+  }
 }
 
 /* Section title pills ("Our Brands", "Customer Stories", "How It Works"):

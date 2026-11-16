@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import HeaderNav from "@/components/header-nav";
 import CaptchaGate, { CaptchaLocked } from "@/components/captcha-gate";
+import { CAPTCHA_ENABLED } from "@/components/turnstile-widget";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -123,7 +124,7 @@ export default function QuotePage() {
   const QUOTE_SOURCE = "Global American";
 
   // The form stays locked until the visitor passes the captcha
-  const [isHuman, setIsHuman] = useState(false);
+  const [isHuman, setIsHuman] = useState(!CAPTCHA_ENABLED);
 
   const [formData, setFormData] = useState({
     contactName: "",

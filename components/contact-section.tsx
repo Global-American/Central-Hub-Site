@@ -339,6 +339,7 @@ import {
 import Link from "next/link";
 import SocialLinks from "@/components/social-links";
 import CaptchaGate, { CaptchaLocked } from "@/components/captcha-gate";
+import { CAPTCHA_ENABLED } from "@/components/turnstile-widget";
 import { COUNTRIES, findCountry } from "@/lib/countries";
 import { warehouseLocations } from "@/lib/warehouse-locations";
 // import ColorPicker from "../components/ColorPicker";
@@ -508,7 +509,7 @@ const shipItSmartServices = [
 export default function ContactPage() {
   const [isVisible, setIsVisible] = useState(false);
   // The form stays locked until the visitor passes the captcha
-  const [isHuman, setIsHuman] = useState(false);
+  const [isHuman, setIsHuman] = useState(!CAPTCHA_ENABLED);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
