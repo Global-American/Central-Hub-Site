@@ -11,6 +11,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { brands } from "@/lib/brands";
 import ItMark from "@/components/icons/it-mark";
 import HangingLightBulb from "@/components/hanging-light-bulb";
+import DeliveryArt from "@/components/delivery-art";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -205,15 +206,26 @@ export default function OurBrandsSection() {
                   </div>
                 </div>
 
-                {/* Image half */}
-                <div className="hidden h-full items-center justify-center p-4 lg:flex lg:p-6 xl:p-8">
-                  <Image
-                    src={brand.image}
-                    alt={`${brand.name} illustration`}
-                    width={720}
-                    height={512}
-                    className="h-full w-full -translate-x-6 scale-[1.2] object-contain drop-shadow-2xl xl:-translate-x-8"
-                  />
+                {/* Image half. Ship itSmart's picture is animated; it fits
+                    itself in this box the way object-contain does for the
+                    others, which is why the box is a size container. */}
+                <div className="hidden h-full items-center justify-center p-4 [container-type:size] lg:flex lg:p-6 xl:p-8">
+                  {brand.art === "delivery" ? (
+                    <DeliveryArt
+                      alt={`${brand.name} illustration`}
+                      sizes="(min-width: 1024px) 55vw, 1px"
+                      className="-translate-x-6 scale-[1.2] xl:-translate-x-8"
+                      baseClassName="drop-shadow-2xl"
+                    />
+                  ) : (
+                    <Image
+                      src={brand.image}
+                      alt={`${brand.name} illustration`}
+                      width={720}
+                      height={512}
+                      className="h-full w-full -translate-x-6 scale-[1.2] object-contain drop-shadow-2xl xl:-translate-x-8"
+                    />
+                  )}
                 </div>
               </div>
             </div>

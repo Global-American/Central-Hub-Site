@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { brands } from "@/lib/brands"
+import DeliveryArt from "@/components/delivery-art"
 
 // Shipping and freight can be priced straight away on the quote page;
 // returns and fulfillment start with a conversation
@@ -99,17 +100,26 @@ export default function ServicesSection() {
                   moves to the right on every other section */}
               <Reveal className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
                 <div
-                  className={`relative aspect-[4/3] w-full ${
+                  className={`relative flex aspect-[4/3] w-full items-center justify-center [container-type:size] ${
                     index % 2 === 0 ? "lg:order-last" : ""
                   }`}
                 >
-                  <Image
-                    src={brand.image}
-                    alt={`${brand.name} illustration`}
-                    fill
-                    sizes="(min-width: 1024px) 540px, 100vw"
-                    className="object-contain"
-                  />
+                  {/* Ship itSmart's picture is animated; it fits itself in
+                      this box the way object-contain does for the others */}
+                  {brand.art === "delivery" ? (
+                    <DeliveryArt
+                      alt={`${brand.name} illustration`}
+                      sizes="(min-width: 1024px) 540px, 100vw"
+                    />
+                  ) : (
+                    <Image
+                      src={brand.image}
+                      alt={`${brand.name} illustration`}
+                      fill
+                      sizes="(min-width: 1024px) 540px, 100vw"
+                      className="object-contain"
+                    />
+                  )}
                 </div>
 
                 <div>

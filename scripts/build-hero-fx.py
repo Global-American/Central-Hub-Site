@@ -6,7 +6,13 @@ Writes public/hero-variation-smart/fx/ (see components/hero-art-fx.tsx):
                           page's globe in place of the ring and dotted globe
                           (hero_projector.py), for Returns and Fulfillment a
                           circuit board in place of the cog
-                          (hero_circuit_board.py)
+                          (hero_circuit_board.py); Fulfillment also gets the
+                          man placing an order on a phone from its card
+                          picture, in place of the worker and the tall phone
+                          on its bottom right station (hero_order_phone.py),
+                          and a packing station in place of the man at a
+                          desk on its bottom left one
+                          (hero_packing_station.py)
   <slide>-<vehicle>.png   each vehicle on its own, cropped to its box
   <slide>-lines.webp      only the artwork's network / circuit lines, with a
                           soft halo, as a mask for the waves of light
@@ -29,10 +35,13 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 from hero_circuit_board import find_traces, swap_cog
+from hero_order_phone import swap_worker
+from hero_packing_station import swap_desk
 from hero_projector import swap_hub
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "public", "hero-variation-smart")
 OUT = os.path.join(ROOT, "fx")
+CARDS = os.path.join(ROOT, "..", "card-thumbnails")
 
 
 def load(name):
@@ -171,8 +180,12 @@ def main():
     for key, centre in hubs.items():
         print(key)
         shift = centre[0] - hubs["fulfil"][0]
+        art = load(f"{key}-it-smart-no-globe.png")
+        if key == "fulfil":
+            card = Image.open(os.path.join(CARDS, "fulfill-itsmart.png")).convert("RGBA")
+            art = swap_desk(swap_worker(art, np.array(card)))
         a, board = swap_cog(
-            load(f"{key}-it-smart-no-globe.png"),
+            art,
             centre,
             np.roll(real, shift, 1),
             np.roll(keep, shift, 1),

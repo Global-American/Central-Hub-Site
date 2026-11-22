@@ -30,6 +30,9 @@ export const brands = [
     taglineColor: "text-[#0F539A]",
     taglineItColor: "text-white",
     image: "/card-thumbnails/ship-itsmart.png",
+    // This picture is animated where it is shown (components/delivery-art.tsx,
+    // which draws it from layers cut out of the file above)
+    art: "delivery",
     // Detail copy for the /services page
     label: "Shipping",
     headline: "Parcel shipping, compared and booked in one place",

@@ -1099,3 +1099,335 @@ select:not([multiple]):not([size]):not(.appearance-none) {
     display: none;
   }
 }
+
+/* Ship itSmart picture (components/delivery-art.tsx). The picture fits itself
+   inside its parent like object-contain (the parent is a size container), and
+   is a size container itself, so cqw below is 1% of the picture's width.
+   Nothing moves until it is on screen (data-active). The pin hops every 2.4s
+   and each of the five trucks gets its parcel once every 12s: the long
+   keyframes below are in % of those 12s. */
+.delivery-art {
+  position: relative;
+  width: min(100cqw, 100cqh * 1440 / 1024);
+  container-type: inline-size;
+}
+
+/* The bright quarter of a pad's band: a quarter of a disc lying on the
+   ground (squashed to the pad's shape), turning about the pad's middle */
+.delivery-quarter {
+  position: absolute;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  transform: scaleY(var(--squash));
+  background: conic-gradient(from 90deg, rgb(0 254 253) 0deg 90deg, transparent 90deg 360deg);
+}
+.delivery-art[data-active="true"] .delivery-quarter {
+  animation: delivery-turn var(--turn) linear infinite;
+}
+@keyframes delivery-turn {
+  from {
+    transform: scaleY(var(--squash)) rotate(0deg);
+  }
+  to {
+    transform: scaleY(var(--squash)) rotate(360deg);
+  }
+}
+
+/* A ring of light spreading from a truck. Its layer is cut to the lines
+   round the trucks, so it only lights them as it passes. */
+.delivery-pulse {
+  position: absolute;
+  aspect-ratio: 1 / 0.55;
+  translate: -50% -50%;
+  opacity: 0;
+  background: radial-gradient(
+    farthest-side,
+    transparent 50%,
+    rgb(130 228 255 / 0.6) 76%,
+    rgb(205 247 255) 91%,
+    transparent 100%
+  );
+}
+.delivery-art[data-active="true"] .delivery-pulse {
+  animation: delivery-pulse 12s cubic-bezier(0.2, 0.5, 0.4, 1) var(--at) infinite both;
+}
+@keyframes delivery-pulse {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  11.5%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Signal marks: the arcs come out from the dot one after another, hold, and
+   fade */
+.delivery-signal {
+  position: absolute;
+}
+.delivery-art[data-active="true"] .delivery-signal {
+  animation: delivery-signal 2.4s linear var(--at) infinite both;
+}
+@keyframes delivery-signal {
+  0% {
+    clip-path: circle(18% at var(--dot-x) var(--dot-y));
+    opacity: 1;
+  }
+  45%,
+  76% {
+    clip-path: circle(150% at var(--dot-x) var(--dot-y));
+    opacity: 1;
+  }
+  100% {
+    clip-path: circle(150% at var(--dot-x) var(--dot-y));
+    opacity: 0.12;
+  }
+}
+
+/* On the phone's screen: a ripple from where the pin lands ... */
+.delivery-ripple {
+  position: absolute;
+  aspect-ratio: 1 / 0.557;
+  translate: -50% -50%;
+  opacity: 0;
+  background: radial-gradient(
+    farthest-side,
+    transparent 70%,
+    rgb(255 255 255 / 0.2) 80%,
+    rgb(255 255 255 / 0.9) 90%,
+    transparent 100%
+  );
+}
+.delivery-art[data-active="true"] .delivery-ripple {
+  animation: delivery-ripple 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) calc(var(--start) + 0.53s)
+    infinite both;
+}
+@keyframes delivery-ripple {
+  0% {
+    transform: scale(0.06);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  40%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+/* ... and a gloss that crosses it now and then */
+.delivery-gloss {
+  position: absolute;
+  inset: 0 -50%;
+  background: linear-gradient(105deg, transparent 45%, rgb(255 255 255 / 0.28) 50%, transparent 55%);
+  transform: translateX(-60%);
+}
+.delivery-art[data-active="true"] .delivery-gloss {
+  animation: delivery-gloss 7.2s ease-in-out 2s infinite;
+}
+@keyframes delivery-gloss {
+  0% {
+    transform: translateX(-60%);
+  }
+  22%,
+  100% {
+    transform: translateX(40%);
+  }
+}
+
+/* Trucks: the engine ticking over (the inner box), and a squash and a hop as
+   the parcel lands (as translate and scale on the outer one, from the
+   wheels up) */
+.delivery-truck {
+  position: absolute;
+  transform-origin: 50% 96%;
+}
+.delivery-art[data-active="true"] .delivery-truck {
+  animation: delivery-catch 12s var(--at) infinite both;
+}
+@keyframes delivery-catch {
+  0% {
+    translate: 0 0;
+    scale: 1 1;
+    animation-timing-function: ease-out;
+  }
+  0.9% {
+    translate: 0 0;
+    scale: 1.06 0.9;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  2.8% {
+    translate: 0 -2.4cqw;
+    scale: 0.96 1.06;
+    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5);
+  }
+  4.5% {
+    translate: 0 0;
+    scale: 1.05 0.93;
+    animation-timing-function: ease-out;
+  }
+  5.5% {
+    translate: 0 -0.5cqw;
+    scale: 0.99 1.02;
+    animation-timing-function: ease-in;
+  }
+  6.4%,
+  100% {
+    translate: 0 0;
+    scale: 1 1;
+  }
+}
+.delivery-art[data-active="true"] .delivery-truck-idle {
+  animation: delivery-idle var(--idle) ease-in-out infinite;
+}
+@keyframes delivery-idle {
+  0%,
+  24%,
+  52%,
+  76%,
+  100% {
+    transform: translateY(0);
+  }
+  12% {
+    transform: translateY(-0.22cqw);
+  }
+  64% {
+    transform: translateY(-0.14cqw);
+  }
+}
+
+/* The pin: crouch, hop (leaning back, then forward), land with a squash and
+   a small bounce. Its transform-origin is its tip. */
+.delivery-pin {
+  position: absolute;
+}
+.delivery-art[data-active="true"] .delivery-pin {
+  animation: delivery-hop 2.4s var(--start) infinite both;
+}
+@keyframes delivery-hop {
+  0% {
+    translate: 0 0;
+    scale: 1 1;
+    rotate: 0deg;
+    animation-timing-function: ease-out;
+  }
+  4% {
+    translate: 0 0;
+    scale: 1.07 0.9;
+    rotate: 0deg;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  13% {
+    translate: 0 -4.6cqw;
+    scale: 0.96 1.06;
+    rotate: -6deg;
+    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5);
+  }
+  22% {
+    translate: 0 0;
+    scale: 1.09 0.87;
+    rotate: 2deg;
+    animation-timing-function: ease-out;
+  }
+  27% {
+    translate: 0 -0.7cqw;
+    scale: 0.99 1.03;
+    rotate: 0deg;
+    animation-timing-function: ease-in;
+  }
+  31%,
+  100% {
+    translate: 0 0;
+    scale: 1 1;
+    rotate: 0deg;
+  }
+}
+
+/* A parcel: straight across to its truck at a steady pace (the outer box),
+   up and down on the way (the inner one), small as it leaves the phone and
+   as it drops into the truck */
+.delivery-parcel {
+  position: absolute;
+  width: 4.6cqw;
+  margin: -3.4cqw 0 0 -2.3cqw;
+  opacity: 0;
+}
+.delivery-art[data-active="true"] .delivery-parcel {
+  animation: delivery-send 12s linear var(--at) infinite both;
+}
+@keyframes delivery-send {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+  0.5%,
+  7.3% {
+    opacity: 1;
+  }
+  7.9%,
+  100% {
+    translate: var(--to-x) var(--to-y);
+    opacity: 0;
+  }
+}
+.delivery-art[data-active="true"] .delivery-parcel-toss {
+  animation: delivery-toss 12s var(--at) infinite both;
+}
+@keyframes delivery-toss {
+  0% {
+    transform: translateY(0) scale(0.3) rotate(-24deg);
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1);
+  }
+  3.6% {
+    transform: translateY(calc(var(--up) * -1)) scale(1) rotate(6deg);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4);
+  }
+  7.9%,
+  100% {
+    transform: translateY(0) scale(0.5) rotate(0deg);
+  }
+}
+
+/* A twinkle where the parcel lands */
+.delivery-spark {
+  position: absolute;
+  width: 3.4cqw;
+  translate: -50% -50%;
+  color: #fff;
+  filter: drop-shadow(0 0 0.5cqw rgb(95 216 255));
+  opacity: 0;
+}
+.delivery-art[data-active="true"] .delivery-spark {
+  animation: delivery-spark 12s ease-out var(--at) infinite both;
+}
+@keyframes delivery-spark {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  1.2% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+  4.5%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(120deg) translateY(-1.5cqw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .delivery-art * {
+    animation: none !important;
+  }
+}
