@@ -1,12 +1,20 @@
 """Cut the hero artwork into the layers its animations use.
 
 Writes public/hero-variation-smart/fx/ (see components/hero-art-fx.tsx):
-  <slide>-base.png        the artwork with its vehicles taken out
+  <slide>-base.png        the artwork with its vehicles taken out and its
+                          middle redrawn: for Freight a projector for the
+                          page's globe in place of the ring and dotted globe
+                          (hero_projector.py), for Returns and Fulfillment a
+                          circuit board in place of the cog
+                          (hero_circuit_board.py)
   <slide>-<vehicle>.png   each vehicle on its own, cropped to its box
   <slide>-lines.webp      only the artwork's network / circuit lines, with a
                           soft halo, as a mask for the waves of light
   <slide>-silhouette.webp the artwork's outline (half size), as a mask for
                           the gloss sweep
+  <slide>-cover.webp      everything but what a vehicle arrives from behind
+                          (the projector and the globe over it), as a mask
+                          for that vehicle
 
 Run it again whenever a hero picture changes, then update the sprite boxes it
 prints into the slide configs in components/hero-section.tsx.
@@ -19,6 +27,9 @@ from collections import deque
 
 import numpy as np
 from PIL import Image, ImageFilter
+
+from hero_circuit_board import find_traces, swap_cog
+from hero_projector import swap_hub
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "public", "hero-variation-smart")
 OUT = os.path.join(ROOT, "fx")
@@ -132,26 +143,47 @@ def main():
 
     print("Freight")
     a = load("freight-it-smart.png")
-    save_silhouette(a, "freight-silhouette.webp")
     base, taken = split(
         a,
         {"freight-ship": (300, 700), "freight-truck": (680, 720), "freight-plane": (1000, 760)},
     )
+    # The ring in the middle and the dotted globe standing in it, swapped for
+    # a projector for the page's own globe
+    lab, _ = label(base[..., 3] > 40, 4)
+    ring = lab == lab[500, 900]
+    base, blocked = swap_hub(base, dilate(ring, 4) & ((lab == 0) | ring))
     Image.fromarray(base).save(os.path.join(OUT, "freight-base.png"), optimize=True)
-    R, G, B, A = channels(a)
+    save_webp(white(255 - blocked), "freight-cover.webp")
+    whole = base.copy()  # with the vehicles back in their places
+    whole[taken] = a[taken]
+    save_silhouette(whole, "freight-silhouette.webp")
+    R, G, B, A = channels(base)
     teal = (A > 80) & (G > 150) & (R < 120) & (G - R > 80) & ~dilate(taken, 2)
-    save_lines(teal, a, "freight-lines.webp")
+    save_lines(teal, base, "freight-lines.webp")
 
-    # Returns / Fulfillment: the thin circuit traces, without the stations and hub
-    for key, name in [("return", "return-it-smart-no-globe.png"), ("fulfil", "fulfil-it-smart-no-globe.png")]:
+    # Returns / Fulfillment: the cog in the middle swapped for a circuit
+    # board, then the thin circuit traces, without the stations and the board
+    # but with the board's own traces. The two pictures have the same traces
+    # round the middle (a few pixels apart), and only Fulfillment draws them
+    # in a colour that tells them from the cog, so it finds them for both.
+    hubs = {"return": (743, 570), "fulfil": (731, 570)}  # middle of the diamonds
+    real, keep = find_traces(load("fulfil-it-smart-no-globe.png"), hubs["fulfil"])
+    for key, centre in hubs.items():
         print(key)
-        a = load(name)
+        shift = centre[0] - hubs["fulfil"][0]
+        a, board = swap_cog(
+            load(f"{key}-it-smart-no-globe.png"),
+            centre,
+            np.roll(real, shift, 1),
+            np.roll(keep, shift, 1),
+        )
+        Image.fromarray(a).save(os.path.join(OUT, f"{key}-base.png"), optimize=True)
         save_silhouette(a, f"{key}-silhouette.webp")
         solid = a[..., 3] > 40
         opened = dilate(erode(solid, 4), 4)
         lab, sizes = label(opened, 2)
         big = np.isin(lab, [k for k, v in sizes.items() if v > 3000])
-        save_lines(solid & ~dilate(big, 3), a, f"{key}-lines.webp")
+        save_lines((solid & ~dilate(big, 3)) | (board > 128), a, f"{key}-lines.webp")
 
 
 if __name__ == "__main__":

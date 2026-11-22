@@ -826,6 +826,73 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   }
 }
 
+/* A long trip in from out of the picture: there almost from the start,
+   holding its speed (the truck less so) and then slowing into its place. On
+   the way the truck brakes into its spot and the plane comes down out of the
+   distance, nose first, and levels off (on their inner boxes, as translate /
+   rotate / scale, so the looping transforms below carry on underneath).
+   A vehicle that swerves on its trip brings its own keyframes (--trip-path,
+   written by the component from the curve it is given). */
+.hero-sprite-trip {
+  --trip-ease: cubic-bezier(0.33, 0.33, 0.4, 1);
+}
+.hero-sprite-trip[data-motion="drive"] {
+  --trip-ease: cubic-bezier(0.25, 0.45, 0.35, 1);
+}
+.hero-art[data-active="true"] .hero-sprite-trip {
+  animation: var(--trip-path, hero-sprite-trip) var(--trip) var(--trip-ease) var(--delay, 0s) both;
+}
+@keyframes hero-sprite-trip {
+  from {
+    opacity: 0;
+    transform: translate(var(--from-x), var(--from-y));
+  }
+  12% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-art[data-active="true"] .hero-sprite-trip > .hero-sprite-drive {
+  animation:
+    hero-drive 2.6s ease-in-out infinite,
+    hero-drive-in var(--trip) ease-in-out var(--delay, 0s) both;
+}
+@keyframes hero-drive-in {
+  from,
+  62% {
+    rotate: 0deg;
+  }
+  84% {
+    rotate: -1.4deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+.hero-art[data-active="true"] .hero-sprite-trip > .hero-sprite-fly {
+  animation:
+    hero-fly 6.5s ease-in-out -1.5s infinite,
+    hero-fly-in var(--trip) cubic-bezier(0.3, 0.4, 0.3, 1) var(--delay, 0s) both;
+}
+@keyframes hero-fly-in {
+  from {
+    translate: 0 -10cqw;
+    rotate: -8deg;
+    scale: 0.7;
+  }
+  74% {
+    rotate: 2deg;
+  }
+  to {
+    translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+
 .hero-sprite-sail {
   transform-origin: 50% 85%;
 }
@@ -975,7 +1042,7 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   transform: translateX(-75%);
 }
 .hero-art[data-active="true"] .hero-sheen::before {
-  animation: hero-sheen 8s ease-in-out 1.6s infinite;
+  animation: hero-sheen 8s ease-in-out var(--sheen-delay, 1.6s) infinite;
 }
 @keyframes hero-sheen {
   0% {

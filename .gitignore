@@ -83,3 +83,5 @@ temp/
 pnpm-lock.yaml
 package-lock.json
 yarn.lock 
+# python (scripts/)
+__pycache__/

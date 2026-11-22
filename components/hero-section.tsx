@@ -7,6 +7,18 @@ import Link from "next/link";
 import { Truck } from "lucide-react";
 import HeroGlobe from "@/components/hero-globe";
 import HeroArtFx, { type ArtFx } from "@/components/hero-art-fx";
+// The pictures scripts/build-hero-fx.py writes are imported, not named by
+// their path: an imported picture's address has a hash of its contents in
+// it, so one that has been redrawn can never come back out of the image
+// cache as the old one (which would put the old artwork over the new globe).
+import shipBase from "@/public/hero-variation-smart/fx/ship-base.png";
+import shipShip from "@/public/hero-variation-smart/fx/ship-ship.png";
+import freightBase from "@/public/hero-variation-smart/fx/freight-base.png";
+import freightShip from "@/public/hero-variation-smart/fx/freight-ship.png";
+import freightTruck from "@/public/hero-variation-smart/fx/freight-truck.png";
+import freightPlane from "@/public/hero-variation-smart/fx/freight-plane.png";
+import returnBase from "@/public/hero-variation-smart/fx/return-base.png";
+import fulfilBase from "@/public/hero-variation-smart/fx/fulfil-base.png";
 
 // How long each slide shows before the banner moves on
 const SLIDE_MS = 15000;
@@ -25,6 +37,10 @@ const FADE_MS = 300;
 // (centre as a % of the picture's width/height, diameter as a % of its width).
 // fx: the animation layer over the artwork (see components/hero-art-fx.tsx).
 // Where it has vehicles of its own, graphic is the artwork with them cut out.
+// The middle of three of them is redrawn: a projector for the globe in
+// Freight (scripts/hero_projector.py), and a circuit board where Returns and
+// Fulfillment had a cog (scripts/hero_circuit_board.py).
+// The masks are fetched as they are, so they are named by their path
 const FX = "/hero-variation-smart/fx";
 
 // All the vehicles face down-left along the isometric axis, so they arrive
@@ -41,7 +57,7 @@ const shippingFx: ArtFx = {
   height: 1086,
   silhouette: `${FX}/ship-silhouette.webp`,
   sprites: [
-    { src: `${FX}/ship-ship.png`, x: 116, y: 300, w: 396, h: 280, motion: "sail", from: arriveFrom(7) },
+    { src: shipShip.src, x: 116, y: 300, w: 396, h: 280, motion: "sail", from: arriveFrom(7) },
   ],
   // The order on the phone goes out across the whole network
   lines: { mask: `${FX}/ship-lines.webp`, x: 890, y: 440, radius: 1000, tone: "light" },
@@ -55,18 +71,27 @@ const shippingFx: ArtFx = {
   ],
 };
 
+// Freight: a projector in the middle throws up the globe, and the vehicles
+// come in round it.
 const freightFx: ArtFx = {
   width: 1440,
   height: 1024,
   silhouette: `${FX}/freight-silhouette.webp`,
+  // Each vehicle turns round the projection on its way in, clear of it and of
+  // the others: the ship comes out from behind the globe and swings round the
+  // left of the projector, the truck comes down the right of it and round the
+  // front, and the plane banks in from the top right, wide of both. They
+  // arrive in that order, so no two are ever in the same place. The truck
+  // and plane start beyond the artwork's right edge.
+  cover: `${FX}/freight-cover.webp`,
   sprites: [
-    { src: `${FX}/freight-ship.png`, x: 80, y: 476, w: 528, h: 400, motion: "sail", from: arriveFrom(7) },
-    { src: `${FX}/freight-truck.png`, x: 536, y: 608, w: 272, h: 260, motion: "drive", from: arriveFrom(7), delay: 0.15 },
-    { src: `${FX}/freight-plane.png`, x: 828, y: 504, w: 540, h: 388, motion: "fly", from: arriveFrom(8, 4), delay: 0.3 },
+    { src: freightShip.src, x: 80, y: 476, w: 528, h: 400, motion: "sail", from: [46.3, -30.6], trip: 3.8, curve: [[176, -476], [225, -130]], emerge: [909, 770] },
+    { src: freightTruck.src, x: 536, y: 608, w: 272, h: 260, motion: "drive", from: arriveFrom(64), trip: 2.8, delay: 0.7, curve: [[670, -40], [216, -126]] },
+    { src: freightPlane.src, x: 828, y: 504, w: 540, h: 388, motion: "fly", from: [41.8, -54], trip: 3, delay: 1.3, curve: [[462, -318], [204, -127]] },
   ],
-  // Radar sweeps out from the pin over the dots around it
-  lines: { mask: `${FX}/freight-lines.webp`, x: 905, y: 430, radius: 1150, tone: "light" },
-  rings: { shape: "ellipse", x: 893, y: 472, rx: 250, grow: 1.8, behind: [735, 40, 375, 520] },
+  // Radar sweeps out from the projector's lens over the dots around it
+  lines: { mask: `${FX}/freight-lines.webp`, x: 909, y: 400, radius: 1150, tone: "light" },
+  rings: { shape: "ellipse", x: 909, y: 470, rx: 250, grow: 1.8, behind: [744, 60, 330, 500] },
   sparkles: [
     [280, 330, 0.9],
     [560, 170, 0.8],
@@ -77,14 +102,16 @@ const freightFx: ArtFx = {
   ],
 };
 
-// Returns and Fulfillment share a layout: four stations wired to a chip in
-// the middle, which sends signals out along the circuit traces
+// Returns and Fulfillment share a layout: four stations wired to a circuit
+// board in the middle, which sends signals out along the circuit traces (and
+// its own). The board lies flat, so the rings only pass behind the globe
+// that floats over it.
 const hubFx = (key: string, chipX: number): ArtFx => ({
   width: 1440,
   height: 1024,
   silhouette: `${FX}/${key}-silhouette.webp`,
   lines: { mask: `${FX}/${key}-lines.webp`, x: chipX, y: 570, radius: 520, tone: "electric" },
-  rings: { shape: "diamond", x: chipX, y: 570, rx: 188, grow: 2.2, behind: [chipX - 155, 150, 310, 465] },
+  rings: { shape: "diamond", x: chipX, y: 570, rx: 188, grow: 2.2, behind: [chipX - 135, 150, 270, 290] },
   sparkles: [
     [700, 70, 0.9],
     [1395, 560, 0.8],
@@ -104,7 +131,7 @@ const slides = [
     description: "Fast, reliable shipping worldwide.",
     textColor: "text-white",
     label: "Shipping",
-    graphic: `${FX}/ship-base.png`,
+    graphic: shipBase.src,
     width: 1448,
     height: 1086,
     artInsetRight: 4.42,
@@ -118,11 +145,19 @@ const slides = [
     description: "Transparent global freight.",
     textColor: "text-white",
     label: "Freight",
-    graphic: `${FX}/freight-base.png`,
+    graphic: freightBase.src,
     width: 1440,
     height: 1024,
     artInsetRight: 5.21,
     fx: freightFx,
+    // Over the projector's lens (scripts/hero_projector.py has the same
+    // place, for the mask of what passes behind it)
+    globe: {
+      x: 63.13,
+      y: 21,
+      size: 19.44,
+      fallback: "/hero-variation-smart/return-it-smart-globe.png",
+    },
   },
   {
     title: "Smart",
@@ -132,11 +167,11 @@ const slides = [
     description: "Hassle-free returns.",
     textColor: "text-white",
     label: "Returns",
-    graphic: "/hero-variation-smart/return-it-smart-no-globe.png",
+    graphic: returnBase.src,
     width: 1440,
     height: 1024,
     artInsetRight: 7.22,
-    fx: hubFx("return", 740),
+    fx: hubFx("return", 743),
     globe: {
       x: 51.77,
       y: 27.96,
@@ -151,11 +186,11 @@ const slides = [
     description: "Complete fulfillment solutions.",
     textColor: "text-white",
     label: "Fulfillment",
-    graphic: "/hero-variation-smart/fulfil-it-smart-no-globe.png",
+    graphic: fulfilBase.src,
     width: 1440,
     height: 1024,
     artInsetRight: 8.06,
-    fx: hubFx("fulfil", 729),
+    fx: hubFx("fulfil", 731),
     globe: {
       x: 50.87,
       y: 28.06,
