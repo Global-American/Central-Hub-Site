@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useId } from "react";
 import type { CSSProperties } from "react";
+import { HeroArtDelivery, type ArtLoop } from "@/components/hero-art-loop";
 
 // Animation layer drawn over a hero slide's artwork. Every coordinate here is
 // in the artwork's own pixels (its PNG size), so the effects stay pinned to
@@ -14,7 +15,6 @@ import type { CSSProperties } from "react";
 //   *-lines.webp     only the artwork's network / circuit lines
 //   *-silhouette     the artwork's outline, for the gloss sweep
 //   *-cover.webp     everything but the piece a vehicle arrives from behind
-//                    or passes behind
 
 /** A piece of the artwork that moves on its own */
 export type ArtSprite = {
@@ -43,19 +43,10 @@ export type ArtSprite = {
       reaches the first x, all there by the second (artwork pixels, heading
       left) */
   emerge?: [number, number];
-  /** It comes in from far off (a curved trip only): this many times its size
-      at the start (0.2 is a fifth), growing as it nears its place, most of
-      all at the end */
+  /** It comes in from far off (a trip with a `curve` only): this many times
+      its size at the start (0.2 is a fifth), staying small for most of the
+      way and growing as it comes in to its place */
   far?: number;
-  /** It faces the way it is going (a curved trip only): mirrored while it
-      heads the other way across the picture from the way it finally faces,
-      swinging round as it turns back */
-  turns?: boolean;
-  /** It passes behind the artwork's `cover` on its way (a curved trip only):
-      for this share of the trip's time (0 to 1) it is drawn behind the cover
-      and under the other vehicles, and as usual after that. Pick a moment
-      when it is clear of the cover and inside the picture. */
-  behind?: number;
 };
 
 export type ArtFx = {
@@ -93,24 +84,9 @@ export type ArtFx = {
   };
   /** Twinkles: x, y, size (1 = 2.2% of the artwork's width) */
   sparkles?: [number, number, number][];
-  /** A beam of light that goes round the artwork's stations in turn, to show
-      the order the work is done in. It runs on a ring on the ground, under
-      the artwork (so it leaves from under one station and comes in under the
-      next), and each station lights up as the beam reaches it: see
-      HeroArtUnder. */
-  loop?: {
-    /** The ring: a circle on the ground, by its middle and how far across it
-        reaches either side of that */
-    x: number;
-    y: number;
-    rx: number;
-    /** The four stations, first to last, going round clockwise: the middle
-        of the top of each one's pad. The ring should pass close to them. */
-    stops: [number, number][];
-    /** The pads, all alike: how far each reaches either side of its middle,
-        and how thick it is */
-    pad: [number, number];
-  };
+  /** A round of the artwork's stations, in the order the work is done in:
+      see hero-art-loop.tsx */
+  loop?: ArtLoop;
 };
 
 // Height of a circle on the artwork's isometric ground plane, as a share of its width
@@ -130,8 +106,7 @@ const mask = (src: string): CSSProperties => ({
 // A curved trip, as keyframes. The vehicle keeps to the Bezier curve, quick at
 // first and slowing all the way in, and leans into the bends (it turns a
 // little towards where it is going, as far as a flat picture of it can).
-// One that comes from far off grows on the way, and one that turns is
-// mirrored while it heads the other way across the picture.
+// One that comes from far off grows on the way.
 // Only + - * / and square roots, so the server and every browser write the
 // very same text.
 const TRIP_STEPS = 36;
@@ -173,173 +148,18 @@ function tripKeyframes(s: ArtSprite, W: number): string {
     const t = (i - 1 + (want - along[i - 1]) / (along[i] - along[i - 1] || 1)) / N;
     const [x, y] = at(t);
     const [hx, hy] = heading(t);
-    // Which way it faces: 1 as it is drawn, -1 mirrored, narrowing to nearly
-    // edge on (never quite, or it would vanish) as it swings from heading
-    // one way across to the other
-    const across = Math.max(-1, Math.min(1, (home[0] < 0 ? -hx : hx) / 0.35));
-    const face = !s.turns ? 1 : across < 0 ? Math.min(-0.14, across) : Math.max(0.14, across);
-    const ahead = face < 0 ? [-home[0], home[1]] : home;
-    const lean = TRIP_LEAN * (ahead[0] * hy - ahead[1] * hx) * (face < 0 ? -face : face);
-    const size = s.far ? s.far + (1 - s.far) * pace * pace * pace : 1;
+    const lean = TRIP_LEAN * (home[0] * hy - home[1] * hx);
+    const late = pace * pace * pace; // most of the growing comes at the end
+    const size = s.far ? s.far + (1 - s.far) * late * late : 1;
     frames.push(
       `${((100 * step) / TRIP_STEPS).toFixed(2)}%{opacity:${Math.min(1, time / 0.12).toFixed(2)};` +
         `transform:translate(${((100 * x) / W).toFixed(2)}cqw,${((100 * y) / W).toFixed(2)}cqw) ` +
         `rotate(${lean.toFixed(2)}deg)` +
-        (s.far || s.turns ? ` scale(${(face * size).toFixed(3)},${size.toFixed(3)})` : "") +
+        (s.far ? ` scale(${size.toFixed(3)})` : "") +
         "}"
     );
   }
   return `@keyframes ${tripName(s)}{${frames.join("")}}`;
-}
-
-// The beam: a comet with a tail, made of dashes drawn over one another with
-// their heads together. Each is [length, width, opacity] in artwork pixels;
-// the last is the bright bead at its head.
-const BEAM: [number, number, number][] = [
-  [320, 6, 0.26],
-  [180, 8, 0.55],
-  [72, 10, 1],
-  [1, 19, 1],
-];
-const BEAM_LONGEST = BEAM[0][0];
-// The bead starts this far back from the start of its leg, to be out of
-// sight under the pad it leaves
-const BEAM_TUCK = 20;
-// Seconds from one station to the next (a short stop, then the trip)
-const LOOP_STEP = 2.2;
-
-/** The outline of a pad: a diamond with its corners rounded off */
-function padOutline(x: number, y: number, rx: number, ry: number): string {
-  const corners = [
-    [x - rx, y],
-    [x, y - ry],
-    [x + rx, y],
-    [x, y + ry],
-  ];
-  const cut = 0.24;
-  const part = (from: number[], to: number[]) =>
-    `${(from[0] + (to[0] - from[0]) * cut).toFixed(1)} ${(from[1] + (to[1] - from[1]) * cut).toFixed(1)}`;
-  return (
-    corners
-      .map((c, i) => {
-        const before = corners[(i + 3) % 4];
-        const after = corners[(i + 1) % 4];
-        return `${i ? "L" : "M"}${part(c, before)}Q${c[0]} ${c[1]} ${part(c, after)}`;
-      })
-      .join("") + "Z"
-  );
-}
-
-/** The beam's trips round its ring, station to station: each as an SVG arc
-    and its length. Where a station is on the ring (straight out from the
-    ring's middle through it) and how long an arc is are worked out with
-    nothing but + - * / and square roots, like the vehicles' trips. */
-function loopLegs(loop: NonNullable<ArtFx["loop"]>) {
-  const ry = loop.rx * ISO;
-  // Each station as a point on a circle of radius 1
-  const spots = loop.stops.map(([px, py]) => {
-    const u = (px - loop.x) / loop.rx;
-    const v = (py - loop.y) / ry;
-    const far = Math.sqrt(u * u + v * v);
-    return [u / far, v / far];
-  });
-  const place = ([u, v]: number[]) =>
-    `${(loop.x + u * loop.rx).toFixed(1)} ${(loop.y + v * ry).toFixed(1)}`;
-  return spots.map((from, i) => {
-    const to = spots[(i + 1) % spots.length];
-    // The arc between them, halved and halved again, measured along the
-    // straight steps
-    let points = [from, to];
-    for (let halving = 0; halving < 5; halving++) {
-      const finer = [points[0]];
-      for (let k = 1; k < points.length; k++) {
-        const [a, b] = [points[k - 1], points[k]];
-        const far = Math.sqrt((a[0] + b[0]) ** 2 + (a[1] + b[1]) ** 2);
-        finer.push([(a[0] + b[0]) / far, (a[1] + b[1]) / far], b);
-      }
-      points = finer;
-    }
-    let length = 0;
-    for (let k = 1; k < points.length; k++) {
-      const dx = (points[k][0] - points[k - 1][0]) * loop.rx;
-      const dy = (points[k][1] - points[k - 1][1]) * ry;
-      length += Math.sqrt(dx * dx + dy * dy);
-    }
-    return {
-      d: `M${place(from)}A${loop.rx} ${ry.toFixed(1)} 0 0 1 ${place(to)}`,
-      length: Math.round(length),
-    };
-  });
-}
-
-/** The part of a slide's animation that lies on the ground under its
-    artwork. It goes before the picture (and before the globe, which floats
-    over the ground), so the picture's own stations hide it where they stand. */
-export function HeroArtUnder({ fx }: { fx: ArtFx }) {
-  const loop = fx.loop;
-  if (!loop) return null;
-  const { width: W, height: H } = fx;
-  const [padRx, padDeep] = loop.pad;
-  const padRy = padRx * ISO;
-  const legs = loopLegs(loop);
-  const round = { "--round": `${loop.stops.length * LOOP_STEP}s` } as CSSProperties;
-  const frame = {
-    viewBox: `0 0 ${W} ${H}`,
-    preserveAspectRatio: "none",
-    style: round,
-  };
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-      {/* Light spilling out from under each pad as the beam comes in */}
-      <svg className="hero-docks absolute inset-0 h-full w-full" {...frame}>
-        {loop.stops.map(([x, y], i) => (
-          <path
-            key={i}
-            className="hero-dock"
-            style={{ animationDelay: `${i * LOOP_STEP}s` }}
-            d={padOutline(x, y + padDeep / 2, padRx + 4, padRy + padDeep / 2 + 4)}
-          />
-        ))}
-      </svg>
-      <svg className="hero-loop absolute inset-0 h-full w-full" {...frame}>
-        <ellipse className="hero-loop-track" cx={loop.x} cy={loop.y} rx={loop.rx} ry={loop.rx * ISO} />
-        {/* ... and a ripple going out from it over the ground */}
-        {loop.stops.map(([x, y], i) => (
-          <path
-            key={i}
-            className="hero-dock-ring"
-            style={{
-              transformOrigin: `${x}px ${y + padDeep / 2}px`,
-              animationDelay: `${i * LOOP_STEP}s`,
-            }}
-            d={padOutline(x, y + padDeep / 2, padRx, padRy + padDeep / 2)}
-          />
-        ))}
-        {/* The beam itself: one leg at a time, each in its quarter of a round */}
-        {legs.map((leg, i) => (
-          <g key={i} className="hero-beam">
-            {BEAM.map(([length, width, opacity], k) => (
-              <path
-                key={k}
-                d={leg.d}
-                pathLength={leg.length}
-                strokeWidth={width}
-                strokeOpacity={opacity}
-                strokeDasharray={`${length} ${leg.length + 2 * BEAM_LONGEST + 100}`}
-                style={
-                  {
-                    "--from": length + BEAM_TUCK,
-                    "--to": length - leg.length - BEAM_LONGEST - BEAM_TUCK,
-                    animationDelay: `${i * LOOP_STEP}s`,
-                  } as CSSProperties
-                }
-              />
-            ))}
-          </g>
-        ))}
-      </svg>
-    </div>
-  );
 }
 
 // A vehicle behind the cover: hidden where the cover's piece of the artwork
@@ -369,11 +189,6 @@ export default function HeroArtFx({
   const { width: W, height: H } = fx;
   const maskId = useId();
   const curved = fx.sprites?.filter((s) => s.trip && s.curve) ?? [];
-  // Vehicles that pass behind the cover on their way, and when each stops
-  // being drawn behind it
-  const passes = (s: ArtSprite) => Boolean(s.behind && s.trip && s.curve && fx.cover);
-  const swap = (s: ArtSprite) =>
-    ({ "--swap": `${((s.delay ?? 0) + s.behind! * s.trip!).toFixed(2)}s` }) as CSSProperties;
   // When the last vehicle on a trip is in its place. The gloss is cut to the
   // finished picture, so until then it would light vehicles that aren't there.
   const settled = Math.max(
@@ -505,27 +320,8 @@ export default function HeroArtFx({
           }}
         />
       )}
-      {/* A vehicle passing behind the cover is drawn twice: here, cut to the
-          cover and under the others, until it is clear of it, and with the
-          rest from then on. Both are in the same place when one takes over. */}
-      {fx.sprites?.filter(passes).map((s) => (
-        <div
-          key={s.src}
-          className="hero-sprite-behind absolute inset-0"
-          style={{ ...mask(fx.cover!), ...swap(s) }}
-        >
-          {vehicle(s)}
-        </div>
-      ))}
       {fx.sprites?.map((s) => {
         const sprite = vehicle(s);
-        if (passes(s)) {
-          return (
-            <div key={s.src} className="hero-sprite-front absolute inset-0" style={swap(s)}>
-              {sprite}
-            </div>
-          );
-        }
         // The mask stays put on the artwork while the vehicle moves under it
         return s.emerge && fx.cover ? (
           <div
@@ -539,6 +335,9 @@ export default function HeroArtFx({
           sprite
         );
       })}
+
+      {/* The truck and the phone of the round's delivery */}
+      {fx.loop && <HeroArtDelivery loop={fx.loop} width={W} height={H} />}
 
       {/* Gloss sweeping across the whole picture */}
       <div

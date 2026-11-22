@@ -12,6 +12,7 @@ import { brands } from "@/lib/brands";
 import ItMark from "@/components/icons/it-mark";
 import HangingLightBulb from "@/components/hanging-light-bulb";
 import DeliveryArt from "@/components/delivery-art";
+import FreightArt from "@/components/freight-art";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -135,7 +136,7 @@ export default function OurBrandsSection() {
             variant="outline"
             className="title-flow text-xs mb-4"
           >
-            Our Brands
+            Our Services
           </Badge>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Smart Logistics <span className="text-accent">Platforms</span>
@@ -206,12 +207,20 @@ export default function OurBrandsSection() {
                   </div>
                 </div>
 
-                {/* Image half. Ship itSmart's picture is animated; it fits
-                    itself in this box the way object-contain does for the
-                    others, which is why the box is a size container. */}
+                {/* Image half. Ship itSmart's and Freight itSmart's pictures
+                    are animated; they fit themselves in this box the way
+                    object-contain does for the others, which is why the box
+                    is a size container. */}
                 <div className="hidden h-full items-center justify-center p-4 [container-type:size] lg:flex lg:p-6 xl:p-8">
                   {brand.art === "delivery" ? (
                     <DeliveryArt
+                      alt={`${brand.name} illustration`}
+                      sizes="(min-width: 1024px) 55vw, 1px"
+                      className="-translate-x-6 scale-[1.2] xl:-translate-x-8"
+                      baseClassName="drop-shadow-2xl"
+                    />
+                  ) : brand.art === "freight" ? (
+                    <FreightArt
                       alt={`${brand.name} illustration`}
                       sizes="(min-width: 1024px) 55vw, 1px"
                       className="-translate-x-6 scale-[1.2] xl:-translate-x-8"

@@ -136,16 +136,17 @@ def pad_edges(a, box):
     return far, near
 
 
-def clear(a, gone):
-    """Take what is in gone off the pad: the top where it stood, with the far
-    edge it hid drawn back in, and nothing beyond that edge.
+def clear(a, gone, pad=PAD):
+    """Take what is in gone off the pad (in the box `pad`): the top where it
+    stood, with the far edge it hid drawn back in, and nothing beyond that
+    edge.
 
     The pad's top is the same shape upside down, so the far edge is its near
     edge flipped: far + near comes to the same sum in every column. That sum
     drifts by a pixel or two across the pad, so it is taken from the columns
     in view on either side of the gap and run between them."""
-    x0, y0, x1, y1 = PAD
-    far, near = pad_edges(a, PAD)
+    x0, y0, x1, y1 = pad
+    far, near = pad_edges(a, pad)
     cols = np.where(gone.any(axis=0))[0]
     left, right = cols.min() - x0, cols.max() - x0
     total = far + near
@@ -286,9 +287,11 @@ def paste(layer, colour, mask):
     layer.paste(Image.new("RGBA", layer.size, colour + (255,)), (0, 0), mask)
 
 
-def draw_phone(img, art):
+def draw_phone(img, art, words=WORDS, sign=None):
     """The phone, standing where the artwork's own stood and shaped and
-    coloured like it, with the order on its screen."""
+    coloured like it, with the order on its screen (or other `words`, under
+    another `sign` than the trolley: a mask drawn on the face it is given.
+    hero_delivery.py draws the phone saying PARCEL DELIVERED with them)."""
     f = Face(PHONE_AREA, PHONE, DROP)
     case = rounded(0, 0, WIDE, HIGH, 12)
     # Its body: the face's shape, swept back to the phone's back. It is lit
@@ -315,8 +318,8 @@ def draw_phone(img, art):
         paste(screen, colour, f.shape([(0, -5), (WIDE, -5), (WIDE, high[1]), (0, high[0])]))
     # ... and on it, under where the "it" goes, the trolley and the words
     middle, room = (2.8 + 95.6) / 2, 84
-    paste(screen, ORANGE, trolley(f, *TROLLEY))
-    for text, foot in WORDS:
+    paste(screen, ORANGE, sign(f) if sign else trolley(f, *TROLLEY))
+    for text, foot in words:
         paste(screen, ORANGE, lettering(f, text, middle, foot, CAPS, room))
     layer.paste(screen, (0, 0), f.shape(rounded(2.8, 3.3, 95.6, HIGH - 2.5, 9.5)))
     # (scaled down by plain averaging: flat colours meet in clean edges)
@@ -422,13 +425,16 @@ def the_man(card):
     return pair & ((xs < 1017.5) | ((xs < reach) & his))
 
 
-def swap_worker(a, card):
-    """The artwork with the order placed: see the top of this file."""
+def swap_worker(a, card, phone=True):
+    """The artwork with the order placed: see the top of this file. Without
+    `phone`, the phone is left out (it is then a picture of its own, which
+    turns over: see hero_delivery.py)."""
     out = clear(a, grow(standing_on(a, STATION, OLD), 2))
     out[grow(standing_on(a, STATION, BOXES), 2)] = TOP + (255,)
     img = Image.fromarray(out)
     # Farthest first
-    draw_phone(img, a)
+    if phone:
+        draw_phone(img, a)
     draw_badge(img)
     tap = (PHONE[0] + TAP[0], PHONE[1] + TAP[0] * DROP - TAP[1])
     box = stand(img, *lift(card, the_man(card)), MAN_SCALE, HAND, tap)

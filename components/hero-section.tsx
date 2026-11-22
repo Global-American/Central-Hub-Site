@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Truck } from "lucide-react";
 import HeroGlobe from "@/components/hero-globe";
-import HeroArtFx, { HeroArtUnder, type ArtFx } from "@/components/hero-art-fx";
+import HeroArtFx, { type ArtFx } from "@/components/hero-art-fx";
+import { HeroArtUnder } from "@/components/hero-art-loop";
 // The pictures scripts/build-hero-fx.py writes are imported, not named by
 // their path: an imported picture's address has a hash of its contents in
 // it, so one that has been redrawn can never come back out of the image
@@ -16,9 +17,17 @@ import shipShip from "@/public/hero-variation-smart/fx/ship-ship.png";
 import freightBase from "@/public/hero-variation-smart/fx/freight-base.png";
 import freightShip from "@/public/hero-variation-smart/fx/freight-ship.png";
 import freightTruck from "@/public/hero-variation-smart/fx/freight-truck.png";
-import freightPlane from "@/public/hero-variation-smart/fx/freight-plane.png";
+// The plane as it parks on the Freight slide, facing the other way from the
+// artwork's (scripts/build-hero-plane.py)
+import freightPlane from "@/public/hero-variation-smart/fx/freight-plane-right.png";
 import returnBase from "@/public/hero-variation-smart/fx/return-base.png";
 import fulfilBase from "@/public/hero-variation-smart/fx/fulfil-base.png";
+import fulfilTruck from "@/public/hero-variation-smart/fx/fulfil-truck.png";
+import fulfilTrolley from "@/public/hero-variation-smart/fx/fulfil-trolley.png";
+import fulfilPhoneOrder from "@/public/hero-variation-smart/fx/fulfil-phone-order.png";
+import fulfilPhoneDelivered from "@/public/hero-variation-smart/fx/fulfil-phone-delivered.png";
+import fulfilHand from "@/public/hero-variation-smart/fx/fulfil-hand.png";
+import fulfilParcel from "@/public/hero-variation-smart/fx/fulfil-parcel.png";
 
 // How long each slide shows before the banner moves on
 const SLIDE_MS = 15000;
@@ -76,21 +85,23 @@ const shippingFx: ArtFx = {
 const freightFx: ArtFx = {
   width: 1440,
   height: 1024,
-  silhouette: `${FX}/freight-silhouette.webp`,
-  // Each vehicle turns round the projection on its way in, clear of it and of
-  // the others: the ship comes out from behind the globe and swings round the
-  // left of the projector, the truck comes down the right of it and round the
-  // front, and the plane flies in from far off in the top left, passes
-  // behind the globe, turns round to the right of it and comes down into its
-  // place. They arrive in that order, so no two are ever in the same place.
-  // The truck starts beyond the artwork's right edge. The plane is drawn
-  // behind the globe (and under the ship) for the first 47% of its trip, by
-  // when it is clear of the projection on the right and still in the picture.
+  // The outline with the plane the way it parks here (build-hero-plane.py)
+  silhouette: `${FX}/freight-silhouette-right.webp`,
+  // The ship and the truck turn round the projection on their way in, clear
+  // of it and of each other: the ship comes out from behind the globe and
+  // swings round the left of the projector, and the truck comes down the
+  // right of it (from beyond the artwork's right edge) and round the front.
+  // The plane points down and to the right here, the opposite way from the
+  // artwork, and flies in the way it points: a straight line from far off in
+  // the top left to its place, well below the globe. It parks lower than the
+  // artwork has it so that line passes between the projector and the truck,
+  // sets off once the ship is out of its way, and arrives last, growing as
+  // it comes.
   cover: `${FX}/freight-cover.webp`,
   sprites: [
     { src: freightShip.src, x: 80, y: 476, w: 528, h: 400, motion: "sail", from: [46.3, -30.6], trip: 3.8, curve: [[176, -476], [225, -130]], emerge: [909, 770] },
     { src: freightTruck.src, x: 536, y: 608, w: 272, h: 260, motion: "drive", from: arriveFrom(64), trip: 2.8, delay: 0.7, curve: [[670, -40], [216, -126]] },
-    { src: freightPlane.src, x: 828, y: 504, w: 540, h: 388, motion: "fly", from: [-67.9, -41.9], trip: 5.2, delay: 0.8, curve: [[640, -500], [200, -117]], far: 0.2, turns: true, behind: 0.47 },
+    { src: freightPlane.src, x: 842, y: 572, w: 540, h: 388, motion: "fly", from: [-72.5, -42.43], trip: 4.6, delay: 1.9, curve: [[-696, -407], [-348, -204]], far: 0.15 },
   ],
   // Radar sweeps out from the projector's lens over the dots around it
   lines: { mask: `${FX}/freight-lines.webp`, x: 909, y: 400, radius: 1150, tone: "light" },
@@ -125,13 +136,17 @@ const hubFx = (key: string, chipX: number): ArtFx => ({
   ],
 });
 
-// Fulfillment's four stations are the steps an order goes through, so a beam
-// of light goes round them in that order, clockwise: the order is placed on
-// the phone (bottom right), packed at the bench (bottom left), taken through
-// the warehouse (top left) and sent out on the truck (top right). Then it
-// comes back round for the next order. The ring it runs on is wide enough
-// to go round the outside of the sign over the bench, so the beam is in
-// view all the way up the left.
+// Fulfillment's four stations are the steps an order goes through, and the
+// picture goes round them in that order, clockwise (hero-art-loop.tsx): the
+// order is placed on the phone (bottom right) and goes as a beam of light to
+// the packing bench (bottom left), which sends it on as a parcel through the
+// warehouse (top left) to the truck (top right). The truck drives it down
+// to the phone and in at the back of it, the phone turns over to say PARCEL
+// DELIVERED, and the next order starts. The ring the round runs on is wide enough to go round the outside
+// of the sign over the bench, so it is in view all the way up the left.
+// The truck, the trolley in front of it, the phone, the man's hand in front
+// of that and the parcel are pictures of their own (scripts/hero_delivery.py): build-hero-fx.py prints
+// their boxes.
 const fulfilFx: ArtFx = {
   ...hubFx("fulfil", 731),
   loop: {
@@ -145,6 +160,17 @@ const fulfilFx: ArtFx = {
       [1143.5, 280.5],
     ],
     pad: [180, 18],
+    parcel: { src: fulfilParcel.src, w: 46, h: 52, foot: [23, 38], from: 1 },
+    delivery: {
+      truck: { src: fulfilTruck.src, x: 1071, y: 96, w: 245, h: 230 },
+      front: { src: fulfilTrolley.src, x: 1018, y: 203, w: 137, h: 130 },
+      // The middle of the truck ends up behind the middle of the phone
+      to: [57, 452],
+      // (the phone turns about the middle of its face, not of its picture:
+      // the picture has the thickness of its case down its right side)
+      phone: { src: fulfilPhoneOrder.src, delivered: fulfilPhoneDelivered.src, x: 1188, y: 524, w: 124, h: 278, axis: 0.452 },
+      hand: { src: fulfilHand.src, x: 1193, y: 670, w: 23, h: 40 },
+    },
   },
 };
 
@@ -230,13 +256,8 @@ export default function HeroSection() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [titleAnimation, setTitleAnimation] = useState("animate-in");
   const pendingTransition = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const indicatorsRef = useRef<HTMLDivElement>(null);
-  const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const truckRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const artTiltRef = useRef<HTMLDivElement>(null);
-  // Centre x of each slide dot, relative to the indicator row
-  const [dotCenters, setDotCenters] = useState<number[]>([]);
 
   // Fade out, then swap the slide index and fade back in. Starting a new
   // transition cancels a pending one so a timer tick and a manual click can
@@ -335,51 +356,6 @@ export default function HeroSection() {
       cancelAnimationFrame(frame);
     };
   }, []);
-
-  // Measure the slide dots so the truck's road runs between them
-  useLayoutEffect(() => {
-    const row = indicatorsRef.current;
-    if (!row) return;
-    const measure = () => {
-      const left = row.getBoundingClientRect().left;
-      setDotCenters(
-        dotRefs.current.map((dot) => {
-          const r = dot?.getBoundingClientRect();
-          return r ? r.left + r.width / 2 - left : 0;
-        })
-      );
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(row);
-    return () => ro.disconnect();
-  }, []);
-
-  // Drive the truck from the current dot to the next one over the slide's
-  // lifetime, so it pulls in just as the banner moves on. Each leg runs dot
-  // centre to dot centre (the dots cover it at the stops) and lasts until the
-  // next slide is actually swapped in, after the fade, so one leg flows
-  // straight into the next. After the last slide it turns round and heads
-  // back to the first.
-  const nextIndex = (currentSlideIndex + 1) % slides.length;
-  const headingBack = nextIndex < currentSlideIndex;
-  useEffect(() => {
-    const truck = truckRef.current;
-    if (!truck || dotCenters.length !== slides.length) return;
-    const from = dotCenters[currentSlideIndex];
-    const to = dotCenters[nextIndex];
-    const at = (x: number) => `translateX(${x}px) translateX(-50%)`;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      truck.style.transform = at(from);
-      return;
-    }
-    const drive = truck.animate([{ transform: at(from) }, { transform: at(to) }], {
-      duration: SLIDE_MS + FADE_MS,
-      easing: "linear",
-      fill: "forwards",
-    });
-    return () => drive.cancel();
-  }, [currentSlideIndex, nextIndex, headingBack, dotCenters]);
 
   return (
     <section
@@ -499,7 +475,13 @@ export default function HeroSection() {
                           : "opacity-0 pointer-events-none"
                       }`}
                     >
-                      {slide.fx && <HeroArtUnder fx={slide.fx} />}
+                      {slide.fx?.loop && (
+                        <HeroArtUnder
+                          loop={slide.fx.loop}
+                          width={slide.fx.width}
+                          height={slide.fx.height}
+                        />
+                      )}
                       {slide.globe && (
                         <HeroGlobe
                           {...slide.globe}
@@ -530,67 +512,72 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Slide indicators */}
-      <div
-        ref={indicatorsRef}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center gap-6"
-      >
-        {/* Dotted road joining the dots, and the truck that drives it to
-            show when the next slide is coming */}
-        {dotCenters.length === slides.length && (
-          <>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute top-[5px] h-0 border-t-2 border-dotted border-white/40"
-              style={{
-                left: dotCenters[0],
-                width: dotCenters[dotCenters.length - 1] - dotCenters[0],
-              }}
-            />
-            <div
-              ref={truckRef}
-              aria-hidden="true"
-              className="pointer-events-none absolute left-0 -top-[3px]"
-            >
-              <Truck
-                className={`h-[18px] w-[18px] text-accent drop-shadow ${headingBack ? "-scale-x-100" : ""}`}
-                fill="white"
-                strokeWidth={2.25}
-              />
-            </div>
-          </>
-        )}
-        {slides.map((slide, index) => (
-          <div key={index} className="relative flex flex-col items-center space-y-2">
+      {/* Slide indicators: a glass bar with a segment for each slide. The
+          current slide's segment fills up over the time the slide is shown,
+          with a truck at the front of it, so the bar also says when the
+          banner will move on; the slides before it stay full. (The fill is
+          keyed by the slide, so it starts again from empty on every change.) */}
+      <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-stretch gap-1 rounded-2xl border border-white/20 bg-gradient-to-br from-[#3f8ade]/80 to-[#1c62b8]/80 p-1.5 shadow-[0_10px_40px_-12px_rgb(8_30_66/0.6)] backdrop-blur-md sm:bottom-7 sm:gap-1.5 sm:p-2">
+        {slides.map((slide, index) => {
+          const active = index === currentSlideIndex;
+          const slideMs = { "--slide-ms": `${SLIDE_MS + FADE_MS}ms` } as React.CSSProperties;
+          return (
             <button
-              ref={(el) => {
-                dotRefs.current[index] = el;
-              }}
+              key={index}
               onClick={() => goToSlide(index)}
-              className="relative group"
               aria-label={`Go to ${slide.label} slide`}
-            >
-              <div
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentSlideIndex
-                    ? "bg-accent shadow-lg shadow-accent/30 scale-110"
-                    : "bg-white/60 group-hover:bg-white/80 group-hover:scale-105"
-                }`}
-              />
-            </button>
-
-            {/* Slide label */}
-            <span
-              className={`text-xs font-medium transition-all duration-300 ${
-                index === currentSlideIndex
-                  ? "text-accent font-semibold"
-                  : "text-white/70"
+              aria-current={active ? "true" : undefined}
+              className={`group relative w-[4.75rem] rounded-xl px-2.5 pt-2 pb-2.5 text-left outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-white/70 sm:w-[7.25rem] sm:px-3 ${
+                active ? "bg-white/15" : "hover:bg-white/10"
               }`}
             >
-              {slide.label}
-            </span>
-          </div>
-        ))}
+              <span className="flex items-baseline gap-1.5">
+                <span
+                  className={`hidden text-[10px] font-semibold tabular-nums transition-colors duration-300 sm:inline ${
+                    active ? "text-accent" : "text-white/40"
+                  }`}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span
+                  className={`text-[11px] font-medium tracking-wide transition-colors duration-300 sm:text-[13px] ${
+                    active ? "text-white" : "text-white/65 group-hover:text-white/90"
+                  }`}
+                >
+                  {slide.label}
+                </span>
+              </span>
+
+              <span className="relative mt-2 block h-[3px]">
+                <span className="absolute inset-0 overflow-hidden rounded-full bg-white/20">
+                  {index <= currentSlideIndex && (
+                    <span
+                      key={active ? `run-${currentSlideIndex}` : "done"}
+                      className={`absolute inset-0 rounded-full bg-gradient-to-r from-accent to-amber-300 ${
+                        active ? "hero-progress" : ""
+                      }`}
+                      style={slideMs}
+                    />
+                  )}
+                </span>
+                {active && (
+                  <span
+                    key={currentSlideIndex}
+                    aria-hidden="true"
+                    className="hero-progress pointer-events-none absolute inset-0"
+                    style={slideMs}
+                  >
+                    <Truck
+                      className="absolute right-0 top-1/2 h-4 w-4 -translate-y-[62%] translate-x-1/2 text-accent drop-shadow-[0_1px_2px_rgb(0_0_0/0.35)]"
+                      fill="white"
+                      strokeWidth={2.25}
+                    />
+                  </span>
+                )}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

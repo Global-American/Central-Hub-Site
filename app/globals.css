@@ -898,36 +898,6 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   animation: hero-fly 6.5s ease-in-out -1.5s infinite;
 }
 
-/* A vehicle that passes behind the cover on its way (ArtSprite.behind) is
-   drawn twice: cut to the cover and under the other vehicles until --swap,
-   and with the rest from then on. One takes over from the other in an
-   instant, both in the same place and clear of the cover. */
-.hero-sprite-behind {
-  opacity: 0;
-}
-.hero-art[data-active="true"] .hero-sprite-behind {
-  animation: hero-swap-out 1ms linear var(--swap) both;
-}
-.hero-art[data-active="true"] .hero-sprite-front {
-  animation: hero-swap-in 1ms linear var(--swap) both;
-}
-@keyframes hero-swap-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-@keyframes hero-swap-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .hero-sprite-sail {
   transform-origin: 50% 85%;
 }
@@ -1060,11 +1030,12 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   }
 }
 
-/* The beam that goes round the stations, on the ground under the picture
-   (HeroArtUnder). A round is --round long and there are four stations, so
-   each leg has a quarter of it: a short stop under the pad it leaves, then
-   the trip to the next. Every leg and pad runs the same keyframes, started a
-   quarter of a round after the one before. */
+/* The round of the stations (components/hero-art-loop.tsx): a light, then a
+   parcel, going from one to the next on a ring on the ground under the
+   picture, and the truck that takes the parcel the last of the way to the
+   phone. A round is --round long. The moving parts' keyframes (hero-loop-*)
+   are written by the component, in % of a round; the pads' are here, and
+   each pad starts its own when the round reaches it (its delay). */
 .hero-docks {
   overflow: visible;
   filter: blur(1.1cqw);
@@ -1080,13 +1051,13 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   0% {
     opacity: 0;
   }
-  3% {
+  2.5% {
     opacity: 1;
   }
-  14% {
+  10% {
     opacity: 0.6;
   }
-  32%,
+  24%,
   100% {
     opacity: 0;
   }
@@ -1117,34 +1088,57 @@ select:not([multiple]):not([size]):not(.appearance-none) {
     transform: scale(1);
     opacity: 0;
   }
-  2% {
+  1.5% {
     opacity: 0.9;
   }
-  16%,
+  12%,
   100% {
     transform: scale(1.3);
     opacity: 0;
   }
 }
-.hero-beam path {
+/* The light on a leg, out of sight (before the start of its leg) until its
+   turn */
+.hero-loop-light path {
   fill: none;
   stroke: rgb(214 250 255);
   stroke-linecap: round;
   stroke-dashoffset: calc(var(--from) * 1px);
+  opacity: 0;
 }
-.hero-art[data-active="true"] .hero-beam path {
-  animation: hero-beam var(--round) linear infinite both;
+.hero-art[data-active="true"] .hero-loop-light path {
+  animation: hero-loop-light var(--round) linear infinite both;
 }
-@keyframes hero-beam {
-  0%,
-  5% {
-    stroke-dashoffset: calc(var(--from) * 1px);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.35, 1);
-  }
-  25%,
-  100% {
-    stroke-dashoffset: calc(var(--to) * 1px);
-  }
+.hero-parcel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  filter: drop-shadow(0 0 0.5cqw rgb(56 225 255 / 0.95));
+  will-change: transform;
+}
+.hero-art[data-active="true"] .hero-parcel {
+  animation: hero-loop-parcel var(--round) linear infinite both;
+}
+.hero-truck {
+  will-change: transform;
+}
+.hero-art[data-active="true"] .hero-truck {
+  animation: hero-loop-truck var(--round) linear infinite both;
+}
+/* The phone's two faces turn about the middle of its face (--axis) */
+.hero-phone-order,
+.hero-phone-delivered {
+  transform-origin: var(--axis) 50%;
+}
+.hero-phone-delivered {
+  transform: scaleX(0);
+}
+.hero-art[data-active="true"] .hero-phone-order {
+  animation: hero-loop-phone-order var(--round) linear infinite both;
+}
+.hero-art[data-active="true"] .hero-phone-delivered {
+  animation: hero-loop-phone-delivered var(--round) linear infinite both;
 }
 
 /* Gloss sweeping across the picture now and then */
@@ -1218,7 +1212,7 @@ select:not([multiple]):not([size]):not(.appearance-none) {
   .hero-wave,
   .hero-ring,
   .hero-sparkle,
-  .hero-beam,
+  .hero-loop-light,
   .hero-dock-ring {
     display: none;
   }
@@ -1553,5 +1547,189 @@ select:not([multiple]):not([size]):not(.appearance-none) {
 @media (prefers-reduced-motion: reduce) {
   .delivery-art * {
     animation: none !important;
+  }
+}
+
+/* Freight itSmart picture (components/freight-art.tsx). Like the Ship
+   itSmart one, it fits itself inside its parent (a size container) and is a
+   size container itself, so cqw below is 1% of the picture's width. */
+.freight-art {
+  position: relative;
+  width: min(100cqw, 100cqh * 1448 / 1086);
+  container-type: inline-size;
+}
+
+/* The bright quarter of the pad's band, in the blue of the truck's box with
+   the same streak of light across it: a quarter of a disc lying on the
+   ground (squashed to the pad's shape), turning about the pad's middle */
+.freight-quarter {
+  position: absolute;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  transform: scaleY(var(--squash));
+  background: conic-gradient(
+    from 90deg,
+    rgb(40 168 236) 0deg,
+    rgb(63 200 250) 22deg,
+    rgb(214 247 255) 44deg,
+    rgb(92 214 252) 60deg,
+    rgb(44 178 242) 90deg,
+    transparent 90deg 360deg
+  );
+}
+.freight-art[data-active="true"] .freight-quarter {
+  animation: delivery-turn 11s linear infinite;
+}
+
+/* The truck, the ship and the plane. Off screen they are taken away
+   (data-active="false"), and each comes in along its heading when the
+   picture comes on screen: there almost from the start, holding its speed
+   and then slowing into its place. */
+.freight-vehicle {
+  position: absolute;
+}
+.freight-art[data-active="false"] .freight-vehicle {
+  opacity: 0;
+}
+.freight-art[data-active="true"] .freight-vehicle {
+  animation: freight-arrive var(--trip) cubic-bezier(0.3, 0.4, 0.35, 1) var(--delay) both;
+}
+@keyframes freight-arrive {
+  from {
+    opacity: 0;
+    transform: translate(var(--from-x), var(--from-y));
+  }
+  14% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* On the way (on the inner box, as rotate / translate / scale, so that what
+   each does once it has arrived carries on underneath): the truck brakes
+   into its spot, nose down, and then its engine ticks over */
+.freight-vehicle[data-vehicle="truck"] .freight-vehicle-body {
+  transform-origin: 50% 96%;
+}
+.freight-art[data-active="true"] [data-vehicle="truck"] .freight-vehicle-body {
+  animation:
+    freight-idle 2.6s ease-in-out calc(var(--delay) + var(--trip)) infinite,
+    freight-brake var(--trip) ease-in-out var(--delay) both;
+}
+@keyframes freight-brake {
+  from,
+  64% {
+    rotate: 0deg;
+  }
+  86% {
+    rotate: -1.3deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+@keyframes freight-idle {
+  0%,
+  24%,
+  52%,
+  76%,
+  100% {
+    transform: translateY(0);
+  }
+  12% {
+    transform: translateY(-0.22cqw);
+  }
+  64% {
+    transform: translateY(-0.14cqw);
+  }
+}
+
+/* ... the ship rides the swell, all the way in and after */
+.freight-vehicle[data-vehicle="ship"] .freight-vehicle-body {
+  transform-origin: 50% 85%;
+}
+.freight-art[data-active="true"] [data-vehicle="ship"] .freight-vehicle-body {
+  animation: freight-swell 5.5s ease-in-out infinite;
+}
+@keyframes freight-swell {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0.6deg);
+  }
+  50% {
+    transform: translateY(-0.5cqw) rotate(-0.8deg);
+  }
+}
+
+/* ... and the plane comes down out of the distance, nose first, and levels
+   off as it lands on its pad. It is over the card's text when it sets off,
+   so it fades in more slowly than the other two. */
+.freight-vehicle[data-vehicle="plane"] .freight-vehicle-body {
+  transform-origin: 55% 60%;
+}
+.freight-art[data-active="true"] .freight-vehicle[data-vehicle="plane"] {
+  animation-name: freight-arrive-far;
+}
+@keyframes freight-arrive-far {
+  from {
+    opacity: 0;
+    transform: translate(var(--from-x), var(--from-y));
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.freight-art[data-active="true"] [data-vehicle="plane"] .freight-vehicle-body {
+  animation: freight-land var(--trip) cubic-bezier(0.3, 0.4, 0.3, 1) var(--delay) both;
+}
+@keyframes freight-land {
+  from {
+    translate: 0 -9cqw;
+    rotate: -7deg;
+    scale: 0.6;
+  }
+  72% {
+    rotate: 2deg;
+  }
+  to {
+    translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .freight-art * {
+    animation: none !important;
+  }
+  .freight-art[data-active="false"] .freight-vehicle {
+    opacity: 1;
+  }
+}
+
+/* Hero slide bar (components/hero-section.tsx): the current slide's segment
+   fills from the left over the time the slide is shown (--slide-ms). The
+   truck at the front of it rides a box that moves the same way. */
+.hero-progress {
+  animation: hero-progress var(--slide-ms) linear both;
+}
+@keyframes hero-progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
   }
 }

@@ -6,13 +6,23 @@ Writes public/hero-variation-smart/fx/ (see components/hero-art-fx.tsx):
                           page's globe in place of the ring and dotted globe
                           (hero_projector.py), for Returns and Fulfillment a
                           circuit board in place of the cog
-                          (hero_circuit_board.py); Fulfillment also gets the
+                          (hero_circuit_board.py). Returns' truck has the
+                          front of its box filled in (the artwork leaves it
+                          see-through over the cab). Fulfillment also gets the
                           man placing an order on a phone from its card
                           picture, in place of the worker and the tall phone
                           on its bottom right station (hero_order_phone.py),
                           and a packing station in place of the man at a
                           desk on its bottom left one
-                          (hero_packing_station.py)
+                          (hero_packing_station.py). Its truck and that
+                          phone are not in it: they are pictures of their
+                          own, below
+  fulfil-<part>.png       the moving parts of Fulfillment's delivery
+                          (hero_delivery.py): the truck, the trolley that
+                          stands in front of it, the phone saying ORDER
+                          PLACED (phone-order) and PARCEL DELIVERED
+                          (phone-delivered), the hand in front of it, and
+                          the parcel
   <slide>-<vehicle>.png   each vehicle on its own, cropped to its box
   <slide>-lines.webp      only the artwork's network / circuit lines, with a
                           soft halo, as a mask for the waves of light
@@ -35,6 +45,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 from hero_circuit_board import find_traces, swap_cog
+from hero_delivery import fill_box_front, take_delivery
 from hero_order_phone import swap_worker
 from hero_packing_station import swap_desk
 from hero_projector import swap_hub
@@ -42,6 +53,10 @@ from hero_projector import swap_hub
 ROOT = os.path.join(os.path.dirname(__file__), "..", "public", "hero-variation-smart")
 OUT = os.path.join(ROOT, "fx")
 CARDS = os.path.join(ROOT, "..", "card-thumbnails")
+
+
+# A point on the side of the Returns picture's truck
+RETURN_TRUCK = (280, 239)
 
 
 def load(name):
@@ -182,9 +197,18 @@ def main():
         shift = centre[0] - hubs["fulfil"][0]
         art = load(f"{key}-it-smart-no-globe.png")
         station = np.zeros(art.shape[:2], bool)
+        parts = {}
+        if key == "return":
+            # The front of its truck's box, which the artwork leaves open
+            art = fill_box_front(art, RETURN_TRUCK)
         if key == "fulfil":
-            card = Image.open(os.path.join(CARDS, "fulfill-itsmart.png")).convert("RGBA")
-            art, station = swap_desk(swap_worker(art, np.array(card)))
+            card = np.array(Image.open(os.path.join(CARDS, "fulfill-itsmart.png")).convert("RGBA"))
+            # Its truck and its phone are pictures of their own, for the
+            # delivery (hero_delivery.py): the artwork is left without them
+            bare, parts = take_delivery(
+                swap_worker(art, card, phone=False), art, swap_worker(art, card)
+            )
+            art, station = swap_desk(bare)
         a, board = swap_cog(
             art,
             centre,
@@ -192,7 +216,13 @@ def main():
             np.roll(keep, shift, 1),
         )
         Image.fromarray(a).save(os.path.join(OUT, f"{key}-base.png"), optimize=True)
-        save_silhouette(a, f"{key}-silhouette.webp")
+        whole = Image.fromarray(a)
+        for name, (part, (x, y)) in parts.items():
+            Image.fromarray(part).save(os.path.join(OUT, f"{key}-{name}.png"), optimize=True)
+            print(f"  {name}: x {x}, y {y}, w {part.shape[1]}, h {part.shape[0]}")
+            if name in ("phone-order", "trolley"):  # always there: the gloss is for them too
+                whole.alpha_composite(Image.fromarray(part), (x, y))
+        save_silhouette(np.array(whole), f"{key}-silhouette.webp")
         solid = a[..., 3] > 40
         opened = dilate(erode(solid, 4), 4)
         lab, sizes = label(opened, 2)

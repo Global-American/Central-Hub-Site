@@ -60,6 +60,9 @@ export const brands = [
     taglineColor: "text-white",
     taglineItColor: "text-[#FBA42C]",
     image: "/card-thumbnails/freight-itsmart.png",
+    // Animated on the homepage card (components/freight-art.tsx, from layers
+    // cut out of the file above); the /services page shows it still
+    art: "freight",
     label: "Freight",
     headline: "Air, ocean and road freight through one integration",
     features: [
@@ -85,7 +88,9 @@ export const brands = [
     textColor: "text-white",
     taglineColor: "text-[#0F539A]",
     taglineItColor: "text-white",
-    image: "/card-thumbnails/return-itsmart.png",
+    // The card picture with the front of its truck's box filled in
+    // (scripts/build-brand-fx.py, from /card-thumbnails/return-itsmart.png)
+    image: "/card-thumbnails/fx/return-base.png",
     label: "Returns",
     headline: "Returns that keep customers coming back",
     features: [
