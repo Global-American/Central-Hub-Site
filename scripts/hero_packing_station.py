@@ -397,7 +397,8 @@ def draw_station(c):
 
 def swap_desk(art):
     """The artwork (RGBA array) with the desk taken out and the packing
-    station put in."""
+    station put in, and a mask of the station (so that its thin parts, like
+    the packer's arms, are not taken for circuit traces)."""
     top = label_from(is_colour(art, PAD_TOP), (int(CENTRE[0]), int(CENTRE[1]) + 80))
     stack = find_stack(art)
     a = art.copy()
@@ -410,8 +411,11 @@ def swap_desk(art):
     out = Image.fromarray(a)
     # (scaled down by plain averaging: the artwork's flat colours meet in
     # clean edges, with no bright fringe)
-    out.alpha_composite(c.img.reduce(SS), AREA[:2])
+    station = c.img.reduce(SS)
+    out.alpha_composite(station, AREA[:2])
     out = np.array(out)
     front = grow(stack, 1) & (art[..., 3] > 0)  # the boxes stand in front
     out[front] = art[front]
-    return out
+    drawn = np.zeros(art.shape[:2], bool)
+    drawn[AREA[1] : AREA[3], AREA[0] : AREA[2]] = np.array(station.getchannel("A")) > 0
+    return out, drawn

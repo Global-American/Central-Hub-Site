@@ -181,9 +181,10 @@ def main():
         print(key)
         shift = centre[0] - hubs["fulfil"][0]
         art = load(f"{key}-it-smart-no-globe.png")
+        station = np.zeros(art.shape[:2], bool)
         if key == "fulfil":
             card = Image.open(os.path.join(CARDS, "fulfill-itsmart.png")).convert("RGBA")
-            art = swap_desk(swap_worker(art, np.array(card)))
+            art, station = swap_desk(swap_worker(art, np.array(card)))
         a, board = swap_cog(
             art,
             centre,
@@ -196,7 +197,8 @@ def main():
         opened = dilate(erode(solid, 4), 4)
         lab, sizes = label(opened, 2)
         big = np.isin(lab, [k for k, v in sizes.items() if v > 3000])
-        save_lines((solid & ~dilate(big, 3)) | (board > 128), a, f"{key}-lines.webp")
+        thin = solid & ~dilate(big, 3) & ~dilate(station, 2)
+        save_lines(thin | (board > 128), a, f"{key}-lines.webp")
 
 
 if __name__ == "__main__":

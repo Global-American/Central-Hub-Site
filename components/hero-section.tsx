@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Truck } from "lucide-react";
 import HeroGlobe from "@/components/hero-globe";
-import HeroArtFx, { type ArtFx } from "@/components/hero-art-fx";
+import HeroArtFx, { HeroArtUnder, type ArtFx } from "@/components/hero-art-fx";
 // The pictures scripts/build-hero-fx.py writes are imported, not named by
 // their path: an imported picture's address has a hash of its contents in
 // it, so one that has been redrawn can never come back out of the image
@@ -80,14 +80,17 @@ const freightFx: ArtFx = {
   // Each vehicle turns round the projection on its way in, clear of it and of
   // the others: the ship comes out from behind the globe and swings round the
   // left of the projector, the truck comes down the right of it and round the
-  // front, and the plane banks in from the top right, wide of both. They
-  // arrive in that order, so no two are ever in the same place. The truck
-  // and plane start beyond the artwork's right edge.
+  // front, and the plane flies in from far off in the top left, passes
+  // behind the globe, turns round to the right of it and comes down into its
+  // place. They arrive in that order, so no two are ever in the same place.
+  // The truck starts beyond the artwork's right edge. The plane is drawn
+  // behind the globe (and under the ship) for the first 47% of its trip, by
+  // when it is clear of the projection on the right and still in the picture.
   cover: `${FX}/freight-cover.webp`,
   sprites: [
     { src: freightShip.src, x: 80, y: 476, w: 528, h: 400, motion: "sail", from: [46.3, -30.6], trip: 3.8, curve: [[176, -476], [225, -130]], emerge: [909, 770] },
     { src: freightTruck.src, x: 536, y: 608, w: 272, h: 260, motion: "drive", from: arriveFrom(64), trip: 2.8, delay: 0.7, curve: [[670, -40], [216, -126]] },
-    { src: freightPlane.src, x: 828, y: 504, w: 540, h: 388, motion: "fly", from: [41.8, -54], trip: 3, delay: 1.3, curve: [[462, -318], [204, -127]] },
+    { src: freightPlane.src, x: 828, y: 504, w: 540, h: 388, motion: "fly", from: [-67.9, -41.9], trip: 5.2, delay: 0.8, curve: [[640, -500], [200, -117]], far: 0.2, turns: true, behind: 0.47 },
   ],
   // Radar sweeps out from the projector's lens over the dots around it
   lines: { mask: `${FX}/freight-lines.webp`, x: 909, y: 400, radius: 1150, tone: "light" },
@@ -121,6 +124,29 @@ const hubFx = (key: string, chipX: number): ArtFx => ({
     [1000, 230, 0.7],
   ],
 });
+
+// Fulfillment's four stations are the steps an order goes through, so a beam
+// of light goes round them in that order, clockwise: the order is placed on
+// the phone (bottom right), packed at the bench (bottom left), taken through
+// the warehouse (top left) and sent out on the truck (top right). Then it
+// comes back round for the next order. The ring it runs on is wide enough
+// to go round the outside of the sign over the bench, so the beam is in
+// view all the way up the left.
+const fulfilFx: ArtFx = {
+  ...hubFx("fulfil", 731),
+  loop: {
+    x: 707,
+    y: 552,
+    rx: 637,
+    stops: [
+      [1143.5, 784.5],
+      [265.5, 760.5],
+      [333.5, 304.5],
+      [1143.5, 280.5],
+    ],
+    pad: [180, 18],
+  },
+};
 
 const slides = [
   {
@@ -190,7 +216,7 @@ const slides = [
     width: 1440,
     height: 1024,
     artInsetRight: 8.06,
-    fx: hubFx("fulfil", 731),
+    fx: fulfilFx,
     globe: {
       x: 50.87,
       y: 28.06,
@@ -473,6 +499,7 @@ export default function HeroSection() {
                           : "opacity-0 pointer-events-none"
                       }`}
                     >
+                      {slide.fx && <HeroArtUnder fx={slide.fx} />}
                       {slide.globe && (
                         <HeroGlobe
                           {...slide.globe}
