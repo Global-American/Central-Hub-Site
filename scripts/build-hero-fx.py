@@ -14,7 +14,10 @@ Writes public/hero-variation-smart/fx/ (see components/hero-art-fx.tsx):
                           on its bottom right station (hero_order_phone.py),
                           and a packing station in place of the man at a
                           desk on its bottom left one
-                          (hero_packing_station.py). Its truck and that
+                          (hero_packing_station.py), and on its top left one
+                          the warehouse alone, with an orange forklift from
+                          the card picture in place of the yard in front of
+                          it (hero_warehouse.py). Its truck and that
                           phone are not in it: they are pictures of their
                           own, below
   fulfil-<part>.png       the moving parts of Fulfillment's delivery
@@ -49,6 +52,7 @@ from hero_delivery import fill_box_front, take_delivery
 from hero_order_phone import swap_worker
 from hero_packing_station import swap_desk
 from hero_projector import swap_hub
+from hero_warehouse import swap_yard
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "public", "hero-variation-smart")
 OUT = os.path.join(ROOT, "fx")
@@ -209,6 +213,8 @@ def main():
                 swap_worker(art, card, phone=False), art, swap_worker(art, card)
             )
             art, station = swap_desk(bare)
+            art, yard = swap_yard(art, card)
+            station |= yard
         a, board = swap_cog(
             art,
             centre,

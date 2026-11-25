@@ -1126,6 +1126,20 @@ select:not([multiple]):not([size]):not(.appearance-none) {
 .hero-art[data-active="true"] .hero-truck {
   animation: hero-loop-truck var(--round) linear infinite both;
 }
+/* The parcel that comes off the truck and goes to the phone, over the
+   artwork (out of sight until then) */
+.hero-drop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transform-origin: 50% 75%;
+  filter: drop-shadow(0 0 0.5cqw rgb(56 225 255 / 0.95));
+  will-change: transform;
+}
+.hero-art[data-active="true"] .hero-drop {
+  animation: hero-loop-drop var(--round) linear infinite both;
+}
 /* The phone's two faces turn about the middle of its face (--axis) */
 .hero-phone-order,
 .hero-phone-delivered {

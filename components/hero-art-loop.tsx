@@ -11,8 +11,9 @@ import type { CSSProperties } from "react";
 // On the Fulfillment slide that is an order's whole life. The order leaves
 // the phone it was placed on as a beam of light, comes out of the packing
 // bench as a parcel, and goes on through the warehouse to the truck. The
-// truck then drives it down to the phone and in at the back of it, the phone
-// turns over to say PARCEL DELIVERED, and it all starts again.
+// truck then drives off the picture with it, the parcel comes off the back
+// of the truck as it goes and hops over to the phone and in behind it, the
+// phone turns over to say PARCEL DELIVERED, and it all starts again.
 //
 // Every coordinate is in the artwork's own pixels, like the rest of the
 // animation layer (hero-art-fx.tsx). The pictures are cut from the artwork
@@ -37,17 +38,20 @@ export type ArtLoop = {
       station on: its picture, its size, and where in it the middle of its
       foot is */
   parcel?: { src: string; w: number; h: number; foot: [number, number]; from: number };
-  /** The last station's truck takes it the rest of the way, back to the
-      first station, whose phone then says it has come */
+  /** The last station's truck sets off with it, and the parcel goes the rest
+      of the way on its own, back to the first station, whose phone then says
+      it has come (needs `parcel`, for its picture) */
   delivery?: {
-    /** The truck in its place */
+    /** The truck in its place. It drives straight off the picture, the way
+        it faces. */
     truck: ArtPart;
     /** What stands in front of the truck there, and stays when it goes */
     front?: ArtPart;
-    /** Where it ends up, behind the phone: how far from its place, across
-        and down. It sets off the way it faces and comes round to drive
-        straight down the picture into the back of the phone, growing small
-        as it goes in, until the phone hides it. */
+    /** Where the parcel lands when it comes off the back of the truck, on
+        the truck's pad (the middle of its foot) */
+    drop: [number, number];
+    /** Where the parcel ends up, behind the phone, which hides it: it gets
+        there in one hop, over the gap between the two pads */
     to: [number, number];
     /** The phone saying the order is placed, the same phone saying the
         parcel has come, and the upright line it turns about (how far across
@@ -70,21 +74,26 @@ const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 // From one station to the next: a short stop under the pad, then the trip
 const STEP = 2.2;
 const STOP = 0.4;
-// The delivery, counted from when the parcel reaches the truck: the truck
-// sets off and is gone into the back of the phone, the phone turns over
-// (FLIP seconds) and shows the news until SHOWN, then turns back as the
-// round ends, while the truck comes back to its place (HOME seconds).
-const DRIVE = [0.2, 2.9];
+// The delivery, counted from when the parcel reaches the truck. The truck
+// sets off and is gone off the picture (DRIVE). Its parcel comes off the back
+// of it, has landed on the pad, sets off for the phone and is in behind it
+// (DROP). Then the phone turns over (FLIP seconds) and shows the news until
+// SHOWN, and turns back as the round ends, while the truck comes back to its
+// place (HOME seconds).
+const DRIVE = [0.2, 1.9];
+const DROP = [0.9, 1.25, 1.5, 2.9];
 const FLIP = 0.6;
 const SHOWN = 5.0;
 const HOME = 0.9;
 const DELIVERY = SHOWN + FLIP;
-// How far the truck leans into its bend (degrees, side-on), how small it is
-// by the time it is inside the phone, and the share of its trip it does at
-// its full size
-const LEAN = 12;
-const INSIDE = 0.36;
-const FULL = 0.55;
+// How far the truck drives (artwork pixels: enough to be off the page, not
+// only the picture), how high the parcel's hop to the phone takes it, how
+// far it swings out to the right on the way, and how much bigger it is shown
+// than on the ring (it is in front of the picture here, not under it)
+const AWAY = 820;
+const HOP = 64;
+const SWING = 22;
+const BIGGER = 1.25;
 
 /** How long a round takes, and when the delivery starts in it */
 function timing(loop: ArtLoop) {
@@ -221,63 +230,69 @@ function loopKeyframes(loop: ArtLoop, W: number): string {
     out.push(`@keyframes hero-loop-parcel{${frames.join("")}}`);
   }
 
-  if (loop.delivery) {
-    const { to } = loop.delivery;
-    // The truck's trip: a bend that leaves along the way it faces and comes
-    // in straight down the picture
-    const c1 = [170 * AHEAD[0], 170 * AHEAD[1]];
-    const c2 = [to[0] + 26, to[1] - 170];
-    const point = (t: number) =>
-      [0, 1].map(
-        (k) => 3 * (1 - t) ** 2 * t * c1[k] + 3 * (1 - t) * t * t * c2[k] + t ** 3 * to[k]
-      );
-    const heading = (t: number) => {
-      const d = [0, 1].map(
-        (k) =>
-          (1 - t) ** 2 * c1[k] + 2 * (1 - t) * t * (c2[k] - c1[k]) + t * t * (to[k] - c2[k])
-      );
-      const len = Math.sqrt(d[0] * d[0] + d[1] * d[1]) || 1;
-      return [d[0] / len, d[1] / len];
-    };
-    // How far along the bend each t is, to pace it by distance
-    const N = 240;
-    const far = [0];
-    for (let i = 1, a = point(0); i <= N; i++) {
-      const b = point(i / N);
-      far.push(far[i - 1] + Math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2));
-      a = b;
-    }
-    const [sets, gone] = [handover + DRIVE[0], handover + DRIVE[1]];
-    const steps = 32;
-    const move = [`0%,${at(sets)}{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}`];
+  if (loop.delivery && loop.parcel) {
+    const { drop, to } = loop.delivery;
+    // The truck: straight off the picture the way it faces, gathering speed,
+    // and out of sight by the end of it
+    const [sets, off] = [handover + DRIVE[0], handover + DRIVE[1]];
+    const steps = 16;
+    const move = [`0%,${at(sets)}{opacity:1;transform:translate(0,0)}`];
     for (let step = 1; step <= steps; step++) {
       const share = step / steps;
-      const want = ease(share) * far[N];
-      let i = 1;
-      while (i < N && far[i] < want) i++;
-      const t = (i - 1 + (want - far[i - 1]) / (far[i] - far[i - 1] || 1)) / N;
-      const [x, y] = point(t);
-      const [hx, hy] = heading(t);
-      // Going in: smaller, straightening up, and out of sight at the last
-      // (the phone is in front of it by then, and is about to turn)
-      const going = share > FULL ? ease((share - FULL) / (1 - FULL)) : 0;
-      const lean = LEAN * (AHEAD[0] * hy - AHEAD[1] * hx) * (1 - going);
-      const size = 1 - (1 - INSIDE) * going;
-      const shown = share > 0.9 ? (1 - share) / 0.1 : 1;
+      const far = AWAY * share * share;
+      const shown = share > 0.8 ? (1 - share) / 0.2 : 1;
       move.push(
-        `${at(sets + (gone - sets) * share)}{opacity:${shown.toFixed(2)};` +
-          `transform:translate(${cqw(x)},${cqw(y)}) rotate(${lean.toFixed(2)}deg) scale(${size.toFixed(3)})}`
+        `${at(sets + (off - sets) * share)}{opacity:${shown.toFixed(2)};` +
+          `transform:translate(${cqw(far * AHEAD[0])},${cqw(far * AHEAD[1])})}`
       );
     }
     // Then it comes back to its place from behind (along the way it faces)
     const back = round - HOME;
-    const behind = `transform:translate(${cqw(-70 * AHEAD[0])},${cqw(-70 * AHEAD[1])}) rotate(0deg) scale(1)`;
+    const behind = `transform:translate(${cqw(-70 * AHEAD[0])},${cqw(-70 * AHEAD[1])})`;
     move.push(
-      `${at(gone + 0.1)},${at(back)}{opacity:0;${behind};animation-timing-function:cubic-bezier(0.16,1,0.3,1)}`,
-      `100%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}`
+      `${at(off + 0.1)},${at(back)}{opacity:0;${behind};animation-timing-function:cubic-bezier(0.16,1,0.3,1)}`,
+      `100%{opacity:1;transform:translate(0,0)}`
     );
     out.push(`@keyframes hero-loop-truck{${move.join("")}}`);
-    // The phone turns over once the truck is in, and back as the round
+
+    // The parcel it was carrying: tossed off the back of the truck as it
+    // pulls away, down on to the pad with a small bounce, then over to the
+    // phone in one hop and in behind it (out of sight by then, as the phone
+    // is about to turn)
+    const foot = loop.parcel.foot.map((v) => v * BIGGER);
+    const spot = ([x, y]: number[], shown: number, size = 1, how = "") =>
+      `{opacity:${shown};transform:translate(${cqw(x - foot[0])},${cqw(y - foot[1])}) scale(${size});${how}}`;
+    const [thrown, landed, leaves, gone] = DROP.map((t) => handover + t);
+    const falling = "animation-timing-function:cubic-bezier(0.5,0,0.9,0.5)";
+    const rising = "animation-timing-function:cubic-bezier(0.1,0.6,0.4,1)";
+    const air = [drop[0] - 20, drop[1] - 36];
+    const hop = [`0%,${at(thrown)}${spot(air, 0, 0.5)}`];
+    hop.push(
+      `${at(thrown + 0.12)}${spot([air[0] + 6, air[1] - 8], 1, 1, falling)}`,
+      `${at(landed)}${spot(drop, 1, 1, rising)}`,
+      `${at(landed + 0.09)}${spot([drop[0] + 2, drop[1] - 8], 1, 1, falling)}`,
+      `${at(landed + 0.18)},${at(leaves)}${spot(drop, 1)}`
+    );
+    const arrives = gone - 0.15;
+    for (let k = 1; k <= STEPS; k++) {
+      const share = k / STEPS;
+      // Steady across, and up and then faster and faster down
+      const up = 4 * share * (1 - share);
+      hop.push(
+        `${at(leaves + (arrives - leaves) * share)}` +
+          spot(
+            [
+              drop[0] + (to[0] - drop[0]) * share + SWING * up,
+              drop[1] + (to[1] - drop[1]) * share * share - HOP * up,
+            ],
+            1
+          )
+      );
+    }
+    hop.push(`${at(gone)},100%${spot(to, 0)}`);
+    out.push(`@keyframes hero-loop-drop{${hop.join("")}}`);
+
+    // The phone turns over once the parcel is in, and back as the round
     // ends: one face closes edge-on, then the other opens
     const over = gone + 0.1;
     const turns = handover + SHOWN;
@@ -333,9 +348,9 @@ export function HeroArtUnder({
     preserveAspectRatio: "none",
   };
   // When each pad lights up: as the round reaches it, and the first once
-  // more when the truck has brought the parcel to it
+  // more when the parcel has got to it from the truck
   const lit = loop.stops.map((stop, i) => ({ stop, when: i * STEP }));
-  if (loop.delivery) lit.push({ stop: loop.stops[0], when: handover + DRIVE[1] });
+  if (loop.delivery) lit.push({ stop: loop.stops[0], when: handover + DROP[3] });
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={vars}>
       <style dangerouslySetInnerHTML={{ __html: loopKeyframes(loop, W) }} />
@@ -434,9 +449,10 @@ function Part({
   );
 }
 
-/** The delivery's own pictures, over the artwork: the truck (which goes in
-    behind the phone, so it comes first) and what stands in front of it, the
-    phone's two faces, and what is in front of the phone. */
+/** The delivery's own pictures, over the artwork: the truck and what stands
+    in front of it, the parcel that comes off the truck (which goes in behind
+    the phone, so it comes before it), the phone's two faces, and what is in
+    front of the phone. */
 export function HeroArtDelivery({
   loop,
   width: W,
@@ -448,6 +464,7 @@ export function HeroArtDelivery({
 }) {
   if (!loop.delivery) return null;
   const { truck, front, phone, hand } = loop.delivery;
+  const parcel = loop.parcel;
   const box = (part: ArtPart): CSSProperties => ({
     left: pct(part.x, W),
     top: pct(part.y, H),
@@ -462,6 +479,19 @@ export function HeroArtDelivery({
       {front && (
         <div className="absolute" style={box(front)}>
           <Part of={W} part={front} className="block h-auto w-full" />
+        </div>
+      )}
+      {parcel && (
+        <div className="hero-drop" style={{ width: pct(parcel.w * BIGGER, W) }}>
+          <Image
+            src={parcel.src}
+            alt=""
+            width={parcel.w}
+            height={parcel.h}
+            sizes={`${Math.ceil((100 * parcel.w * BIGGER) / W)}vw`}
+            loading="eager"
+            className="block h-auto w-full"
+          />
         </div>
       )}
       <div

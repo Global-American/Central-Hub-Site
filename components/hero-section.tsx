@@ -140,13 +140,14 @@ const hubFx = (key: string, chipX: number): ArtFx => ({
 // picture goes round them in that order, clockwise (hero-art-loop.tsx): the
 // order is placed on the phone (bottom right) and goes as a beam of light to
 // the packing bench (bottom left), which sends it on as a parcel through the
-// warehouse (top left) to the truck (top right). The truck drives it down
-// to the phone and in at the back of it, the phone turns over to say PARCEL
-// DELIVERED, and the next order starts. The ring the round runs on is wide enough to go round the outside
-// of the sign over the bench, so it is in view all the way up the left.
-// The truck, the trolley in front of it, the phone, the man's hand in front
-// of that and the parcel are pictures of their own (scripts/hero_delivery.py): build-hero-fx.py prints
-// their boxes.
+// warehouse (top left) to the truck (top right). The truck drives off the
+// picture with it, the parcel comes off the back of the truck as it goes and
+// hops over to the phone and in behind it, the phone turns over to say
+// PARCEL DELIVERED, and the next order starts. The ring the round runs on is
+// wide enough to go round the outside of the sign over the bench, so it is
+// in view all the way up the left. The truck, the trolley in front of it,
+// the phone, the man's hand in front of that and the parcel are pictures of
+// their own (scripts/hero_delivery.py): build-hero-fx.py prints their boxes.
 const fulfilFx: ArtFx = {
   ...hubFx("fulfil", 731),
   loop: {
@@ -164,8 +165,10 @@ const fulfilFx: ArtFx = {
     delivery: {
       truck: { src: fulfilTruck.src, x: 1071, y: 96, w: 245, h: 230 },
       front: { src: fulfilTrolley.src, x: 1018, y: 203, w: 137, h: 130 },
-      // The middle of the truck ends up behind the middle of the phone
-      to: [57, 452],
+      // The parcel lands where the truck's cab stood, near the front of the
+      // pad, and ends up behind the middle of the phone
+      drop: [1215, 312],
+      to: [1250, 650],
       // (the phone turns about the middle of its face, not of its picture:
       // the picture has the thickness of its case down its right side)
       phone: { src: fulfilPhoneOrder.src, delivered: fulfilPhoneDelivered.src, x: 1188, y: 524, w: 124, h: 278, axis: 0.452 },
